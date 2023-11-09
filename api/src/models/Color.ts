@@ -20,7 +20,6 @@ const ColorSchema = new mongoose.Schema(
     },
     pantonecode: {
       type: String,
-      unique: true,
       required: false,
     },
     tags: {
