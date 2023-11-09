@@ -1,0 +1,5 @@
+export const BASE_URL = process.env.REACT_APP_BASE_API_URL || ''
+export const API_URL_ADMIN = '/admin/'
+export const COLORS_URL = API_URL_ADMIN + 'colors'
+export const ADD_COLOR_URL = API_URL_ADMIN + 'add-color'
+export const EDIT_COLOR_URL = API_URL_ADMIN + 'edit-color'

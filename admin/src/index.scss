@@ -1,0 +1,24 @@
+@import "fonts.css";
+
+body {
+  margin: 0;
+  font-family: Poppins;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.App {
+  display: flex;
+}
+.main-content {
+  padding: 20px;
+  width: calc(100% - 46px);
+  &._expanded {
+    width: calc(100% - 300px);
+  }
+}

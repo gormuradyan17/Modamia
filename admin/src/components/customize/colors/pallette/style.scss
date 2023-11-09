@@ -1,0 +1,46 @@
+$colorFill: var(--colorFill);
+@use 'variables';
+
+.new-color {
+    &-actions {
+        margin-top: 20px;   
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+    }
+}
+.add-button {
+    margin: 20px 0;
+}
+
+.colors-list {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    &-color {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 10px 20px 10px 0;
+        flex-direction: column;
+    }
+}
+
+.color-text {
+    margin-bottom: 5px;
+    color: variables.$appColor !important;
+}
+
+.color-span {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: $colorFill;
+    border: 1px solid variables.$appColor;
+    margin: 10px 0;
+}
+
+.color-button {
+    padding: 10px 15px !important;
+    min-height: 15px !important;
+}
