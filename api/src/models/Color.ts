@@ -7,7 +7,7 @@ export interface ColorInterface {
   tags?: string,
 }
 
-const ColorSchema = new mongoose.Schema(
+const ColorSchema: ColorInterface = new mongoose.Schema(
   {
     name: {
       type: String,

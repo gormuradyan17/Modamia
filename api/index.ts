@@ -9,6 +9,7 @@ import morgan from "morgan";
 import multer from "multer";
 import express from "express";
 import bodyParser from "body-parser";
+const upload = require('express-fileupload');
 // const errorMidleware = require('./middlewares/error')
 // const passport = require('passport')
 // import HttpError from "./utils/HttpError";
@@ -26,14 +27,17 @@ dotenv.config();
 // });
 
 // const upload = multer({ storage: storage });
-
 app.use(express.static(path.join(__dirname, 'public')))
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser())
-app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true })); //this line is already mentioned above
+app.use(bodyParser.json());//add this line
 app.use(helmet());
 app.use(morgan("common"));
+
+app.use(upload());
 app.use(cors());
 
 router(app);
@@ -44,18 +48,18 @@ const PORT = process.env.PORT || 6000
 // app.use(errorMidleware)
 
 async function start() {
-    try {
-        await mongoose
-		.connect(process.env.MONGODB_URL || '')
-		.then(() => console.log("Database connected!"))
-		.catch((err: any) => console.log(err));
+	try {
+		await mongoose
+			.connect(process.env.MONGODB_URL || '')
+			.then(() => console.log("Database connected!"))
+			.catch((err: any) => console.log(err));
 
-        app.listen(PORT, () => {
+		app.listen(PORT, () => {
 			console.log(`Backend server is running on port ${PORT}!`);
 		});
-    } catch (error) {
-        console.log(error);
-    }
+	} catch (error) {
+		console.log(error);
+	}
 }
 
 start()
