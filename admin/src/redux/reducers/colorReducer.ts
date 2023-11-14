@@ -2,17 +2,12 @@ import { createSlice } from '@reduxjs/toolkit';
 import { getAvailableColors } from 'redux/features/colorApi';
 import { ArrayType, ObjectType } from 'shared/helpers/helpers';
 
-interface colorStateInterface {
-	name: string,
-	hexcode: string,
-	pantonecode?: string,
-	tags?: string,
-}
+type PrintStateInterface = Record<string, string>
 
 interface stateProps {
     colors: ArrayType,
     loading: boolean,
-	colorState: colorStateInterface
+	colorState: PrintStateInterface
 }
 
 export const defaultColorState = {
@@ -37,7 +32,7 @@ export const colorSlice = createSlice({
 		},
 		setColorState: (state, action) => {
 			const {name, value} = action.payload
-			state.colorState[name as keyof colorStateInterface] = value;
+			state.colorState[name] = value;
 		},
 		resetColorState: (state) => {
 			state.colorState = defaultColorState

@@ -6,6 +6,7 @@ export class BaseApi {
   private storeToken: string = sessionStorageSync.privateToken;
   private assocaiteToken: string = localStorageSync.token;
   private additionalHeaders: any | null = null;
+  private clearHeader: boolean = true;
 
   constructor(
     private apiPrefix: string = '',
@@ -22,9 +23,13 @@ export class BaseApi {
     this.additionalHeaders = headers;
   }
 
+  public removeDefaultHeader() {
+    this.clearHeader = false;
+  }
+
   public buildHeaders(authToken: string = '', assocaiteToken: string = '') {
     return {
-      "Content-Type": "application/json",
+      ...(this.clearHeader && {"Content-Type": "application/json"}),
       ...(authToken && { Authorization: `Bearer ${authToken}`}),
       ...(assocaiteToken && {'Associate-Authorization': `${assocaiteToken}`}),
       ...(this.additionalHeaders)
@@ -55,14 +60,15 @@ export class BaseApi {
 
   public post(url: string,
     payload: any = {},
-    headers: any = this.getAuthHeader()
+    headers: any = this.getAuthHeader(),
+    isFormData: boolean = false
   ): Promise<any> {
     return fetch(this.getUrl(url), {
       method: "POST",
       headers,
       redirect: "follow",
       cache: "no-cache",
-      body: JSON.stringify(payload)
+      body: isFormData ? payload : JSON.stringify(payload)
     }).then(this.handleResponse)
     .catch(err => console.log(err))
   }

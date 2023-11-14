@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-import { faDiceD20, faDroplet, faHome, faLayerGroup, faPalette, faPaw } from '@fortawesome/free-solid-svg-icons';
+import { faDiceD20, faDroplet, faHome, faLayerGroup, faPalette, faPaw, faPersonDress } from '@fortawesome/free-solid-svg-icons';
 
 const AUTH = {
 	PAGE_404: lazy(() => import('pages/auth/page404/Page404')),
@@ -9,12 +9,21 @@ const AUTH = {
 const LANDING = {
 	DASHBOARD: lazy(() => import('pages/dashboard/Dashboard')),
 	CUSTOMIZE: lazy(() => import('pages/customize/Customize')),
+	// Colors
 	CUSTOMIZE_COLORS: lazy(() => import('components/customize/colors/CustomizeColors')),
-	CUSTOMIZE_LAYERS: lazy(() => import('components/customize/layers/CustomizeLayers')),
-	CUSTOMIZE_PRINTS: lazy(() => import('components/customize/prints/CustomizePrints')),
 	CUSTOMIZE_COLORS_PALLETTE: lazy(() => import('components/customize/colors/pallette/ColorsPallette')),
-	CUSTOMIZE_LAYERS_PALLETTE: lazy(() => import('components/customize/layers/pallette/LayersPallette')),
+	// Prints
+	CUSTOMIZE_PRINTS: lazy(() => import('components/customize/prints/CustomizePrints')),
 	CUSTOMIZE_PRINTS_PALLETTE: lazy(() => import('components/customize/prints/pallette/PrintsPallette')),
+	// Layers
+	CUSTOMIZE_LAYERS: lazy(() => import('components/customize/layers/CustomizeLayers')),
+	CUSTOMIZE_LAYERS_PALLETTE: lazy(() => import('components/customize/layers/pallette/LayersPallette')),
+	// Silhouettes
+	CUSTOMIZE_SILHOUETTES: lazy(() => import('components/customize/silhouettes/CustomizeSilhouettes')),
+	CUSTOMIZE_SILHOUETTES_TOP: lazy(() => import('components/customize/silhouettes/tops/TopSilhouettes')),
+	CUSTOMIZE_SILHOUETTES_BOTTOM: lazy(() => import('components/customize/silhouettes/bottoms/BottomSilhouettes')),
+	CUSTOMIZE_SILHOUETTES_SLEEVE: lazy(() => import('components/customize/silhouettes/sleeves/SleeveSilhouettes')),
+	CUSTOMIZE_MANNEQUINS: lazy(() => import('components/customize/mannequins/CustomizeMannequins')),
 };
 
 const CustomizeChildrens = [
@@ -41,7 +50,7 @@ const CustomizeChildrens = [
 		text: 'Print',
 		path: '/customize/prints',
 		icon: faPaw,
-		element: LANDING.CUSTOMIZE_LAYERS,
+		element: LANDING.CUSTOMIZE_PRINTS,
 		exact: true,
 		children: [
 			{
@@ -59,7 +68,7 @@ const CustomizeChildrens = [
 		text: 'Layer',
 		path: '/customize/layers',
 		icon: faLayerGroup,
-		element: LANDING.CUSTOMIZE_PRINTS,
+		element: LANDING.CUSTOMIZE_LAYERS,
 		exact: true,
 		children: [
 			{
@@ -68,6 +77,48 @@ const CustomizeChildrens = [
 				path: '/customize/layers-pallette',
 				icon: faPalette,
 				element: LANDING.CUSTOMIZE_LAYERS_PALLETTE,
+				exact: true,
+			},
+		]
+	},
+	{
+		id: 'mannequins',
+		text: 'Mannequin',
+		path: '/customize/mannequins',
+		icon: faPersonDress,
+		element: LANDING.CUSTOMIZE_MANNEQUINS,
+		exact: true,
+	},
+	{
+		id: 'silhouettes',
+		text: 'Silhouette',
+		path: '/customize/silhouettes',
+		icon: faPersonDress,
+		element: LANDING.CUSTOMIZE_SILHOUETTES,
+		exact: true,
+		children: [
+			{
+				id: 'silhouettes-top',
+				text: 'Top Silhouettes',
+				path: '/customize/silhouettes-top',
+				icon: faPalette,
+				element: LANDING.CUSTOMIZE_SILHOUETTES_TOP,
+				exact: true,
+			},
+			{
+				id: 'silhouettes-bottom',
+				text: 'Bottom Silhouettes',
+				path: '/customize/silhouettes-bottom',
+				icon: faPalette,
+				element: LANDING.CUSTOMIZE_SILHOUETTES_BOTTOM,
+				exact: true,
+			},
+			{
+				id: 'silhouettes-sleeve',
+				text: 'Sleeve Silhouettes',
+				path: '/customize/silhouettes-sleeve',
+				icon: faPalette,
+				element: LANDING.CUSTOMIZE_SILHOUETTES_SLEEVE,
 				exact: true,
 			},
 		]

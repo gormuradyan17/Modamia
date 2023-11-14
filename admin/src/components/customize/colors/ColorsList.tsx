@@ -60,7 +60,7 @@ const ColorsList = ({
                     '--colorFill': color.hexcode
                 }
                 return <div className="colors-list-color" key={color._id}>
-                    <HeadingUI classN="color-text" text={color.name} size="16px" />
+                    <HeadingUI classN="color-text _ellipsis" text={color.name} size="16px" />
                     <span className="color-span" style={style}></span>
                     <ButtonUI classN="color-button" onClick={() => editColor(color)}>Edit</ButtonUI>
                 </div>
