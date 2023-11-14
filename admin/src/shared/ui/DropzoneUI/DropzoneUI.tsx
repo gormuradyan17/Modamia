@@ -5,8 +5,6 @@ import { faX } from '@fortawesome/free-solid-svg-icons';
 import HeadingUI from '../HeadingUI/HeadingUI';
 import { CallbackSkeletonType, CallbackSkeletonValue } from 'shared/objectModels/GenericModel';
 import { ArrayType, ObjectType } from 'shared/helpers/helpers';
-import { BASE_UPLOADS_URL } from 'shared/constants/genericApiRoutes';
-import { formValidator } from 'utils/validators/validator';
 
 interface FileWithPreview extends File {
     preview: string;

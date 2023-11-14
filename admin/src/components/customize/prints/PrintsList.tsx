@@ -1,4 +1,4 @@
-import { BASE_UPLOADS_PRINTS_PREVIEWS_URL, BASE_UPLOADS_URL } from "shared/constants/genericApiRoutes";
+import { BASE_UPLOADS_PRINTS_PREVIEWS_URL } from "shared/constants/genericApiRoutes";
 import { ArrayType, ObjectType } from "shared/helpers/helpers";
 import { ButtonUI } from "shared/ui/ButtonUI/ButtonUI";
 import HeadingUI from "shared/ui/HeadingUI/HeadingUI";
