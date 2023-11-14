@@ -60,6 +60,35 @@ class AdminController {
         }
     }
 
+    // Mannequins
+
+    async getMannequins(req: any, res: any, next: any) {
+        try {
+            const prints = await adminService.getMannequins();
+            return res.json(prints);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async addManequin(req: any, res: any, next: any) {
+        try {
+            const print = await adminService.addMannequin(req);
+            return res.json(print);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async editMannequin(req: any, res: any, next: any) {
+        try {
+            const print = await adminService.editMannequin(req);
+            return res.json(print);
+        } catch (error) {
+            next(error);
+        }
+    }
+
 }
 
 export default new AdminController()
