@@ -41,7 +41,7 @@ app.use(morgan("common"));
 app.use(upload());
 app.use(cors());
 
-app.use('/api', router);
+app.use('/', router);
 
 const PORT = process.env.PORT || 6000
 
