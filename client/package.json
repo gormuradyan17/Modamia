@@ -19,7 +19,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "env-cmd -f ./.env.production react-scripts build && mv ./build ./clientBuild",
+    "build": "env-cmd -f ./.env.production react-scripts build && mv ./build/ ./clientBuild && rm -rf ./build",
     "buildProd": "sudo rm -rf /var/www/html/client && sudo mv ./clientBuild /var/www/html/client && sudo service nginx restart",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
