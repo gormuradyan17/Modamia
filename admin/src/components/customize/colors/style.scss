@@ -1,14 +1,13 @@
 $colorFill: var(--colorFill);
 @use 'variables';
 
-.new-color {
-    &-actions {
-        margin-top: 20px;   
-        width: 100%;
-        display: flex;
-        justify-content: flex-end;
-    }
+.new-color-actions {
+    margin-top: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
 }
+
 .add-button {
     margin: 20px 0;
 }
@@ -17,6 +16,7 @@ $colorFill: var(--colorFill);
     width: 100%;
     display: flex;
     flex-wrap: wrap;
+
     &-color {
         display: flex;
         justify-content: center;
@@ -29,6 +29,7 @@ $colorFill: var(--colorFill);
 .color-text {
     margin-bottom: 5px;
     color: variables.$appColor !important;
+    max-width: 100px;
 }
 
 .color-span {

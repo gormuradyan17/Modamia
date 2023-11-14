@@ -24,3 +24,5 @@ export const CardBarPanelAnimations: AnimationObject = {
         { opacity: 1, transform: "translateX(0%)" },
     ],
 };
+
+export const appColor = '#aa8a75';

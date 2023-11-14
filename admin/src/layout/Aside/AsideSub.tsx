@@ -30,10 +30,13 @@ const AsideSub = ({
     const isActive = child.path === '/' && pathname === '/admin' || child.path !== '/' && pathname.includes(child.path)
     
     useEffect(() => {
+        if (pathname !== '/admin' && isActive) {
+            setIsVisible(true)
+        }
         return () => {
             setIsVisible(false)
         }
-    },[])
+    },[pathname])
 
     return (
         <div className={`admin-aside__link${isVisible ? ' _collapsed' : ''}`}>

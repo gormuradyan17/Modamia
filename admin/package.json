@@ -25,9 +25,10 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && mv ./build ./adminBuild",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "buildProd": "sudo rm -rf /var/www/html/admin && sudo mv ./adminBuild /var/www/html/admin && sudo service nginx restart"
   },
   "eslintConfig": {
     "extends": [
@@ -48,6 +49,8 @@
     ]
   },
   "devDependencies": {
-    "sass": "^1.69.5"
+    "file-loader": "^6.2.0",
+    "sass": "^1.69.5",
+    "url-loader": "^4.1.1"
   }
 }

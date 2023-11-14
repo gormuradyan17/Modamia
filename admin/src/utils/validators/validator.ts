@@ -9,15 +9,12 @@ export type ErrorInfo = Record<string, Record<string, {message: string}>>
 
 
 export const formValidator = (formData: ObjectType, options: ObjectType) => {
-    
     const errorInfo = Object.keys(formData).reduce((acc: any, inputName): any => {
-
         const currnetInputOptions:Rule[] = options[inputName] || [];
         const inputValue = formData[inputName];
-
         currnetInputOptions.forEach(option => {
             const rule = option.rule;
-            const error = option.error;
+            const error = option.error; 
 
             if(rule.required !== undefined && !inputValue) {
                 acc[inputName] = error;

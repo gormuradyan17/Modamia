@@ -18,8 +18,10 @@ const PopupUI = ({
     return (
         <ReactPortal>
             <div className='PopupUI'>
-                <div className='PopupUI__body'>
-                    {children}
+                <div className="PopupUI__container">
+                    <div className='PopupUI__body'>
+                        {children}
+                    </div>
                     <div className='PopupUI__icon'
                         onClick={() => callback()}>
                         <FontAwesomeIcon icon={faXmark} fontSize='18px' color="#fff" />
