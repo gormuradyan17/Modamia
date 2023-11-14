@@ -1,6 +1,6 @@
 export const BASE_URL = process.env.REACT_APP_BASE_API_URL || ''
 export const API_URL_ADMIN = '/admin/'
-export const BASE_UPLOADS_URL = BASE_URL + '/uploads/'
+export const BASE_UPLOADS_URL = BASE_URL + '/api/uploads/'
 
 // Color
 
