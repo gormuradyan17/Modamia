@@ -1,5 +1,9 @@
 import adminRoute from './admin'
 
-export default (app: any) => {
-    app.use("/admin", adminRoute);
-}
+import { Router } from 'express'
+
+const routes = Router()
+
+routes.use('/admin', adminRoute)
+
+export default routes
