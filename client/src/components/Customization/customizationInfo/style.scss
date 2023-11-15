@@ -1,0 +1,8 @@
+.customization-info {
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    &-name {
+        text-transform: capitalize;
+    }
+}

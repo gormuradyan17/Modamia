@@ -4,15 +4,6 @@ class AdminController {
 
     // Colors
 
-    async getColors(req: any, res: any, next: any) {
-        try {
-            const colors = await adminService.getColors();
-            return res.json(colors);
-        } catch (error) {
-            next(error);
-        }
-    }
-
     async addColor(req: any, res: any, next: any) {
         try {
             const color = await adminService.addColor(req.body);
@@ -33,15 +24,6 @@ class AdminController {
 
     // Prints
 
-    async getPrints(req: any, res: any, next: any) {
-        try {
-            const prints = await adminService.getPrints();
-            return res.json(prints);
-        } catch (error) {
-            next(error);
-        }
-    }
-
     async addPrint(req: any, res: any, next: any) {
         try {
             const print = await adminService.addPrint(req);
@@ -61,15 +43,6 @@ class AdminController {
     }
 
     // Mannequins
-
-    async getMannequins(req: any, res: any, next: any) {
-        try {
-            const prints = await adminService.getMannequins();
-            return res.json(prints);
-        } catch (error) {
-            next(error);
-        }
-    }
 
     async addManequin(req: any, res: any, next: any) {
         try {
