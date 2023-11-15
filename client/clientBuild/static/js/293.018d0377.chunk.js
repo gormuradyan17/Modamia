@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkmodamia_app=self.webpackChunkmodamia_app||[]).push([[293],{293:(a,e,t)=>{t.r(e),t.d(e,{default:()=>s});var p=t(184);const s=()=>(0,p.jsx)("div",{children:"SilhouetteContent"})}}]);
+//# sourceMappingURL=293.018d0377.chunk.js.map
