@@ -6,7 +6,6 @@ export const getAvailableColors = createAsyncThunk(
 	COLORS_URL,
 	async () => {
 		const response = await getColors();
-		console.log('response => ', response)
 		return response.data;
 	}
 )

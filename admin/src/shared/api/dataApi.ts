@@ -15,7 +15,7 @@ import { BaseApi } from "./baseApi";
 
 export const getColors = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');
-	return http.post(COLORS_URL, body)
+	return http.get(COLORS_URL, body)
 }
 
 export const addColor = (body: Record<string, any> = {}) => {
@@ -32,7 +32,7 @@ export const updateColor = (body: Record<string, any> = {}) => {
 
 export const getPrints = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');
-	return http.post(PRINTS_URL, body)
+	return http.get(PRINTS_URL, body)
 }
 
 export const addPrint = (body: Record<string, any> = {}) => {
@@ -51,7 +51,7 @@ export const updatePrint = (body: Record<string, any> = {}) => {
 
 export const getMannequins = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');
-	return http.post(MANNEQUINS_URL, body)
+	return http.get(MANNEQUINS_URL, body)
 }
 
 export const addMannequin = (body: Record<string, any> = {}) => {
