@@ -78,7 +78,7 @@ export async function addImageProcess(printImageURL: string, imageSrc: string, c
 	await new Promise(res => {
 		img.onload = res
 	})
-	img.crossOrigin = "http://localhost:8001";
+	img.crossOrigin = "*";
 	const ctxBg = document.createElement('canvas').getContext('2d')
 	if (!ctxBg) return context.drawImage(image, 0, 0, width, height);
 	ctxBg.canvas.width = width;

@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-import { faDiceD20, faDroplet, faHome, faLayerGroup, faPalette, faPaw, faPersonDress } from '@fortawesome/free-solid-svg-icons';
+import { faChildReaching, faDiceD20, faDroplet, faHome, faLayerGroup, faPalette, faPaw, faPersonDress, faRibbon, faShirt } from '@fortawesome/free-solid-svg-icons';
 
 const AUTH = {
 	PAGE_404: lazy(() => import('pages/auth/page404/Page404')),
@@ -101,7 +101,7 @@ const CustomizeChildrens = [
 				id: 'silhouettes-top',
 				text: 'Top Silhouettes',
 				path: '/customize/silhouettes-top',
-				icon: faPalette,
+				icon: faShirt,
 				element: LANDING.CUSTOMIZE_SILHOUETTES_TOP,
 				exact: true,
 			},
@@ -109,7 +109,7 @@ const CustomizeChildrens = [
 				id: 'silhouettes-bottom',
 				text: 'Bottom Silhouettes',
 				path: '/customize/silhouettes-bottom',
-				icon: faPalette,
+				icon: faChildReaching,
 				element: LANDING.CUSTOMIZE_SILHOUETTES_BOTTOM,
 				exact: true,
 			},
@@ -117,7 +117,7 @@ const CustomizeChildrens = [
 				id: 'silhouettes-sleeve',
 				text: 'Sleeve Silhouettes',
 				path: '/customize/silhouettes-sleeve',
-				icon: faPalette,
+				icon: faRibbon,
 				element: LANDING.CUSTOMIZE_SILHOUETTES_SLEEVE,
 				exact: true,
 			},

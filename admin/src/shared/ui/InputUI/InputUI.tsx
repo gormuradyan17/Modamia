@@ -53,7 +53,7 @@ const InputUI = ({
                 id={`InputUI-${name}`}
                 name={name}
                 type={type}
-                defaultValue={value}
+                value={value}
                 onChange={callback}
                 {...(placeholder && {placeholder})}
             />

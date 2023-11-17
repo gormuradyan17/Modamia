@@ -8,6 +8,9 @@ import {
 	MANNEQUINS_URL,
 	ADD_MANNEQUIN_URL,
 	EDIT_MANNEQUIN_URL,
+	SILHOUETTES_URL,
+	ADD_SILHOUETTE_URL,
+	EDIT_SILHOUETTE_URL,
 } from "shared/constants/genericApiRoutes";
 import { BaseApi } from "./baseApi";
 
@@ -64,4 +67,23 @@ export const updateMannequin = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');
 	http.removeDefaultHeader()
 	return http.post(EDIT_MANNEQUIN_URL, body, undefined, true)
+}
+
+// Silhouette
+
+export const getSilhouettes = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.get(SILHOUETTES_URL, body)
+}
+
+export const addSilhouette = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	http.removeDefaultHeader()
+	return http.post(ADD_SILHOUETTE_URL, body, undefined, true)
+}
+
+export const updateSilhouette = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	http.removeDefaultHeader()
+	return http.post(EDIT_SILHOUETTE_URL, body, undefined, true)
 }

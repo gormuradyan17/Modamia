@@ -1,6 +1,6 @@
 .admin-aside {
     min-height: 100vh;
-    height: 100%;
+    height: auto;
     width: 60px;
     background-color: #fff;
     display: flex;
@@ -35,7 +35,7 @@
     height: 43px;
     overflow: hidden;
     &._collapsed {
-        height: 100%;
+        height: max-content;
     }
     
 }

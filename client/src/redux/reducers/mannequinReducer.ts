@@ -82,6 +82,9 @@ export const mannequinSlice = createSlice({
 		setActiveCategory: (state, action) => {
 			state.activeCategory = action.payload;
 		},
+		setMannequinLoading: (state, action) => {
+			state.loading = action.payload;
+		},
 	},
 	extraReducers: (builder) => {
 		builder
@@ -110,6 +113,7 @@ export const {
 	setActiveColor,
 	setActivePrint,
 	setActiveCategory,
+	setMannequinLoading
 } = mannequinSlice.actions;
 
 export const availableMannequins = (state: ObjectType) => state.mannequinReducer.mannequins;
@@ -118,5 +122,6 @@ export const getActiveMannequin = (state: ObjectType) => state.mannequinReducer.
 export const getMannequinActiveColor = (state: ObjectType) => state.mannequinReducer.activeColor;
 export const getMannequinActivePrint = (state: ObjectType) => state.mannequinReducer.activePrint;
 export const getMannequinActiveCategory = (state: ObjectType) => state.mannequinReducer.activeCategory;
+export const getMannequinLoading = (state: ObjectType) => state.mannequinReducer.loading;
 
 export default mannequinSlice.reducer;

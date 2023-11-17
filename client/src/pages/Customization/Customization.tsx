@@ -18,10 +18,13 @@ import {
 	availableMannequins,
 	getMannequinActiveCategory,
 	getMannequinActiveColor,
-	getMannequinActivePrint
+	getMannequinActivePrint,
+	getMannequinLoading,
+	setMannequinLoading
 } from "redux/reducers/mannequinReducer";
 import {getAvMannequins} from "services/mannequinService";
 import {ArrayType} from "../../shared/helpers/helpers";
+import CustomizationLoader from "components/Customization/customizationLoader/CustomizationLoader";
 
 const Customization = () => {
 	const [activeOptions, setActiveOptions] = useState<Record<string, any>[]>([]);
@@ -29,6 +32,7 @@ const Customization = () => {
 	const activeColor = useSelector(getMannequinActiveColor)
 	const activePrint = useSelector(getMannequinActivePrint)
 	const activeCategory = useSelector(getMannequinActiveCategory)
+	const isLoading = useSelector(getMannequinLoading)
 	const dispatch = useDispatch()
 	const [modelData, setModelData] = useState(getModelData())
 	// const [subTabs, setSubTabs] = useState<Record<string, string | boolean>[]>([
@@ -41,7 +45,8 @@ const Customization = () => {
 	const [rangeValue, setRangeValue] = useState<number>(0.1);
 	
 	const canvasModelInit = (num: number, modData: ArrayType) => {
-		if (!canvasRef.current) return;
+		if (!canvasRef.current || !mannequins?.length) return;
+		dispatch(setMannequinLoading(true))
 		const canvas = canvasRef.current;
 		canvas.width = width;
 		canvas.height = height;
@@ -60,20 +65,22 @@ const Customization = () => {
 					await addModel(modData[i].src, '', ctx, width, height);
 				}
 			}
-			// console.log(modData);
+			await dispatch(setMannequinLoading(false))
 		};
 	};
 	
 	useEffect(() => {
 		getAvMannequins(dispatch)
 	}, [])
+
+	useEffect(() => {
+		console.log('isLoading => ', isLoading)
+	},[isLoading])
 	
 	useEffect(() => {
 		if (mannequins?.length) {
 			canvasModelInit(rangeValue, modelData);
 			// canvasModelInit(rangeValue, getModelData(activeColor, activePrint));
-			console.log('+++++++++++');
-			console.log(modelData);
 		}
 	}, [mannequins, modelData]);
 	
@@ -83,7 +90,6 @@ const Customization = () => {
 		canvasModelInit(rangeValue, getModelData(activeColor, activePrint, activeCategory));
 		setModelData(getModelData(activeColor, activePrint, activeCategory))
 		// }
-		console.log('----------');
 	}, [activeColor, activePrint, activeCategory])
 	
 	// function changRange(e: ChangeEvent<HTMLInputElement>) {
@@ -100,28 +106,17 @@ const Customization = () => {
 	return (
 		<Container>
 			<div className="customization">
-				<canvas className="canvas" id="canvas" ref={canvasRef}></canvas>
+				<div className="customization-body">
+					{isLoading && <CustomizationLoader />}
+					<canvas className="canvas" id="canvas" ref={canvasRef}></canvas>
+				</div>
 				<div className="customization-body">
 					<CustomizationInfo infoData={infoData}/>
 					<CustomizationFeatures/>
 				</div>
+			{/* <input type="range" min="0.01" max="1" step="0.01" value={rangeValue} onChange={changRange}/> */}
 				
-				{/* <div>
-				<div className="models-tab">
-				{tabs.map((tab, index) => (
-					<div key={index} className={`tab-item ${tab.isActive ? "active" : ""}`}>
-					{tab.label}
-						</div>
-						))}
-						</div>
-				<div className="models-subTab">
-					{subTabs.map((subTab, index) => (
-						<div key={index} className={`subTab-item ${subTab.isActive ? "active" : ""}`}>{subTab.label}</div>
-						))}
-						</div>
-						</div>
 						
-					<input type="range" min="0.01" max="1" step="0.01" value={rangeValue} onChange={changRange}/> */}
 			</div>
 		</Container>
 	);

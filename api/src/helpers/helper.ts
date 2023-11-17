@@ -23,3 +23,10 @@ export const createMannequinsDirsIfNotExists = async () => {
     if (!fs.existsSync(path.join(__dirname, '../../uploads/mannequins/fronts'))) await fs.mkdirSync(path.join(__dirname, '../../uploads/mannequins/fronts'), { recursive: true });
     if (!fs.existsSync(path.join(__dirname, '../../uploads/mannequins/backs'))) await fs.mkdirSync(path.join(__dirname, '../../uploads/mannequins/backs'), { recursive: true });
 }
+
+export const createSilhouettesDirsIfNotExists = async () => {
+    if (!fs.existsSync(path.join(__dirname, '../../uploads/silhouettes'))) await fs.mkdirSync(path.join(__dirname, '../../uploads/silhouettes'), { recursive: true });
+    if (!fs.existsSync(path.join(__dirname, '../../uploads/silhouettes/tops'))) await fs.mkdirSync(path.join(__dirname, '../../uploads/silhouettes/tops'), { recursive: true });
+    if (!fs.existsSync(path.join(__dirname, '../../uploads/silhouettes/bottoms'))) await fs.mkdirSync(path.join(__dirname, '../../uploads/silhouettes/bottoms'), { recursive: true });
+    if (!fs.existsSync(path.join(__dirname, '../../uploads/silhouettes/sleeves'))) await fs.mkdirSync(path.join(__dirname, '../../uploads/silhouettes/sleeves'), { recursive: true });
+}
