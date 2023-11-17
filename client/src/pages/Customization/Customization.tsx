@@ -45,7 +45,7 @@ const Customization = () => {
 	const [rangeValue, setRangeValue] = useState<number>(0.1);
 	
 	const canvasModelInit = (num: number, modData: ArrayType) => {
-		if (!canvasRef.current || !mannequins?.length) return;
+		if (!canvasRef.current) return;
 		dispatch(setMannequinLoading(true))
 		const canvas = canvasRef.current;
 		canvas.width = width;
@@ -73,10 +73,6 @@ const Customization = () => {
 		getAvMannequins(dispatch)
 	}, [])
 
-	useEffect(() => {
-		console.log('isLoading => ', isLoading)
-	},[isLoading])
-	
 	useEffect(() => {
 		if (mannequins?.length) {
 			canvasModelInit(rangeValue, modelData);
