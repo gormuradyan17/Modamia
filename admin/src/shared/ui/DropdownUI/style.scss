@@ -1,0 +1,78 @@
+@use 'variables';
+
+.DropdownUI {
+    z-index: 10;
+    width: 100%;
+    position: relative;
+    margin: 0 auto;
+    margin-bottom: 10px;
+
+    &__button {
+        font-weight: 700;
+        font-size: 18px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: #777;
+        padding: 10px 15px;
+        border-radius: 5px;
+        height: 30px;
+        border: 1px solid variables.$appColor;
+        background-color: #fff;
+
+        &._active {
+            box-shadow: 0 2px 3px 0 rgba(34, 36, 38, .15);
+            border-bottom-color: #fff;
+        }
+        &._error {
+            border: 1px solid red;
+            animation: shake 0.2s ease-in-out 0s 2;
+        }
+    
+        &._errorShake {
+            animation: shake 0.2s ease-in-out 0s 2;
+        }
+    }
+
+    &__option {
+        cursor: pointer;
+        padding: 10px 15px;
+        color: variables.$appColor;
+        background-color: #f9f1f1;
+        font-size: 16px;
+        user-select: none;
+        transition: .3s all ease 0s;
+
+        &:hover {
+            background-color: #fff;
+        }
+    }
+
+    &__icon {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    &._disabled {
+        .DropdownUI__button {
+            border-color: lightgray;
+            opacity: .5;
+        }
+    }
+}
+
+.DropdownUI__content {
+    box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    z-index: 1000;
+    border: 1px solid variables.$appColor;
+    display: none;
+
+    &._active {
+        box-shadow: 0 2px 3px 0 rgba(34, 36, 38, .15);
+        display: block;
+    }
+}

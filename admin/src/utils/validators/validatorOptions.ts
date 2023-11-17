@@ -41,3 +41,25 @@ export const mannequinFilesOptions = {
         {rule: { test: /^$|\.jpe?g$|\.png$|\.webp$|\.bmp$/i }, error: {message: 'Incorrect format for Back Url'} }
     ]
 }
+
+
+export const silhouetteFormOptions = {
+    name: [
+        {rule: { required : true }, error: {message: 'Name is required'} },
+    ],
+    price: [
+        {rule: { required : true }, error: {message: 'Price is required'} },
+    ],
+    type: [
+        {rule: { required : true }, error: {message: 'Type is required'} },
+    ],
+    orientation: [
+        {rule: { required : true }, error: {message: 'Orientation is required'} },
+    ]
+}
+
+export const silhouetteFilesOptions = {
+    silhouetteurl: [
+        {rule: { test: /^$|\.jpe?g$|\.png$|\.webp$|\.bmp$/i }, error: {message: 'Incorrect format for Silhouette Url'} }
+    ]
+}

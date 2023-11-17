@@ -28,6 +28,15 @@ class PublicController {
             next(error);
         }
     }
+
+    async getSilhouettes(req: any, res: any, next: any) {
+        try {
+            const prints = await publicService.getSilhouettes();
+            return res.json(prints);
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 export default new PublicController()

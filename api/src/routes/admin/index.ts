@@ -16,4 +16,9 @@ router.post('/edit-print', adminController.editPrint)
 router.post('/add-mannequin', adminController.addManequin)
 router.post('/edit-mannequin', adminController.editMannequin)
 
+// Silhouettes
+
+router.post('/add-silhouette', adminController.addSilhouette)
+router.post('/edit-silhouette', adminController.editSilhouette)
+
 export default router

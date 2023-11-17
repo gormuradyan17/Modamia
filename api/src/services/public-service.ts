@@ -1,6 +1,7 @@
 import ColorModel from '../models/Color'
 import PrintMotel from '../models/Print'
 import MannequinModel from '../models/Mannequin'
+import SilhouetteModel from '../models/Silhouette'
 
 class PublicService {
 
@@ -17,6 +18,11 @@ class PublicService {
     async getMannequins() {
         const mannequins = await MannequinModel.find({});
         return mannequins;
+    }
+
+    async getSilhouettes() {
+        const silhouettes = await SilhouetteModel.find({});
+        return silhouettes;
     }
 
 }

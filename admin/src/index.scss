@@ -1,4 +1,5 @@
 @import "fonts.css";
+$appColor: #aa8a75;
 
 body {
   margin: 0;
@@ -26,6 +27,7 @@ code {
 .error-message {
   font-size: 14px;
   margin-bottom: 3px;
+  display: block;
   color: red;
   font-family: Poppins-SemiBold;
   animation: shake 0.2s ease-in-out 0s 2;
@@ -46,4 +48,25 @@ code {
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   white-space: nowrap !important;
+}
+
+.customXScrollbar {
+  &::-webkit-scrollbar-track {
+    border: 3px solid #fff;
+    background-color: $appColor;
+  }
+
+  &::-webkit-scrollbar {
+    height: 6px;
+    background-color: $appColor;
+
+    &:hover, &:focus, &:active {
+      background-color: $appColor;
+    }
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $appColor;
+    border-radius: 10px;
+  }
 }

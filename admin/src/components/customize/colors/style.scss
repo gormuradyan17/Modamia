@@ -1,6 +1,8 @@
 $colorFill: var(--colorFill);
 @use 'variables';
-
+.new-color {
+    position: relative;
+}
 .new-color-actions {
     margin-top: 20px;
     width: 100%;
@@ -44,4 +46,10 @@ $colorFill: var(--colorFill);
 .color-button {
     padding: 10px 15px !important;
     min-height: 15px !important;
+}
+
+.new-color-btn {
+    position: absolute;
+    right: 0;
+    z-index: 1;
 }

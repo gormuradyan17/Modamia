@@ -1,4 +1,4 @@
-import { CSSProperties, useState } from "react";
+import { CSSProperties, useEffect, useState } from "react";
 import { ArrayType, ObjectType } from "shared/helpers/helpers";
 import { ButtonUI } from "shared/ui/ButtonUI/ButtonUI";
 import HeadingUI from "shared/ui/HeadingUI/HeadingUI";
@@ -26,11 +26,13 @@ const ColorsList = ({
 
     const [isVisible, setIsVisible] = useState<boolean>(false)
     const [editableColor, setEditableColor] = useState<ObjectType>({})
+    const [colorInfo, setColorInfo] = useState<ObjectType>({})
     const [errors, setErrors] = useState<ObjectType>({})
     
     const editColor = (color: ObjectType) => {
         if (color) {
             setEditableColor(color)
+            setColorInfo(color)
             setIsVisible(true)   
         }
     }
@@ -38,6 +40,7 @@ const ColorsList = ({
     const closePopup = () => {
         setIsVisible(false)
         setEditableColor({})
+        setColorInfo({})
         setErrors({})
     }
 
@@ -70,6 +73,7 @@ const ColorsList = ({
                     callback={saveColor}
                     closePopup={closePopup}
                     color={editableColor}
+                    defaultColor={colorInfo}
                     errors={errors}
                     setColor={setEditableColor}
                 />

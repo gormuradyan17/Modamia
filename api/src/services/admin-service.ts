@@ -1,20 +1,17 @@
 import path from 'path';
-import { createPrintsDirsIfNotExists, getFileOriginalMimeType, createMannequinsDirsIfNotExists } from '../helpers/helper';
+import { createPrintsDirsIfNotExists, getFileOriginalMimeType, createMannequinsDirsIfNotExists, createSilhouettesDirsIfNotExists } from '../helpers/helper';
 import ColorModel, { ColorInterface } from '../models/Color'
 import PrintMotel from '../models/Print'
 import MannequinModel from '../models/Mannequin'
+import SilhouetteModel from '../models/Silhouette'
 // const ApiError = require('../exceptions/api-error')
 import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs'
+import mongoose from 'mongoose';
 
 class AdminService {
 
     // Colors 
-
-    async getColors() {
-        const colors = await ColorModel.find({});
-        return colors;
-    }
 
     async addColor(req: ColorInterface) {
         try {
@@ -34,19 +31,14 @@ class AdminService {
 
     async editColor(req: Record<string, any>) {
         try {
-            const query = {'_id': req._id};
-            return await ColorModel.findOneAndUpdate(query, req, {upsert: true});
+            const query = { '_id': req._id };
+            return await ColorModel.findOneAndUpdate(query, req, { upsert: true });
         } catch (error) {
             console.log(error)
         }
     }
 
     // Prints
-
-    async getPrints() {
-        const prints = await PrintMotel.find({});
-        return prints;
-    }
 
     async addPrint(req: any) {
         try {
@@ -69,10 +61,10 @@ class AdminService {
                 fs.writeFileSync(filePath, previewurl.data);
             }
             const print = await PrintMotel.create({
-                name, 
-                price, 
-                tags, 
-                highresurl: highImage, 
+                name,
+                price,
+                tags,
+                highresurl: highImage,
                 previewurl: previewImage
             })
             return print;
@@ -102,14 +94,14 @@ class AdminService {
                 const filePath = path.join(__dirname, '../../uploads/prints/previews', previewImage);
                 fs.writeFileSync(filePath, previewurl.data);
             }
-            const query = {'_id': _id};
+            const query = { '_id': _id };
             return await PrintMotel.findOneAndUpdate(query, {
-                name, 
-                price, 
-                tags, 
-                ...(highImage && {highresurl: highImage}),
-                ...(previewImage && {previewurl: previewImage})
-            }, {upsert: true});
+                name,
+                price,
+                tags,
+                ...(highImage && { highresurl: highImage }),
+                ...(previewImage && { previewurl: previewImage })
+            }, { upsert: true });
 
         } catch (error) {
             console.log(error)
@@ -117,11 +109,6 @@ class AdminService {
     }
 
     // Mannequins
-
-    async getMannequins() {
-        const mannequins = await MannequinModel.find({});
-        return mannequins;
-    }
 
     async addMannequin(req: any) {
         try {
@@ -144,8 +131,8 @@ class AdminService {
                 fs.writeFileSync(filePath, backurl.data);
             }
             const mannequin = await MannequinModel.create({
-                name, 
-                fronturl: frontImage, 
+                name,
+                fronturl: frontImage,
                 backurl: backImage
             })
             return mannequin;
@@ -175,13 +162,103 @@ class AdminService {
                 const filePath = path.join(__dirname, '../../uploads/mannequins/backs', backImage);
                 fs.writeFileSync(filePath, backurl.data);
             }
-            const query = {'_id': _id};
+            const query = { '_id': _id };
             return await MannequinModel.findOneAndUpdate(query, {
-                name, 
-                ...(frontImage && {fronturl: frontImage}),
-                ...(backImage && {backurl: backImage})
-            }, {upsert: true});
+                name,
+                ...(frontImage && { fronturl: frontImage }),
+                ...(backImage && { backurl: backImage })
+            }, { upsert: true });
 
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    // Silhouettes
+
+    async addSilhouette(req: any) {
+        try {
+            const { name, price, tags = '', type, orientation } = req.body
+            const { silhouetteurl } = req.files || {}
+            let silhouetteImage = ''
+            await createSilhouettesDirsIfNotExists()
+            if (silhouetteurl) {
+                const newName = uuidv4()
+                const fileType = getFileOriginalMimeType(silhouetteurl.data)
+                silhouetteImage = newName + fileType
+                const pathName = type.toLowerCase() + 's'
+                const filePath = path.join(__dirname, `../../uploads/silhouettes/${pathName}`, silhouetteImage);
+                fs.writeFileSync(filePath, silhouetteurl.data);
+            }
+            const silhouette = await SilhouetteModel.create({
+                name,
+                price,
+                tags,
+                type,
+                orientation,
+                silhouetteurl: silhouetteImage,
+            })
+            return silhouette;
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async editSilhouette(req: Record<string, any>) {
+        try {
+            const { name, price, tags = '', type, orientation, silhouetteurl: silhouetteurlB, _id } = req.body
+            const { silhouetteurl } = req.files || {}
+            let silhouetteImage = ''
+            await createSilhouettesDirsIfNotExists()
+            const currentSilhouette = await SilhouetteModel.findById(_id)
+
+            if (currentSilhouette) {
+                const currentUrl = currentSilhouette?.silhouetteurl;
+                const currentType = currentSilhouette?.type;
+                const query = { '_id': _id };
+
+                if (!silhouetteurl && currentType !== type) {
+                    const newType = type.toLowerCase() + 's'
+                    const oldType = currentType.toLowerCase() + 's'
+                    const oldFilePath = path.join(__dirname, `../../uploads/silhouettes/${oldType}`, currentUrl);
+                    const newFilePath = path.join(__dirname, `../../uploads/silhouettes/${newType}`, currentUrl);
+                    fs.rename(oldFilePath, newFilePath, (err) => {
+                        if (err) throw err
+                    })
+                    return await SilhouetteModel.findOneAndUpdate(query, {
+                        name, 
+                        price, 
+                        tags, 
+                        type, 
+                        orientation,
+                    }, { upsert: true });
+                }
+                if (silhouetteurl) {
+                    const newName = uuidv4()
+                    const fileType = getFileOriginalMimeType(silhouetteurl.data)
+                    silhouetteImage = newName + fileType
+                    const pathName = type.toLowerCase() + 's'
+                    const filePath = path.join(__dirname, `../../uploads/silhouettes/${pathName}`, silhouetteImage);
+                    fs.writeFileSync(filePath, silhouetteurl.data);
+                    return await SilhouetteModel.findOneAndUpdate(query, {
+                        name, 
+                        price, 
+                        tags, 
+                        type, 
+                        orientation,
+                        ...(silhouetteImage && { silhouetteurl: silhouetteImage }),
+                    }, { upsert: true });
+                }
+                return await SilhouetteModel.findOneAndUpdate(query, {
+                    name, 
+                    price, 
+                    tags, 
+                    type, 
+                    orientation,
+                }, { upsert: true });
+            }
+            return false
         } catch (error) {
             console.log(error)
         }

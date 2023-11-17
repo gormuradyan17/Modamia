@@ -62,6 +62,26 @@ class AdminController {
         }
     }
 
+    // Mannequins
+
+    async addSilhouette(req: any, res: any, next: any) {
+        try {
+            const print = await adminService.addSilhouette(req);
+            return res.json(print);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async editSilhouette(req: any, res: any, next: any) {
+        try {
+            const print = await adminService.editSilhouette(req);
+            return res.json(print);
+        } catch (error) {
+            next(error);
+        }
+    }
+
 }
 
 export default new AdminController()

@@ -5,13 +5,15 @@ import HeadingUI from "shared/ui/HeadingUI/HeadingUI";
 import InputUI from "shared/ui/InputUI/InputUI";
 import './style.scss'
 import { ObjectType } from "shared/helpers/helpers";
+import ColorPickerUI from "shared/ui/ColorPickerUI/ColorPickerUI";
 
 interface Props {
     callback: CallbackSkeletonType,
     closePopup: CallbackSkeletonType,
     color: ObjectType,
     setColor: CallbackSkeletonType,
-    errors: ObjectType
+    errors: ObjectType,
+    defaultColor: ObjectType,
 }
 
 const EditColor = ({
@@ -19,7 +21,8 @@ const EditColor = ({
     closePopup,
     color,
     setColor,
-    errors
+    errors,
+    defaultColor
 }: Props) => {
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -27,9 +30,17 @@ const EditColor = ({
         setColor({...color, [name]: value})
     }
 
+    const changeColor = (obj: ObjectType) => {
+        setColor({
+            ...color,
+            ...obj
+        })
+    }
+
     return (
         <div className="new-color">
-            <HeadingUI text="Add new color" align="center" color="#aa8a75" />
+            <HeadingUI text={`Edit ${defaultColor.name} color`} align="center" color="#aa8a75" />
+            <ColorPickerUI classN="new-color-btn" callback={changeColor} />
             <div className="new-color-inputs">
                 <InputUI
                     placeholder="Name"

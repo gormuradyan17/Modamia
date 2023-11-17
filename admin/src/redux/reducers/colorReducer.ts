@@ -34,6 +34,9 @@ export const colorSlice = createSlice({
 			const {name, value} = action.payload
 			state.colorState[name] = value;
 		},
+		setColorFullState: (state, action) => {
+			state.colorState = action.payload;
+		},
 		resetColorState: (state) => {
 			state.colorState = defaultColorState
 		}
@@ -57,7 +60,7 @@ export const colorSlice = createSlice({
 	},
 });
 
-export const { setColorData, setColorState, resetColorState } = colorSlice.actions;
+export const { setColorData, setColorState, resetColorState, setColorFullState } = colorSlice.actions;
 
 export const availableColors = (state: ObjectType) => state.colorReducer.colors;
 export const colorDetails = (state: ObjectType) => state.colorReducer.colorState;

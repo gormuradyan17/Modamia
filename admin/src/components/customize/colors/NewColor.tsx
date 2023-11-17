@@ -1,12 +1,13 @@
-import { ChangeEvent } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import { CallbackSkeletonType } from "shared/objectModels/GenericModel";
 import { ButtonUI } from "shared/ui/ButtonUI/ButtonUI";
 import HeadingUI from "shared/ui/HeadingUI/HeadingUI";
 import InputUI from "shared/ui/InputUI/InputUI";
 import './style.scss'
-import { colorDetails, setColorState } from "redux/reducers/colorReducer";
+import { colorDetails, setColorFullState, setColorState } from "redux/reducers/colorReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { ObjectType } from "shared/helpers/helpers";
+import ColorPickerUI from "shared/ui/ColorPickerUI/ColorPickerUI";
 
 interface Props {
     callback: CallbackSkeletonType,
@@ -28,9 +29,17 @@ const NewColor = ({
         dispatch(setColorState({ name, value }))
     }
 
+    const changeColor = (obj: ObjectType) => {
+        dispatch(setColorFullState({
+            ...cDetails,
+            ...obj
+        }))
+    }
+   
     return (
         <form onSubmit={callback} className="new-color">
             <HeadingUI text="Add new color" align="center" color="#aa8a75" />
+            <ColorPickerUI classN="new-color-btn" callback={changeColor} />
             <div className="new-color-inputs">
                 <InputUI
                     placeholder="Name"
