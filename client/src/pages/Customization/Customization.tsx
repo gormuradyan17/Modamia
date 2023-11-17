@@ -45,7 +45,7 @@ const Customization = () => {
 	const [rangeValue, setRangeValue] = useState<number>(0.1);
 	
 	const canvasModelInit = (num: number, modData: ArrayType) => {
-		if (!canvasRef.current) return;
+		if (!canvasRef.current || !mannequins?.length) return;
 		dispatch(setMannequinLoading(true))
 		const canvas = canvasRef.current;
 		canvas.width = width;
@@ -83,8 +83,8 @@ const Customization = () => {
 	useEffect(() => {
 		// if (mannequins?.length) {
 		// canvasModelInit(rangeValue, modelData);
-		canvasModelInit(rangeValue, getModelData(activeColor, activePrint, activeCategory));
 		setModelData(getModelData(activeColor, activePrint, activeCategory))
+		canvasModelInit(rangeValue, getModelData(activeColor, activePrint, activeCategory));
 		// }
 	}, [activeColor, activePrint, activeCategory])
 	
