@@ -18,11 +18,11 @@ const PrintContent = () => {
     }, [])
 
     const updateActivePrint = (print: ObjectType) => {
-        // const obj = {
-        //     highresurl: `${BASE_UPLOADS_PRINTS_HIGHS_URL}${print.highresurl}`,
-        //     previewurl: `${BASE_UPLOADS_PRINTS_PREVIEWS_URL}${print.previewurl}`
-        // }
-        // dispatch(setActivePrint(obj))
+        const obj = {
+            highresurl: `${BASE_UPLOADS_PRINTS_HIGHS_URL}${print.highresurl}`,
+            previewurl: `${BASE_UPLOADS_PRINTS_PREVIEWS_URL}${print.previewurl}`
+        }
+        dispatch(setActivePrint(obj))
     }
 
     return (

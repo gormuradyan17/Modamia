@@ -62,7 +62,7 @@ const bottomModels = [
 ];
 
 export const modelData = [
-	{src: B_I2, color: '#17d011', printImageURL: B_G2},
-	{src: T_I4, color: '#17d011', printImageURL: B_G3},
+	{src: B_I2, color: '#cb0e2a', printImageURL: B_G2},
+	{src: T_I4, color: '#2e1', printImageURL: B_G3},
 	// {src: S_I2, color: '#17d011', printImageURL: B_G3}
 ]

@@ -20,7 +20,8 @@ interface stateProps {
 	mannequinState: MannequinStateInterface,
 	activeMannequin: MannequinInterface,
 	activeColor: string,
-	activePrint: MannequinPrintInterface
+	activePrint: MannequinPrintInterface,
+	activeCategory: string
 }
 
 export const defaultMannequinState: MannequinStateInterface = {
@@ -36,6 +37,7 @@ export const defaultMannequinState: MannequinStateInterface = {
 		highresurl: '',
 		previewurl: ''
 	},
+	activeCategory: ''
 }
 
 const initialState: stateProps = {
@@ -51,6 +53,7 @@ const initialState: stateProps = {
 		highresurl: '',
 		previewurl: ''
 	},
+	activeCategory: 'color'
 }
 
 export const mannequinSlice = createSlice({
@@ -75,6 +78,9 @@ export const mannequinSlice = createSlice({
 		},
 		setActivePrint: (state, action) => {
 			state.activePrint = action.payload;
+		},
+		setActiveCategory: (state, action) => {
+			state.activeCategory = action.payload;
 		},
 	},
 	extraReducers: (builder) => {
@@ -103,6 +109,7 @@ export const {
 	setActiveMannequin,
 	setActiveColor,
 	setActivePrint,
+	setActiveCategory,
 } = mannequinSlice.actions;
 
 export const availableMannequins = (state: ObjectType) => state.mannequinReducer.mannequins;
@@ -110,5 +117,6 @@ export const mannequinDetails = (state: ObjectType) => state.mannequinReducer.ma
 export const getActiveMannequin = (state: ObjectType) => state.mannequinReducer.activeMannequin;
 export const getMannequinActiveColor = (state: ObjectType) => state.mannequinReducer.activeColor;
 export const getMannequinActivePrint = (state: ObjectType) => state.mannequinReducer.activePrint;
+export const getMannequinActiveCategory = (state: ObjectType) => state.mannequinReducer.activeCategory;
 
 export default mannequinSlice.reducer;
