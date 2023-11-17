@@ -12,7 +12,6 @@ const PrintContent = () => {
 
     const prints = useSelector(availablePrints)
     const dispatch = useDispatch()
-
     useEffect(() => {
         getAvPrints(dispatch)
     }, [])
