@@ -34,7 +34,6 @@ const Customization = () => {
 	const activeCategory = useSelector(getMannequinActiveCategory)
 	const isLoading = useSelector(getMannequinLoading)
 	const dispatch = useDispatch()
-	const [modelData, setModelData] = useState(getModelData())
 	// const [subTabs, setSubTabs] = useState<Record<string, string | boolean>[]>([
 	// 	{ label: "All Over", isActive: true },
 	// 	{ label: "Top", isActive: false },
@@ -50,12 +49,12 @@ const Customization = () => {
 		const canvas = canvasRef.current;
 		canvas.width = width;
 		canvas.height = height;
-		const ctx = canvasRef.current?.getContext("2d");
+		let ctx = canvasRef.current?.getContext("2d");
 		const img = new Image();
 		img.src = `${BASE_UPLOADS_MANNEQUINS_FRONTS_URL}${mannequins?.[1]?.fronturl}`
 		// img.src = M_I;
 		img.onload = async () => {
-			ctx?.drawImage(img, 0, 0, width, height);
+			await ctx?.drawImage(img, 0, 0, width, height);
 			for (let i = 0; i < modData.length; i++) {
 				if (modData[i].category === 'color') {
 					await addModel(modData[i].src, modData[i].color, ctx, width, height);
@@ -76,18 +75,22 @@ const Customization = () => {
 
 	useEffect(() => {
 		if (mannequins?.length) {
-			canvasModelInit(rangeValue, modelData);
+			const drawManequin = async () => {
+				const data = await getModelData(activeColor, activePrint, activeCategory)
+				await canvasModelInit(rangeValue, data);
+			}
+			drawManequin()
 			// canvasModelInit(rangeValue, getModelData(activeColor, activePrint));
 		}
-	}, [mannequins, modelData]);
+	}, [mannequins, activeColor, activePrint, activeCategory]);
 	
-	useEffect(() => {
-		// if (mannequins?.length) {
-		// canvasModelInit(rangeValue, modelData);
-		setModelData(getModelData(activeColor, activePrint, activeCategory))
-		canvasModelInit(rangeValue, getModelData(activeColor, activePrint, activeCategory));
-		// }
-	}, [activeColor, activePrint, activeCategory])
+	// useEffect(() => {
+	// 	// if (mannequins?.length) {
+	// 	// canvasModelInit(rangeValue, modelData);
+	// 	canvasModelInit(rangeValue, getModelData(activeColor, activePrint, activeCategory));
+	// 	// setModelData(getModelData(activeColor, activePrint, activeCategory))
+	// 	// }
+	// }, [activeColor, activePrint, activeCategory])
 	
 	// function changRange(e: ChangeEvent<HTMLInputElement>) {
 	// console.log(e.target.value);
