@@ -114,7 +114,7 @@ const NewSilhouette = ({
                     label="Silhouette type*"
                     error={errors?.type?.message || ''}
                     {...(selectedType && {defaultValue: selectedType})}
-                    disabled={true}
+                    disabled={!!selectedType}
                 />
                 <DropdownUI 
                     options={silhouetteOrientationOptions} 
