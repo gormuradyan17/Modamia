@@ -4,10 +4,12 @@ import { ButtonUI } from "shared/ui/ButtonUI/ButtonUI";
 import HeadingUI from "shared/ui/HeadingUI/HeadingUI";
 import InputUI from "shared/ui/InputUI/InputUI";
 import './style.scss'
-import { colorDetails, setColorFullState, setColorState } from "redux/reducers/colorReducer";
+import { colorDetails, colorsVariants, setColorFullState, setColorState } from "redux/reducers/colorReducer";
 import { useDispatch, useSelector } from "react-redux";
-import { ObjectType } from "shared/helpers/helpers";
+import { ObjectType, getDropdownOptionsFromItemsVariants } from "shared/helpers/helpers";
 import ColorPickerUI from "shared/ui/ColorPickerUI/ColorPickerUI";
+import DropdownUI from "shared/ui/DropdownUI/DropdownUI";
+import NewColorVariant from "./NewColorVariant";
 
 interface Props {
     callback: CallbackSkeletonType,
@@ -23,6 +25,7 @@ const NewColor = ({
 
     const dispatch = useDispatch()
     const cDetails = useSelector(colorDetails)
+    const colorVariants = getDropdownOptionsFromItemsVariants(useSelector(colorsVariants)) || [{}]
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { target: { name, value } } = event
@@ -35,7 +38,12 @@ const NewColor = ({
             ...obj
         }))
     }
-   
+
+    const handleDropdownChange = (data: ObjectType) => {
+        const value = data.id
+        dispatch(setColorState({ name: 'colorVariant', value }))
+    }
+
     return (
         <form onSubmit={callback} className="new-color">
             <HeadingUI text="Add new color" align="center" color="#aa8a75" />
@@ -71,6 +79,14 @@ const NewColor = ({
                     name="tags"
                     callback={handleInputChange}
                 />
+                <div className="new-color-variants">
+                    <NewColorVariant />
+                    <DropdownUI
+                        options={colorVariants}
+                        onChange={(data) => handleDropdownChange(data)}
+                        label="Color type"
+                    />
+                </div>
             </div>
             <div className="new-color-actions">
                 <ButtonUI onClick={() => closePopup()} version="gray">Close</ButtonUI>

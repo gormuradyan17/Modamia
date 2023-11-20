@@ -6,12 +6,10 @@ import useClickOutSide from 'utils/hooks/useClickOutside';
 import HeadingUI from '../HeadingUI/HeadingUI';
 import ReactPortal from 'layout/ReactPortal/ReactPortal';
 
-type OptionItem = { id?: any; text?: string | number, value?: any }
-
 interface DropdownPropsi {
     text?: string | number;
-    onChange: (data: OptionItem) => void
-    options: OptionItem[];
+    onChange: (data?: any) => void
+    options: any;
     classN?: string;
     label?: string;
     error?: string,
@@ -91,7 +89,7 @@ const DropdownUI = ({
                     ref={contentRef}
                 >
                     {Boolean(options?.length) &&
-                        options?.map(({ id, text, value }, index) => (
+                        options?.map(({ id, text, value }: any, index: number) => (
                             <div
                                 key={id}
                                 onClick={(event) => handleClick(event, index)}

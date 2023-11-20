@@ -5,6 +5,7 @@ export interface ColorInterface {
   hexcode: string,
   pantonecode?: string,
   tags?: string,
+  colorVariant?: string,
 }
 
 const ColorSchema: ColorInterface = new mongoose.Schema(
@@ -26,6 +27,10 @@ const ColorSchema: ColorInterface = new mongoose.Schema(
       type: String,
       required: false,
     },
+    colorVariant: {
+      type: String,
+      required: false,
+    }
   },
   { timestamps: true }
 );

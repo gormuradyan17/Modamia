@@ -1,8 +1,8 @@
 import { ChangeEvent, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getAvPrints } from 'services/printService';
 import { addPrint } from 'shared/api/dataApi';
-import { ArrayType, ObjectType, appColor } from 'shared/helpers/helpers';
+import { ArrayType, ObjectType, appColor, getDropdownOptionsFromItemsVariants } from 'shared/helpers/helpers';
 import { CallbackSkeletonType } from 'shared/objectModels/GenericModel';
 import { ButtonUI } from 'shared/ui/ButtonUI/ButtonUI';
 import DropzoneUI from 'shared/ui/DropzoneUI/DropzoneUI';
@@ -10,6 +10,9 @@ import HeadingUI from 'shared/ui/HeadingUI/HeadingUI';
 import InputUI from 'shared/ui/InputUI/InputUI';
 import { formValidator } from 'utils/validators/validator';
 import { printFilesOptions, printFormOptions } from 'utils/validators/validatorOptions';
+import NewPrintVariant from './NewPrintVariant';
+import DropdownUI from 'shared/ui/DropdownUI/DropdownUI';
+import { printsVariants } from 'redux/reducers/printReducer';
 
 interface Props {
     closePopup: CallbackSkeletonType,
@@ -19,12 +22,16 @@ const NewPrint = ({
     closePopup,
 }: Props) => {
     const dispatch = useDispatch()
+
+    const printVariants = getDropdownOptionsFromItemsVariants(useSelector(printsVariants)) || [{}]
+
     const [data, setData] = useState<ObjectType>({
         name: '',
         price: '',
         tags: '',
         highresurl: '',
-        previewurl: ''
+        previewurl: '',
+        colorVariant: ''
     })
     const [errors, setErrors] = useState<ObjectType>({})
     const [fileErrors, setFileErrors] = useState<ObjectType>({})
@@ -72,6 +79,11 @@ const NewPrint = ({
         return true
     }
 
+    const handleDropdownChange = (dataT: ObjectType) => {
+        const value = dataT.id
+        setData({ ...data, printVariant: value })
+    }
+
     return (
         <form onSubmit={addNewPrint} className="new-print">
             <HeadingUI text="Add new print" align="center" color={appColor} />
@@ -100,6 +112,14 @@ const NewPrint = ({
                     name="tags"
                     callback={handleInputChange}
                 />
+                <div className="new-color-variants">
+                    <NewPrintVariant />
+                    <DropdownUI
+                        options={printVariants}
+                        onChange={(data) => handleDropdownChange(data)}
+                        label="Print type"
+                    />
+                </div>
                 <div className="new-print-zone">
                     <HeadingUI text='High res image' size='18px' color={appColor} />
                     <DropzoneUI

@@ -7,7 +7,7 @@ import HeadingUI from "shared/ui/HeadingUI/HeadingUI";
 import PopupUI from "shared/ui/PopupUI/PopupUI";
 import './style.scss'
 import NewPrint from "./NewPrint";
-import { getAvPrints } from "services/printService";
+import { getAvPrints, getAvPrintsVariants } from "services/printService";
 import { availablePrints, resetPrintState } from "redux/reducers/printReducer";
 import PrintsList from "./PrintsList";
 
@@ -23,6 +23,7 @@ const CustomizePrints = () => {
 
     useEffect(() => {
         getAvPrints(dispatch)
+        getAvPrintsVariants(dispatch)
     }, [])
 
     return (

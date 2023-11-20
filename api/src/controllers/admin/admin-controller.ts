@@ -22,6 +22,15 @@ class AdminController {
         }
     }
 
+    async addColorVariant(req: any, res: any, next: any) {
+        try {
+            const color = await adminService.addColorVariant(req.body);
+            return res.json(color);
+        } catch (error) {
+            next(error);
+        }
+    }
+
     // Prints
 
     async addPrint(req: any, res: any, next: any) {
@@ -37,6 +46,15 @@ class AdminController {
         try {
             const print = await adminService.editPrint(req);
             return res.json(print);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async addPrintVariant(req: any, res: any, next: any) {
+        try {
+            const color = await adminService.addPrintVariant(req.body);
+            return res.json(color);
         } catch (error) {
             next(error);
         }

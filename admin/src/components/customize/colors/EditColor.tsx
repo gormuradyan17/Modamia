@@ -4,8 +4,11 @@ import { ButtonUI } from "shared/ui/ButtonUI/ButtonUI";
 import HeadingUI from "shared/ui/HeadingUI/HeadingUI";
 import InputUI from "shared/ui/InputUI/InputUI";
 import './style.scss'
-import { ObjectType } from "shared/helpers/helpers";
+import { ObjectType, getActiveItemTypeById, getDropdownOptionsFromItemsVariants } from "shared/helpers/helpers";
 import ColorPickerUI from "shared/ui/ColorPickerUI/ColorPickerUI";
+import DropdownUI from "shared/ui/DropdownUI/DropdownUI";
+import { useSelector } from "react-redux";
+import { colorsVariants } from "redux/reducers/colorReducer";
 
 interface Props {
     callback: CallbackSkeletonType,
@@ -25,9 +28,11 @@ const EditColor = ({
     defaultColor
 }: Props) => {
 
+    const colorVariants = getDropdownOptionsFromItemsVariants(useSelector(colorsVariants)) || [{}]
+
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { target: { name, value } } = event
-        setColor({...color, [name]: value})
+        setColor({ ...color, [name]: value })
     }
 
     const changeColor = (obj: ObjectType) => {
@@ -35,6 +40,11 @@ const EditColor = ({
             ...color,
             ...obj
         })
+    }
+
+    const handleDropdownChange = (data: ObjectType) => {
+        const value = data.id
+        setColor({ ...color, colorVariant: value })
     }
 
     return (
@@ -72,6 +82,14 @@ const EditColor = ({
                     name="tags"
                     callback={handleInputChange}
                 />
+                <div className="new-color-variants">
+                    <DropdownUI
+                        options={colorVariants}
+                        onChange={(data) => handleDropdownChange(data)}
+                        label="Color type"
+                        defaultValue={getActiveItemTypeById(colorVariants, color?.colorVariant)}
+                    />
+                </div>
             </div>
             <div className="new-color-actions">
                 <ButtonUI onClick={() => closePopup()} version="gray">Discard</ButtonUI>

@@ -3,12 +3,14 @@ import { BaseApi } from "./baseApi";
 
 export const getColors = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');
-	return http.get(COLORS_URL, body)
+	const {colorVariant = ''} = body;
+	return http.get(`${COLORS_URL}${colorVariant ? `?variant=${colorVariant}` : ''}`, body)
 }
 
 export const getPrints = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');
-	return http.get(PRINTS_URL, body)
+	const {printVariant = ''} = body;
+	return http.get(`${PRINTS_URL}${printVariant ? `?variant=${printVariant}` : ''}`, body)
 }
 
 export const getMannequins = (body: Record<string, any> = {}) => {

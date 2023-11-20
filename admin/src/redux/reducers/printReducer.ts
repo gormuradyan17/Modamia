@@ -7,7 +7,8 @@ type PrintStateInterface = Record<string, string | number>
 interface stateProps {
     prints: ArrayType,
     loading: boolean,
-	printState: PrintStateInterface
+	printState: PrintStateInterface,
+	printsVariants: ArrayType
 }
 
 export const defaultPrintState: PrintStateInterface = {
@@ -16,12 +17,14 @@ export const defaultPrintState: PrintStateInterface = {
 	tags: '',
 	highresurl: '',
 	previewurl: '',
+	printVariant: ''
 }
 
 const initialState: stateProps = {
 	prints: [],
     loading: false,
-	printState: defaultPrintState
+	printState: defaultPrintState,
+	printsVariants: []
 }
 
 export const printSlice = createSlice({
@@ -37,7 +40,10 @@ export const printSlice = createSlice({
 		},
 		resetPrintState: (state) => {
 			state.printState = defaultPrintState
-		}
+		},
+		setPrintsVariantsData: (state, action) => {
+			state.printsVariants = action.payload;
+		},
 	},
 	extraReducers: (builder) => {
 		builder
@@ -58,9 +64,10 @@ export const printSlice = createSlice({
 	},
 });
 
-export const { setPrintData, setPrintState, resetPrintState } = printSlice.actions;
+export const { setPrintData, setPrintState, resetPrintState, setPrintsVariantsData } = printSlice.actions;
 
 export const availablePrints = (state: ObjectType) => state.printReducer.prints;
 export const printDetails = (state: ObjectType) => state.printReducer.printState;
+export const printsVariants = (state: ObjectType) => state.printReducer.printsVariants;
 
 export default printSlice.reducer;
