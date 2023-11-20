@@ -61,9 +61,10 @@ const Customization = () => {
 					await addModel(modData[i].src, modData[i].color, ctx, width, height);
 				} else if (modData[i].category === 'print') {
 					await addImageProcess(modData[i].printImageURL, modData[i].src, ctx, width, height, num);
-				} else {
-					await addModel(modData[i].src, '', ctx, width, height);
 				}
+				// else {
+				// 	await addModel(modData[i].src, '', ctx, width, height);
+				// }
 			}
 			await dispatch(setMannequinLoading(false))
 		};
