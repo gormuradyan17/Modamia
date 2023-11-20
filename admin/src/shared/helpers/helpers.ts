@@ -71,3 +71,19 @@ export const getSilhouetteFullPath = (type: string) => {
       break;
   }
 }
+
+export const getDropdownOptionsFromItemsVariants = (options: ArrayType) => {
+  return options?.length ? options.reduce((acc: any, option: ObjectType) => {
+    acc.push({
+      id: option?._id,
+      text: option?.name,
+      value: option?.name,
+    })
+    return acc
+  }, []) : []
+}
+
+export const getActiveItemTypeById = (options:  ArrayType, id: string) => {
+  const elem = options.find(option => option.id === id)
+  return elem?.value || ''
+}

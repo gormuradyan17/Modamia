@@ -49,3 +49,37 @@
     padding: 10px 15px !important;
     min-height: 15px !important;
 }
+
+
+.new-item-variant {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    button {
+        border: none;
+        outline: none;
+        padding: 10px;
+        border-radius: 3px;
+        cursor: pointer;
+        font-size: 12px;
+        background-color: variables.$appColor;
+        color: #fff;
+    }
+    > .InputUI {
+        width: 100%;
+    }
+}
+
+.new-item-variant-save {
+    position: relative;
+    width: 100%;
+    input {
+        padding-right: 50px;
+    }
+    > button {
+        position: absolute;
+        right: 10px;
+        transform: translateY(-50%);
+        top: 50%;
+    }
+}

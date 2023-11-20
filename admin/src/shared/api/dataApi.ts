@@ -11,6 +11,10 @@ import {
 	SILHOUETTES_URL,
 	ADD_SILHOUETTE_URL,
 	EDIT_SILHOUETTE_URL,
+	COLORS_VARIANTS_URL,
+	ADD_COLOR_VARIANT_URL,
+	PRINTS_VARIANTS_URL,
+	ADD_PRINT_VARIANT_URL,
 } from "shared/constants/genericApiRoutes";
 import { BaseApi } from "./baseApi";
 
@@ -21,9 +25,19 @@ export const getColors = (body: Record<string, any> = {}) => {
 	return http.get(COLORS_URL, body)
 }
 
+export const getColorsVariants = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.get(COLORS_VARIANTS_URL, body)
+}
+
 export const addColor = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');
 	return http.post(ADD_COLOR_URL, body)
+}
+
+export const addColorVariant = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(ADD_COLOR_VARIANT_URL, body)
 }
 
 export const updateColor = (body: Record<string, any> = {}) => {
@@ -38,10 +52,20 @@ export const getPrints = (body: Record<string, any> = {}) => {
 	return http.get(PRINTS_URL, body)
 }
 
+export const getPrintsVariants = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.get(PRINTS_VARIANTS_URL, body)
+}
+
 export const addPrint = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');
 	http.removeDefaultHeader()
 	return http.post(ADD_PRINT_URL, body, undefined, true)
+}
+
+export const addPrintVariant = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(ADD_PRINT_VARIANT_URL, body)
 }
 
 export const updatePrint = (body: Record<string, any> = {}) => {

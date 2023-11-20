@@ -1,6 +1,8 @@
 import path from 'path';
 import { createPrintsDirsIfNotExists, getFileOriginalMimeType, createMannequinsDirsIfNotExists, createSilhouettesDirsIfNotExists } from '../helpers/helper';
 import ColorModel, { ColorInterface } from '../models/Color'
+import ColorVariantModel from '../models/ColorVariant'
+import PrintVariantModel from '../models/PrintVariant'
 import PrintMotel from '../models/Print'
 import MannequinModel from '../models/Mannequin'
 import SilhouetteModel from '../models/Silhouette'
@@ -15,12 +17,13 @@ class AdminService {
 
     async addColor(req: ColorInterface) {
         try {
-            const { name, hexcode, pantonecode, tags } = req
+            const { name, hexcode, pantonecode, tags, colorVariant = '' } = req
             const color = await ColorModel.create({
                 name,
                 hexcode,
                 pantonecode,
-                tags
+                tags,
+                colorVariant
             })
             return color;
 
@@ -38,11 +41,24 @@ class AdminService {
         }
     }
 
+    async addColorVariant(req: Record<string, any>) {
+        try {
+            const { name } = req
+            const colorVariant = await ColorVariantModel.create({
+                name,
+            })
+            return colorVariant;
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     // Prints
 
     async addPrint(req: any) {
         try {
-            const { name, price, tags } = req.body
+            const { name, price, tags, printVariant = '' } = req.body
             const { highresurl = '', previewurl = '' } = req.files || {}
             let highImage = '', previewImage = '';
             await createPrintsDirsIfNotExists()
@@ -65,7 +81,8 @@ class AdminService {
                 price,
                 tags,
                 highresurl: highImage,
-                previewurl: previewImage
+                previewurl: previewImage,
+                printVariant
             })
             return print;
 
@@ -76,7 +93,7 @@ class AdminService {
 
     async editPrint(req: Record<string, any>) {
         try {
-            const { name, price, tags, _id } = req.body
+            const { name, price, tags, _id, printVariant = '' } = req.body
             const { highresurl = '', previewurl = '' } = req.files || {}
             let highImage = '', previewImage = '';
             await createPrintsDirsIfNotExists()
@@ -99,9 +116,23 @@ class AdminService {
                 name,
                 price,
                 tags,
+                printVariant,
                 ...(highImage && { highresurl: highImage }),
                 ...(previewImage && { previewurl: previewImage })
             }, { upsert: true });
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async addPrintVariant(req: Record<string, any>) {
+        try {
+            const { name } = req
+            const printVariant = await PrintVariantModel.create({
+                name,
+            })
+            return printVariant;
 
         } catch (error) {
             console.log(error)

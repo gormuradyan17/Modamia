@@ -2,12 +2,13 @@ import { createSlice } from '@reduxjs/toolkit';
 import { getAvailableColors } from 'redux/features/colorApi';
 import { ArrayType, ObjectType } from 'shared/helpers/helpers';
 
-type PrintStateInterface = Record<string, string>
+type ColorStateInterface = Record<string, string>
 
 interface stateProps {
     colors: ArrayType,
     loading: boolean,
-	colorState: PrintStateInterface
+	colorState: ColorStateInterface,
+	colorsVariants: ArrayType
 }
 
 export const defaultColorState = {
@@ -15,12 +16,14 @@ export const defaultColorState = {
 	hexcode: '',
 	pantonecode: '',
 	tags: '',
+	colorVariant: ''
 }
 
 const initialState: stateProps = {
 	colors: [],
     loading: false,
-	colorState: defaultColorState
+	colorState: defaultColorState,
+	colorsVariants: []
 }
 
 export const colorSlice = createSlice({
@@ -39,7 +42,10 @@ export const colorSlice = createSlice({
 		},
 		resetColorState: (state) => {
 			state.colorState = defaultColorState
-		}
+		},
+		setColorsVariantsData: (state, action) => {
+			state.colorsVariants = action.payload;
+		},
 	},
 	extraReducers: (builder) => {
 		builder
@@ -60,9 +66,16 @@ export const colorSlice = createSlice({
 	},
 });
 
-export const { setColorData, setColorState, resetColorState, setColorFullState } = colorSlice.actions;
+export const { 
+	setColorData, 
+	setColorState, 
+	resetColorState, 
+	setColorFullState,
+	setColorsVariantsData
+} = colorSlice.actions;
 
 export const availableColors = (state: ObjectType) => state.colorReducer.colors;
 export const colorDetails = (state: ObjectType) => state.colorReducer.colorState;
+export const colorsVariants = (state: ObjectType) => state.colorReducer.colorsVariants;
 
 export default colorSlice.reducer;
