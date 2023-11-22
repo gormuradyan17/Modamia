@@ -1,4 +1,4 @@
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { CallbackSkeletonType } from "shared/objectModels/GenericModel";
 import { ButtonUI } from "shared/ui/ButtonUI/ButtonUI";
 import HeadingUI from "shared/ui/HeadingUI/HeadingUI";
@@ -8,8 +8,8 @@ import { colorDetails, colorsVariants, setColorFullState, setColorState } from "
 import { useDispatch, useSelector } from "react-redux";
 import { ObjectType, getDropdownOptionsFromItemsVariants } from "shared/helpers/helpers";
 import ColorPickerUI from "shared/ui/ColorPickerUI/ColorPickerUI";
-import DropdownUI from "shared/ui/DropdownUI/DropdownUI";
 import NewColorVariant from "./NewColorVariant";
+import DropdownCheckboxUI from "shared/ui/DropdownCheckboxUI/DropdownCheckboxUI";
 
 interface Props {
     callback: CallbackSkeletonType,
@@ -26,7 +26,6 @@ const NewColor = ({
     const dispatch = useDispatch()
     const cDetails = useSelector(colorDetails)
     const colorVariants = getDropdownOptionsFromItemsVariants(useSelector(colorsVariants)) || [{}]
-
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { target: { name, value } } = event
         dispatch(setColorState({ name, value }))
@@ -39,9 +38,19 @@ const NewColor = ({
         }))
     }
 
-    const handleDropdownChange = (data: ObjectType) => {
-        const value = data.id
-        dispatch(setColorState({ name: 'colorVariant', value }))
+    const handleDropdownChange = (event: ChangeEvent<HTMLInputElement>, option: ObjectType) => {
+        const { target: { checked } } = event
+        const { id } = option;
+        const copyPalettes = [...cDetails?.colorPalettes]
+        if (checked) copyPalettes.push(id)
+        else {
+            const idx = copyPalettes.findIndex(() => id)
+            if (idx !== -1) copyPalettes.splice(idx, 1)
+        }
+        dispatch(setColorState({
+            name: 'colorPalettes',
+            value: copyPalettes
+        }))
     }
 
     return (
@@ -81,10 +90,10 @@ const NewColor = ({
                 />
                 <div className="new-color-variants">
                     <NewColorVariant />
-                    <DropdownUI
+                    <DropdownCheckboxUI
                         options={colorVariants}
-                        onChange={(data) => handleDropdownChange(data)}
-                        label="Color type"
+                        onChange={(e: any, option: ObjectType) => handleDropdownChange(e, option)}
+                        label="Color palettes"
                     />
                 </div>
             </div>

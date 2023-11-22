@@ -4,8 +4,7 @@ class PublicController {
 
     async getColors(req: any, res: any, next: any) {
         try {
-            const {variant = ''} = req.query
-            const colors = await publicService.getColors(variant);
+            const colors = await publicService.getColors();
             return res.json(colors);
         } catch (error) {
             next(error);
@@ -16,6 +15,16 @@ class PublicController {
         try {
             const variants = await publicService.getColorsVariants();
             return res.json(variants);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getColorsPalettes(req: any, res: any, next: any) {
+        try {
+            const {color_id = '', variant_id = ''} = req.query
+            const palettes = await publicService.getColorsPalettes(color_id, variant_id);
+            return res.json(palettes);
         } catch (error) {
             next(error);
         }
@@ -35,6 +44,15 @@ class PublicController {
         try {
             const prints = await publicService.getPrintsVariants();
             return res.json(prints);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getSizes(req: any, res: any, next: any) {
+        try {
+            const colors = await publicService.getSizes();
+            return res.json(colors);
         } catch (error) {
             next(error);
         }

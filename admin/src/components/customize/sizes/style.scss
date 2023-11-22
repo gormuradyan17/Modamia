@@ -1,0 +1,60 @@
+@use 'variables';
+
+.new-size {
+    position: relative;
+}
+.new-size-actions {
+    margin-top: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.add-button {
+    margin: 20px 0;
+}
+
+.sizes-list {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+
+    &-size {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 10px 20px 10px 0;
+        flex-direction: column;
+        border: 1px solid variables.$appColor;
+        padding: 5px;
+        border-radius: 3px;
+    }
+}
+
+.size-text {
+    margin-bottom: 5px;
+    size: variables.$appColor !important;
+    max-width: 100px;
+}
+
+.size-button {
+    padding: 10px 15px !important;
+    min-height: 15px !important;
+}
+
+.new-size-btn {
+    position: absolute;
+    right: 0;
+    z-index: 1;
+}
+
+.new-size-inputs {
+    .TabUI-head {
+        width: 50%;
+        justify-content: center;
+    }
+}
+
+.size-options {
+
+}

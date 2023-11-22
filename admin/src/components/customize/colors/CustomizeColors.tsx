@@ -7,7 +7,7 @@ import { availableColors, colorDetails, resetColorState } from "redux/reducers/c
 import { addColor } from "shared/api/dataApi";
 import PopupUI from "shared/ui/PopupUI/PopupUI";
 import NewColor from "./NewColor";
-import { getAvColors, getAvColorsVariants } from "services/colorService";
+import { getAvColors, getAvColorsPalettes, getAvColorsVariants } from "services/colorService";
 import { ButtonUI } from "shared/ui/ButtonUI/ButtonUI";
 import ColorsList from "./ColorsList";
 import { colorFormOptions } from "utils/validators/validatorOptions";
@@ -25,6 +25,7 @@ const ColorsPallette = () => {
     useEffect(() => {
         getAvColors(dispatch)
         getAvColorsVariants(dispatch)
+        getAvColorsPalettes(dispatch)
     }, [])
 
     const addNewColor = async (e: HTMLFormElement) => {

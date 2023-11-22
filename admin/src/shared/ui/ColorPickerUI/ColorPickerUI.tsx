@@ -56,7 +56,7 @@ const ColorPickerUI = ({
         inputRef?.current?.click()
     }
 
-    useClickOutSide(ref, () => setIsVisible(false), isVisible)
+    useClickOutSide([ref], () => setIsVisible(false), isVisible)
 
     return (
         <div className={`new-color-picker ${classN}`} ref={ref}>
