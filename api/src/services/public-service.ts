@@ -41,6 +41,24 @@ class PublicService {
         return silhouettes;
     }
 
+    async getSilhouettesTypes() {
+        const silhouettesFront = await SilhouetteModel.find({
+            orientation: 'Front'
+        });
+        const silhouettesBack = await SilhouetteModel.find({
+            orientation: 'Back'
+        });
+        const silhouettesSleeve = await SilhouetteModel.find({
+            type: 'Sleeve'
+        });
+
+        return {
+            front: silhouettesFront,
+            back: silhouettesBack,
+            sleeve: silhouettesSleeve
+        };
+    }
+
 }
 
 export default new PublicService();

@@ -1,8 +1,10 @@
 export const BASE_URL = process.env.REACT_APP_BASE_API_URL || ''
 export const API_URL = '/'
 export const BASE_UPLOADS_URL = BASE_URL + '/api/uploads/'
+export const API_URL_ADMIN = '/admin/'
 
 export const COLORS_URL = API_URL + 'colors'
+export const COLORS_VARIANTS_URL = API_URL + 'colors-variants'
 export const PRINTS_URL = API_URL + 'prints'
 export const MANNEQUINS_URL = API_URL + 'mannequins'
 
@@ -66,3 +68,23 @@ export const modelData = [
 	{src: T_I4, color: '#2e1', printImageURL: B_G3},
 	// {src: S_I2, color: '#17d011', printImageURL: B_G3}
 ]
+
+// Silhouette
+
+export const SILHOUETTES_URL = API_URL + 'silhouettes'
+export const SILHOUETTES_TYPES_URL = API_URL + 'silhouettes-types'
+export const ADD_SILHOUETTE_URL = API_URL_ADMIN + 'add-silhouette'
+export const EDIT_SILHOUETTE_URL = API_URL_ADMIN + 'edit-silhouette'
+export const BASE_UPLOADS_SILHOUETTES_URL = BASE_UPLOADS_URL + 'silhouettes/'
+export const BASE_UPLOADS_SILHOUETTES_TOPS_URL = BASE_UPLOADS_SILHOUETTES_URL + 'tops/'
+export const BASE_UPLOADS_SILHOUETTES_BOTTOMS_URL = BASE_UPLOADS_SILHOUETTES_URL + 'bottoms/'
+export const BASE_UPLOADS_SILHOUETTES_SLEEVES_URL = BASE_UPLOADS_SILHOUETTES_URL + 'sleeves/'
+
+
+
+// Print
+
+export const PRINTS_VARIANTS_URL = API_URL + 'prints-variants'
+export const ADD_PRINT_URL = API_URL_ADMIN + 'add-print'
+export const ADD_PRINT_VARIANT_URL = API_URL_ADMIN + 'add-print-variant'
+export const EDIT_PRINT_URL = API_URL_ADMIN + 'edit-print'

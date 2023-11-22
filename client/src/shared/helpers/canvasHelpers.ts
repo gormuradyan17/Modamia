@@ -88,12 +88,12 @@ export async function addImageProcess(printImageURL: string, imageSrc: string, c
 	ctxBg.globalCompositeOperation = 'multiply';
 	ctx.clearRect(0, 0, width, height);
 	ctxBg.drawImage(image, 0, 0, width, height);
-	ctxBg.drawImage(img, 0, 0, width, height);
-	// for (let i = 0; i * width * rangeValue <= width; i++) {
-	// 	for (let j = 0; j * height * rangeValue <= height; j++) {
-	// 		ctxBg.drawImage(img, 50, 50, width, height,  i * width * rangeValue, j * height * rangeValue, width * rangeValue, height * rangeValue);
-	// 	}
-	// }
+	// ctxBg.drawImage(img, 0, 0, width, height);
+	for (let i = 0; i * width * rangeValue <= width; i++) {
+		for (let j = 0; j * height * rangeValue <= height; j++) {
+			ctxBg.drawImage(img, 50, 50, width, height,  i * width * rangeValue, j * height * rangeValue, width * rangeValue, height * rangeValue);
+		}
+	}
 	const bgImageData = ctxBg.getImageData(0, 0, width, height);
 	const bgData = bgImageData.data;
 	for (let i = 0; i < data.length; i += 4) {

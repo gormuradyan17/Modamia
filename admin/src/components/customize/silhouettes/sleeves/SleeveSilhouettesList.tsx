@@ -23,7 +23,7 @@ const SleeveSilhouettesList = () => {
     const dispatch = useDispatch()
 
     const sleeveSilhouettes = useMemo(() => {
-        return silhouettes.filter((silhouette: ObjectType) => silhouette.type === 'Sleeve')
+        return silhouettes.filter((silhouette: ObjectType) => silhouette?.type === 'Sleeve')
     }, [silhouettes])
 
     const editSilhouette = (silhouette: ObjectType) => {
