@@ -28,7 +28,7 @@ const EditColor = ({
     defaultColor
 }: Props) => {
 
-    const colorVariants = getDropdownOptionsFromItemsVariants(useSelector(colorsVariants)) || [{}]
+    // const colorVariants = getDropdownOptionsFromItemsVariants(useSelector(colorsVariants)) || [{}]
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { target: { name, value } } = event
@@ -42,10 +42,10 @@ const EditColor = ({
         })
     }
 
-    const handleDropdownChange = (data: ObjectType) => {
-        const value = data.id
-        setColor({ ...color, colorVariant: value })
-    }
+    // const handleDropdownChange = (data: ObjectType) => {
+    //     const value = data.id
+    //     setColor({ ...color, colorVariant: value })
+    // }
 
     return (
         <div className="new-color">
@@ -82,14 +82,14 @@ const EditColor = ({
                     name="tags"
                     callback={handleInputChange}
                 />
-                <div className="new-color-variants">
+                {/* <div className="new-color-variants">
                     <DropdownUI
                         options={colorVariants}
                         onChange={(data) => handleDropdownChange(data)}
                         label="Color type"
                         defaultValue={getActiveItemTypeById(colorVariants, color?.colorVariant)}
                     />
-                </div>
+                </div> */}
             </div>
             <div className="new-color-actions">
                 <ButtonUI onClick={() => closePopup()} version="gray">Discard</ButtonUI>

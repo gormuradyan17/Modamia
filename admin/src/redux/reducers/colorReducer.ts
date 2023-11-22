@@ -1,14 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getAvailableColors } from 'redux/features/colorApi';
 import { ArrayType, ObjectType } from 'shared/helpers/helpers';
 
-type ColorStateInterface = Record<string, string>
+type ColorStateInterface = Record<string, any>
 
 interface stateProps {
     colors: ArrayType,
     loading: boolean,
 	colorState: ColorStateInterface,
-	colorsVariants: ArrayType
+	colorsVariants: ArrayType,
+	colorsPalettes: ArrayType,
 }
 
 export const defaultColorState = {
@@ -16,14 +16,15 @@ export const defaultColorState = {
 	hexcode: '',
 	pantonecode: '',
 	tags: '',
-	colorVariant: ''
+	colorPalettes: []
 }
 
 const initialState: stateProps = {
 	colors: [],
     loading: false,
 	colorState: defaultColorState,
-	colorsVariants: []
+	colorsVariants: [],
+	colorsPalettes: []
 }
 
 export const colorSlice = createSlice({
@@ -46,24 +47,10 @@ export const colorSlice = createSlice({
 		setColorsVariantsData: (state, action) => {
 			state.colorsVariants = action.payload;
 		},
-	},
-	extraReducers: (builder) => {
-		builder
-            .addCase(getAvailableColors.pending, (state, action) => {
-                state.colors = [];
-                state.loading = true;
-                colorSlice.caseReducers.setColorData(state, action);
-            })
-			.addCase(getAvailableColors.fulfilled, (state, action) => {
-				state.colors = action.payload.data;
-				state.loading = false;
-				colorSlice.caseReducers.setColorData(state, action);
-			})
-			.addCase(getAvailableColors.rejected, (state) => {
-				state.colors = [];
-				state.loading = false;
-			})
-	},
+		setColorsPalettesData: (state, action) => {
+			state.colorsPalettes = action.payload;
+		},
+	}
 });
 
 export const { 
@@ -71,11 +58,13 @@ export const {
 	setColorState, 
 	resetColorState, 
 	setColorFullState,
-	setColorsVariantsData
+	setColorsVariantsData,
+	setColorsPalettesData
 } = colorSlice.actions;
 
 export const availableColors = (state: ObjectType) => state.colorReducer.colors;
 export const colorDetails = (state: ObjectType) => state.colorReducer.colorState;
 export const colorsVariants = (state: ObjectType) => state.colorReducer.colorsVariants;
+export const colorsPalettes = (state: ObjectType) => state.colorReducer.colorsPalettes;
 
 export default colorSlice.reducer;

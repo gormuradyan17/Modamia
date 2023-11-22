@@ -24,8 +24,35 @@ class AdminController {
 
     async addColorVariant(req: any, res: any, next: any) {
         try {
-            const color = await adminService.addColorVariant(req.body);
-            return res.json(color);
+            const colorVariant = await adminService.addColorVariant(req.body);
+            return res.json(colorVariant);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async addColorPalette(req: any, res: any, next: any) {
+        try {
+            const colorPalette = await adminService.addColorPalette(req.body);
+            return res.json(colorPalette);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async removeColorPalette(req: any, res: any, next: any) {
+        try {
+            const colorPalette = await adminService.removeColorPalette(req.body);
+            return res.json(colorPalette);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async orderPaletteColors(req: any, res: any, next: any) {
+        try {
+            const colorPalette = await adminService.orderPaletteColors(req.body);
+            return res.json(colorPalette);
         } catch (error) {
             next(error);
         }
@@ -53,8 +80,8 @@ class AdminController {
 
     async addPrintVariant(req: any, res: any, next: any) {
         try {
-            const color = await adminService.addPrintVariant(req.body);
-            return res.json(color);
+            const print = await adminService.addPrintVariant(req.body);
+            return res.json(print);
         } catch (error) {
             next(error);
         }
@@ -64,8 +91,8 @@ class AdminController {
 
     async addManequin(req: any, res: any, next: any) {
         try {
-            const print = await adminService.addMannequin(req);
-            return res.json(print);
+            const mannequin = await adminService.addMannequin(req);
+            return res.json(mannequin);
         } catch (error) {
             next(error);
         }
@@ -73,8 +100,8 @@ class AdminController {
 
     async editMannequin(req: any, res: any, next: any) {
         try {
-            const print = await adminService.editMannequin(req);
-            return res.json(print);
+            const mannequin = await adminService.editMannequin(req);
+            return res.json(mannequin);
         } catch (error) {
             next(error);
         }
@@ -84,8 +111,8 @@ class AdminController {
 
     async addSilhouette(req: any, res: any, next: any) {
         try {
-            const print = await adminService.addSilhouette(req);
-            return res.json(print);
+            const silhouette = await adminService.addSilhouette(req);
+            return res.json(silhouette);
         } catch (error) {
             next(error);
         }
@@ -93,8 +120,28 @@ class AdminController {
 
     async editSilhouette(req: any, res: any, next: any) {
         try {
-            const print = await adminService.editSilhouette(req);
-            return res.json(print);
+            const silhouette = await adminService.editSilhouette(req);
+            return res.json(silhouette);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    // Size
+
+    async addSize(req: any, res: any, next: any) {
+        try {
+            const size = await adminService.addSize(req.body);
+            return res.json(size);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async editSize(req: any, res: any, next: any) {
+        try {
+            const size = await adminService.editSize(req.body);
+            return res.json(size);
         } catch (error) {
             next(error);
         }

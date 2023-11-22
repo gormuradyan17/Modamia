@@ -1,5 +1,5 @@
-import React, {ChangeEvent, useEffect, useRef, useState} from "react";
-import {addModel, addImageProcess, getModelData} from "../../shared/helpers/canvasHelpers";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
+import { addModel, addImageProcess, getModelData } from "../../shared/helpers/canvasHelpers";
 import {
 	width,
 	height,
@@ -13,7 +13,7 @@ import "./style.scss";
 import CustomizationFeatures from "components/Customization/features/CustomizationFeatures";
 import Container from "layout/Container/Container";
 import CustomizationInfo from "components/Customization/customizationInfo/CustomizationInfo";
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
 	availableMannequins,
 	getMannequinActiveCategory,
@@ -22,8 +22,8 @@ import {
 	getMannequinLoading,
 	setMannequinLoading
 } from "redux/reducers/mannequinReducer";
-import {getAvMannequins} from "services/mannequinService";
-import {ArrayType} from "../../shared/helpers/helpers";
+import { getAvMannequins } from "services/mannequinService";
+import { ArrayType } from "../../shared/helpers/helpers";
 import CustomizationLoader from "components/Customization/customizationLoader/CustomizationLoader";
 
 const Customization = () => {
@@ -36,7 +36,7 @@ const Customization = () => {
 
 	const canvasRef = useRef<HTMLCanvasElement | null>(null);
 	const [rangeValue, setRangeValue] = useState<number>(0.1);
-	
+
 	const canvasModelInit = (num: number, modData: ArrayType) => {
 		if (!canvasRef.current || !mannequins?.length) return;
 		dispatch(setMannequinLoading(true))
@@ -61,7 +61,7 @@ const Customization = () => {
 			await dispatch(setMannequinLoading(false))
 		};
 	};
-	
+
 	useEffect(() => {
 		getAvMannequins(dispatch)
 	}, [])
@@ -86,7 +86,7 @@ const Customization = () => {
 		name: 'the juliette dress',
 		price: '59,775'
 	}
-	
+
 	return (
 		<Container>
 			<div className="customization">
@@ -95,12 +95,12 @@ const Customization = () => {
 					<canvas className="canvas" id="canvas" ref={canvasRef}></canvas>
 				</div>
 				<div className="customization-body">
-					<CustomizationInfo infoData={infoData}/>
-					<CustomizationFeatures/>
+					<CustomizationInfo infoData={infoData} />
+					<CustomizationFeatures />
 				</div>
-			{/* <input type="range" min="0.01" max="1" step="0.01" value={rangeValue} onChange={changRange}/> */}
-				
-						
+				{/* <input type="range" min="0.01" max="1" step="0.01" value={rangeValue} onChange={changRange} /> */}
+
+
 			</div>
 		</Container>
 	);

@@ -1,14 +1,19 @@
-import { CSSProperties, useEffect, useState } from "react";
+import { CSSProperties, ChangeEvent, useRef, useState } from "react";
 import { ArrayType, ObjectType } from "shared/helpers/helpers";
 import { ButtonUI } from "shared/ui/ButtonUI/ButtonUI";
 import HeadingUI from "shared/ui/HeadingUI/HeadingUI";
 import PopupUI from "shared/ui/PopupUI/PopupUI";
 import EditColor from "./EditColor";
-import { updateColor } from "shared/api/dataApi";
-import { getAvColors } from "services/colorService";
-import { useDispatch } from "react-redux";
+import { addColorPalette, removeColorPalette, updateColor } from "shared/api/dataApi";
+import { getAvColors, getAvColorsPalettes, getAvColorsVariants } from "services/colorService";
+import { useDispatch, useSelector } from "react-redux";
 import { formValidator } from "utils/validators/validator";
 import { colorFormOptions } from "utils/validators/validatorOptions";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPalette } from "@fortawesome/free-solid-svg-icons";
+import PalettesList from "./PalettesList";
+import { colorsVariants } from "redux/reducers/colorReducer";
+import useClickOutSide from "utils/hooks/useClickOutside";
 
 interface Props {
     colors: ArrayType
@@ -23,17 +28,19 @@ const ColorsList = ({
 }: Props) => {
 
     const dispatch = useDispatch()
-
+    const colorVariants = useSelector(colorsVariants)
     const [isVisible, setIsVisible] = useState<boolean>(false)
+    const [isVisiblePalettes, setIsVisiblePalettes] = useState<boolean>(false)
     const [editableColor, setEditableColor] = useState<ObjectType>({})
     const [colorInfo, setColorInfo] = useState<ObjectType>({})
     const [errors, setErrors] = useState<ObjectType>({})
-    
+    const paletteRef = useRef<HTMLDivElement>(null)
+
     const editColor = (color: ObjectType) => {
         if (color) {
             setEditableColor(color)
             setColorInfo(color)
-            setIsVisible(true)   
+            setIsVisible(true)
         }
     }
 
@@ -47,13 +54,43 @@ const ColorsList = ({
     const saveColor = async () => {
         const activeColor = colors?.find(color => color._id === editableColor._id) || undefined
         const errors = formValidator(editableColor, colorFormOptions);
-        if (errors) {return setErrors(errors)};
-        if (Object.keys(errors).length) {setErrors({})};
-        if (activeColor && JSON.stringify(editableColor) !== JSON.stringify(activeColor) ) {
+        if (errors) { return setErrors(errors) };
+        if (Object.keys(errors).length) { setErrors({}) };
+        if (activeColor && JSON.stringify(editableColor) !== JSON.stringify(activeColor)) {
             await updateColor(editableColor)
             await getAvColors(dispatch)
-        } 
+        }
         closePopup()
+    }
+
+    const togglePalettes = (color: ObjectType) => {
+        setIsVisiblePalettes(!isVisiblePalettes)
+        setEditableColor(color)
+    }
+
+    useClickOutSide([paletteRef], () => setIsVisiblePalettes(false), isVisiblePalettes)
+
+    const manipulateColorWithPalette = async (event: ChangeEvent<HTMLInputElement>,foundItem: ObjectType, option: ObjectType) => {
+        const { target: { checked } } = event
+        const { grouped = [] } = foundItem || {};
+        const { _id: newVariantId = '' } = option || {}
+
+        if (checked && newVariantId) {
+            await addColorPalette({
+                color_id: editableColor?._id,
+                variant_id: newVariantId,
+            })
+        }
+        else {
+            const paletteId = grouped?.find((group: ObjectType) => group?.color_id === editableColor?._id)
+            const { _id = '' } = paletteId || {}
+            if (_id) {
+                await removeColorPalette({
+                    palette_id: _id
+                })
+            }
+        }
+        await getAvColorsPalettes(dispatch)
     }
 
     return (
@@ -65,7 +102,19 @@ const ColorsList = ({
                 return <div className="colors-list-color" key={color._id}>
                     <HeadingUI classN="color-text _ellipsis" text={color.name} size="16px" />
                     <span className="color-span" style={style}></span>
-                    <ButtonUI classN="color-button" onClick={() => editColor(color)}>Edit</ButtonUI>
+                    <div className="colors-list-buttons">
+                        <ButtonUI classN="color-button" onClick={() => editColor(color)}>Edit</ButtonUI>
+                        <div {...(color?._id === editableColor?._id) && { ref: paletteRef }}>
+                            <ButtonUI classN="color-button" onClick={() => togglePalettes(color)}><FontAwesomeIcon icon={faPalette} /></ButtonUI>
+                            {isVisiblePalettes && color?._id === editableColor?._id &&
+                                <PalettesList
+                                    activeColor={editableColor}
+                                    onChange={(e: any, foundItem: any, option: any) => manipulateColorWithPalette(e, foundItem, option)}
+                                    options={colorVariants}
+                                />
+                            }
+                        </div>
+                    </div>
                 </div>
             })}
             {isVisible && <PopupUI callback={closePopup}>

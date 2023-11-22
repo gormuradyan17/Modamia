@@ -63,3 +63,15 @@ export const silhouetteFilesOptions = {
         {rule: { test: /^$|\.jpe?g$|\.png$|\.webp$|\.bmp$/i }, error: {message: 'Incorrect format for Silhouette Url'} }
     ]
 }
+
+export const sizeFormOptions = {
+    name: [
+        {rule: { required : true }, error: {message: 'Name is required'} },
+    ],
+}
+
+export const variantFormOptions = {
+    name: [
+        {rule: { required : true }, error: {message: 'Name is required'} },
+    ],
+}

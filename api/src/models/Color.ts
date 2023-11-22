@@ -27,10 +27,6 @@ const ColorSchema: ColorInterface = new mongoose.Schema(
       type: String,
       required: false,
     },
-    colorVariant: {
-      type: String,
-      required: false,
-    }
   },
   { timestamps: true }
 );
