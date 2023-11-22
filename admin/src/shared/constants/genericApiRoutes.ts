@@ -7,8 +7,12 @@ export const BASE_UPLOADS_URL = BASE_URL + '/api/uploads/'
 
 export const COLORS_URL = API_URL + 'colors'
 export const COLORS_VARIANTS_URL = API_URL + 'colors-variants'
+export const COLORS_PALETTES_URL = API_URL + 'colors-palettes'
 export const ADD_COLOR_URL = API_URL_ADMIN + 'add-color'
 export const ADD_COLOR_VARIANT_URL = API_URL_ADMIN + 'add-color-variant'
+export const ADD_COLOR_PALETTE_URL = API_URL_ADMIN + 'add-color-palette'
+export const REMOVE_COLOR_PALETTE_URL = API_URL_ADMIN + 'remove-color-palette'
+export const ORDER_PALETTE_COLORS_URL = API_URL_ADMIN + 'order-palette-colors'
 export const EDIT_COLOR_URL = API_URL_ADMIN + 'edit-color'
 
 // Print
@@ -40,3 +44,9 @@ export const BASE_UPLOADS_SILHOUETTES_URL = BASE_UPLOADS_URL + 'silhouettes/'
 export const BASE_UPLOADS_SILHOUETTES_TOPS_URL = BASE_UPLOADS_SILHOUETTES_URL + 'tops/'
 export const BASE_UPLOADS_SILHOUETTES_BOTTOMS_URL = BASE_UPLOADS_SILHOUETTES_URL + 'bottoms/'
 export const BASE_UPLOADS_SILHOUETTES_SLEEVES_URL = BASE_UPLOADS_SILHOUETTES_URL + 'sleeves/'
+
+// Size
+
+export const SIZE_URL = API_URL + 'sizes'
+export const ADD_SIZE_URL = API_URL_ADMIN + 'add-size'
+export const EDIT_SIZE_URL = API_URL_ADMIN + 'edit-size'

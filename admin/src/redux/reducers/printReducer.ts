@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getAvailablePrints } from 'redux/features/printApi';
 import { ArrayType, ObjectType } from 'shared/helpers/helpers';
 
 type PrintStateInterface = Record<string, string | number>
@@ -44,24 +43,7 @@ export const printSlice = createSlice({
 		setPrintsVariantsData: (state, action) => {
 			state.printsVariants = action.payload;
 		},
-	},
-	extraReducers: (builder) => {
-		builder
-            .addCase(getAvailablePrints.pending, (state, action) => {
-                state.prints = [];
-                state.loading = true;
-                printSlice.caseReducers.setPrintData(state, action);
-            })
-			.addCase(getAvailablePrints.fulfilled, (state, action) => {
-				state.prints = action.payload.data;
-				state.loading = false;
-				printSlice.caseReducers.setPrintData(state, action);
-			})
-			.addCase(getAvailablePrints.rejected, (state) => {
-				state.prints = [];
-				state.loading = false;
-			})
-	},
+	}
 });
 
 export const { setPrintData, setPrintState, resetPrintState, setPrintsVariantsData } = printSlice.actions;

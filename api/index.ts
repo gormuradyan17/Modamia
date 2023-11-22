@@ -9,7 +9,7 @@ import morgan from "morgan";
 import multer from "multer";
 import express from "express";
 import bodyParser from "body-parser";
-const upload = require('express-fileupload');
+const upload = require('express-fileupload')
 // const errorMidleware = require('./middlewares/error')
 // const passport = require('passport')
 // import HttpError from "./utils/HttpError";

@@ -1,10 +1,17 @@
 import { CallbackSkeletonType } from 'shared/objectModels/GenericModel';
 import { useEffect } from "react";
 
-const useClickOutSide = (ref: any, handler: CallbackSkeletonType, dependency: any = false) => {
+const useClickOutSide = (refList: any, handler: CallbackSkeletonType, dependency: any = false) => {
   useEffect(() => {
     const listener = (event: any) => {
-      if (ref.current && !ref.current.contains(event.target)) {
+      let shouldCallHandler = true;
+      refList?.length && refList?.forEach((ref: any) => {
+        if (ref.current && ref.current.contains(event.target)) {
+          shouldCallHandler = false;
+        }
+      });
+
+      if (shouldCallHandler) {
         handler();
       }
     };

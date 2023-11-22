@@ -6,6 +6,9 @@ import adminController from '../../controllers/admin/admin-controller'
 router.post('/add-color', adminController.addColor)
 router.post('/edit-color', adminController.editColor)
 router.post('/add-color-variant', adminController.addColorVariant)
+router.post('/add-color-palette', adminController.addColorPalette)
+router.post('/remove-color-palette', adminController.removeColorPalette)
+router.post('/order-palette-colors', adminController.orderPaletteColors)
 
 // Prints
 
@@ -22,5 +25,10 @@ router.post('/edit-mannequin', adminController.editMannequin)
 
 router.post('/add-silhouette', adminController.addSilhouette)
 router.post('/edit-silhouette', adminController.editSilhouette)
+
+// Size
+
+router.post('/add-size', adminController.addSize)
+router.post('/edit-size', adminController.editSize)
 
 export default router
