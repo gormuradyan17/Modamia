@@ -6,6 +6,8 @@ export class BaseApi {
   private storeToken: string = sessionStorageSync.privateToken;
   private assocaiteToken: string = localStorageSync.token;
   private additionalHeaders: any | null = null;
+  private clearHeader: boolean = true;
+
 
   constructor(
     private apiPrefix: string = '',
@@ -20,6 +22,10 @@ export class BaseApi {
 
   public setAdditionalHeaders(headers: any) {
     this.additionalHeaders = headers;
+  }
+  
+  public removeDefaultHeader() {
+    this.clearHeader = false;
   }
 
   public buildHeaders(authToken: string = '', assocaiteToken: string = '') {

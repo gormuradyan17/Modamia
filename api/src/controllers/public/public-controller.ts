@@ -75,6 +75,15 @@ class PublicController {
             next(error);
         }
     }
+
+    async getSilhouettesTypes(req: any, res: any, next: any) {
+        try {
+            const prints = await publicService.getSilhouettesTypes();
+            return res.json(prints);
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 export default new PublicController()

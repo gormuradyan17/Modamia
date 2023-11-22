@@ -1,32 +1,63 @@
 $colorFill: var(--colorFill);
-@use 'variables';
+@use "variables";
 
 .color-content {
+  display: flex;
+  &.-container {
     width: 100%;
     display: flex;
     flex-wrap: wrap;
-
-    &-color {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 10px 20px 10px 0;
-        flex-direction: column;
-        cursor: pointer;
-    }
+    flex-direction: column;
+  }
+  &-color {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 20px 10px 0;
+    flex-direction: column;
+    cursor: pointer;
+  }
 }
 
 .color-text {
-    margin-bottom: 5px;
-    color: variables.$appColor !important;
-    max-width: 100px;
+  margin-bottom: 5px;
+  color: variables.$appColor !important;
+  max-width: 100px;
 }
 
 .color-span {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background-color: $colorFill;
-    border: 1px solid variables.$appColor;
-    margin: 10px 0;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: $colorFill;
+  border: 1px solid variables.$appColor;
+  margin: 10px 0;
+}
+.variant_selector {
+  background: #aa8a75;
+  border: none;
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: white;
+  outline: none;
+  text-align: center;
+  vertical-align: middle;
+}
+.btnContent {
+  display: flex;
+}
+.DropdownUI {
+    margin: unset;
+    width: 115%;
+    &__button{
+        background: none;
+        box-shadow: unset;
+        border: none;
+        color: white;
+        padding: unset;
+    }
+   svg{
+    right: 0;
+   }
 }

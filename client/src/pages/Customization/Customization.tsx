@@ -70,18 +70,18 @@ const Customization = () => {
 		if (mannequins?.length) {
 			const drawManequin = async () => {
 				const data = await getModelData(activeColor, activePrint, activeCategory)
-				await canvasModelInit(rangeValue, data);
+				await canvasModelInit(.2, data);
 			}
 			drawManequin()
 		}
 	}, [mannequins, activeColor, activePrint, activeCategory]);
-
-	// function changRange(e: ChangeEvent<HTMLInputElement>) {
-	// 	console.log(e.target.value);
-	// 	setRangeValue(Number(e.target.value));
-	// 	canvasModelInit(Number(e.target.value), getModelData(activeColor, activePrint, activeCategory));
-	// }
-
+	
+	function changRange(e: ChangeEvent<HTMLInputElement>) {
+	// console.log(e.target.value);
+	// setRangeValue(Number(e.target.value));
+	// canvasModelInit(Number(e.target.value), getModelData(activeColor, activePrint, activeCategory));
+	}
+	
 	const infoData = {
 		name: 'the juliette dress',
 		price: '59,775'

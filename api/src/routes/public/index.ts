@@ -23,5 +23,6 @@ router.get('/sizes', publicController.getSizes)
 // Silhouette
 
 router.get('/silhouettes', publicController.getSilhouettes)
+router.get('/silhouettes-types', publicController.getSilhouettesTypes)
 
 export default router
