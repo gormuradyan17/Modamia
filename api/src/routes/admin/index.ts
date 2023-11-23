@@ -15,6 +15,9 @@ router.post('/order-palette-colors', adminController.orderPaletteColors)
 router.post('/add-print', adminController.addPrint)
 router.post('/edit-print', adminController.editPrint)
 router.post('/add-print-variant', adminController.addPrintVariant)
+router.post('/add-print-palette', adminController.addPrintPalette)
+router.post('/remove-print-palette', adminController.removePrintPalette)
+router.post('/order-palette-prints', adminController.orderPalettePrints)
 
 // Prints
 

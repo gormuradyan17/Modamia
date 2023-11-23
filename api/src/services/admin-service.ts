@@ -3,6 +3,7 @@ import { createPrintsDirsIfNotExists, getFileOriginalMimeType, createMannequinsD
 import ColorModel, { ColorInterface } from '../models/Color'
 import ColorVariantModel from '../models/ColorVariant'
 import ColorPaletteModel from '../models/ColorPalette'
+import PrintPaletteModel from '../models/PrintPalette'
 import PrintVariantModel from '../models/PrintVariant'
 import PrintMotel from '../models/Print'
 import MannequinModel from '../models/Mannequin'
@@ -12,6 +13,8 @@ import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs'
 import mongoose from 'mongoose';
 import { ColorPaletteInterface } from '../models/ColorPalette';
+import { PrintPaletteInterface } from '../models/PrintPalette';
+import { ObjectId } from 'mongodb';
 
 class AdminService {
 
@@ -67,7 +70,7 @@ class AdminService {
         try {
             const { color_id, variant_id } = req
             const count = await ColorPaletteModel.find({
-                variant_id
+                variant_id: new ObjectId(variant_id)
             }).count()
             const colorPalette = await ColorPaletteModel.create({
                 color_id,
@@ -149,7 +152,8 @@ class AdminService {
 
     async addPrint(req: any) {
         try {
-            const { name, price, tags, printVariant = '' } = req.body
+            const { name, price, tags, printsPalettes = '[]'  } = req.body
+            const parsedPrints = JSON.parse(printsPalettes);
             const { highresurl = '', previewurl = '' } = req.files || {}
             let highImage = '', previewImage = '';
             await createPrintsDirsIfNotExists()
@@ -173,8 +177,17 @@ class AdminService {
                 tags,
                 highresurl: highImage,
                 previewurl: previewImage,
-                printVariant
             })
+
+            const { id } = print;
+            parsedPrints?.length && id && parsedPrints.forEach((print: string) => {
+                const obj = {
+                    print_id: id,
+                    variant_id: print
+                }
+                this.addPrintPalette(obj)
+            });
+
             return print;
 
         } catch (error) {
@@ -224,6 +237,88 @@ class AdminService {
                 name,
             })
             return printVariant;
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    
+    async addPrintPalette(req: PrintPaletteInterface) {
+        try {
+            const { print_id, variant_id } = req
+            const count = await PrintPaletteModel.find({
+                variant_id: new ObjectId(variant_id)
+            }).count()
+            const printPalette = await PrintPaletteModel.create({
+                print_id,
+                variant_id,
+                order: count + 1
+            })
+            return printPalette;
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async removePrintPalette(req: any) {
+        try {
+            const { palette_id = '' } = req
+            if (!mongoose.Types.ObjectId.isValid(palette_id)) {
+                throw new Error('Invalid palette_id');
+            }
+
+            const query = { '_id': palette_id };
+            return await PrintPaletteModel.deleteOne(query);
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async orderPalettePrints(req: any) {
+        try {
+            const { fromElement = {}, toElement = {} } = req
+            const { _id = '', order = undefined} = fromElement;
+            const { _id: id_to = '', order: order_to = undefined} = toElement;
+            if (_id && order && id_to && order_to) {
+                const queryFrom = {  
+                    _id,
+                    order
+                }
+                await PrintPaletteModel.findOneAndUpdate(queryFrom, {
+                    order: order_to,
+                }, { upsert: true });
+
+                const queryTo = {
+                    _id: id_to,
+                    order: order_to
+                }
+
+                await PrintPaletteModel.findOneAndUpdate(queryTo, {
+                    order,
+                }, { upsert: true });
+            }
+            const printPalettes = await PrintPaletteModel.aggregate([
+                { $sort : { order : 1 } },
+                {
+                    $group: {
+                        _id: {
+                            variant_id: "$variant_id",
+                        },
+                        grouped: {
+                            $push: {
+                                print_id: "$print_id",
+                                _id: "$_id",
+                                order: "$order",
+                                createdAt: "$createdAt",
+                            }
+                        }
+                    }
+                },
+            ])
+    
+            return printPalettes;
 
         } catch (error) {
             console.log(error)

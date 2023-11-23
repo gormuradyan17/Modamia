@@ -1,9 +1,8 @@
 import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import './style.scss'
 import HeadingUI from '../HeadingUI/HeadingUI';
-import ReactPortal from 'layout/ReactPortal/ReactPortal';
 import useClickOutSide from 'utils/useClickOutside';
 
 interface DropdownPropsi {
@@ -46,29 +45,13 @@ const DropdownUI = ({
 
     useClickOutSide(ref, () => setIsActive(false), isActive)
 
-    const getContentPositioned = () => {
-        if (ref?.current && contentRef?.current) {
-            const posY = ref.current.getBoundingClientRect().top + 60
-            const posX = ref.current.getBoundingClientRect().left
-            const posW = ref.current.offsetWidth - 3
-            contentRef.current.style.top = `${posY}px`
-            contentRef.current.style.left = `${posX}px`
-            contentRef.current.style.width = `${posW}px`
-        }
-    }
-
     const toggleDropdown = () => {
         setIsActive(!isActive);
-        getContentPositioned()
     }
-    
-    useEffect(() => {
-        getContentPositioned()
-    },[contentRef, ref])
 
     return (
         <>
-            {label && <HeadingUI size='18px' color='#aa8a75' text={label}/>}
+            {label && <HeadingUI size='18px' color='#aa8a75' text={label} />}
             {error && <span className="error-message">{error}</span>}
             <div className={`DropdownUI ${classN} ${disabled ? '_disabled' : ''}`} ref={ref}>
                 <div
@@ -82,10 +65,8 @@ const DropdownUI = ({
                         <FontAwesomeIcon className='DropdownUI__icon' icon={faCaretDown} />
                     )}
                 </div>
-            </div>
-            {!disabled && <ReactPortal>
                 <div
-                    className={`DropdownUI__content${isActive ? ' _active' : ''}`}
+                    className={`DropdownUI__content customYScrollbar${isActive ? ' _active' : ''}`}
                     ref={contentRef}
                 >
                     {Boolean(options?.length) &&
@@ -99,7 +80,7 @@ const DropdownUI = ({
                             </div>
                         ))}
                 </div>
-            </ReactPortal>}
+            </div>
         </>
     );
 };

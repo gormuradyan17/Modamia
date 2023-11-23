@@ -38,10 +38,10 @@ const NewPrintVariant = () => {
             <button
                 type="button"
                 onClick={toggleNewVariant}
-            >Add new type +</button>
+            >Add new palette +</button>
             {isVisible && <div className="new-item-variant-save">
                 <InputUI
-                    placeholder="New type"
+                    placeholder="New palette"
                     value={newVariant}
                     name="newType"
                     callback={handleInputChange}

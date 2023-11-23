@@ -49,16 +49,21 @@ $colorFill: var(--colorFill);
   display: flex;
 }
 .color-dropdown-styles {
-    margin: 0;
-    .DropdownUI__button{
-        background: none;
-        box-shadow: unset;
-        border: none;
-        color: white;
-        padding: unset;
-        text-transform: uppercase;
-    }
-   svg{
-    right: 0;
-   }
+  margin: 0;
+  .DropdownUI__content {
+      top: 50px;
+      width: calc(100% + 35px);
+      left: -18px;
+  }
+  .DropdownUI__button{
+      background: none;
+      box-shadow: unset;
+      border: none;
+      color: white;
+      padding: unset;
+      text-transform: uppercase;
+  }
+ svg{
+  right: 0;
+ }
 }

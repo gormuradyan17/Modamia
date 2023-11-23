@@ -11,8 +11,8 @@ import InputUI from 'shared/ui/InputUI/InputUI';
 import { formValidator } from 'utils/validators/validator';
 import { printFilesOptions, printFormOptions } from 'utils/validators/validatorOptions';
 import NewPrintVariant from './NewPrintVariant';
-import DropdownUI from 'shared/ui/DropdownUI/DropdownUI';
-import { printsVariants } from 'redux/reducers/printReducer';
+import { printDetails, printsVariants, setPrintState } from 'redux/reducers/printReducer';
+import DropdownCheckboxUI from 'shared/ui/DropdownCheckboxUI/DropdownCheckboxUI';
 
 interface Props {
     closePopup: CallbackSkeletonType,
@@ -24,6 +24,7 @@ const NewPrint = ({
     const dispatch = useDispatch()
 
     const printVariants = getDropdownOptionsFromItemsVariants(useSelector(printsVariants)) || [{}]
+    const pDetails = useSelector(printDetails)
 
     const [data, setData] = useState<ObjectType>({
         name: '',
@@ -31,7 +32,7 @@ const NewPrint = ({
         tags: '',
         highresurl: '',
         previewurl: '',
-        colorVariant: ''
+        printsPalettes: []
     })
     const [errors, setErrors] = useState<ObjectType>({})
     const [fileErrors, setFileErrors] = useState<ObjectType>({})
@@ -48,7 +49,8 @@ const NewPrint = ({
         if (Object.keys(errors).length) { setErrors({}) };
         const formData = new FormData();
         Object.keys(data).forEach((key: string) => {
-            formData.append(key, data[key]); // Add other data properties as needed
+            if (key === 'printsPalettes') formData.append(key, JSON.stringify(data[key])); 
+            else formData.append(key, data[key]); // Add other data properties as needed
         });
         await addPrint(formData)
         await getAvPrints(dispatch)
@@ -79,9 +81,16 @@ const NewPrint = ({
         return true
     }
 
-    const handleDropdownChange = (dataT: ObjectType) => {
-        const value = dataT.id
-        setData({ ...data, printVariant: value })
+    const handleDropdownChange = (event: ChangeEvent<HTMLInputElement>, option: ObjectType) => {
+        const { target: { checked } } = event
+        const { id } = option;
+        const copyPalettes = [...data?.printsPalettes]
+        if (checked) copyPalettes.push(id)
+        else {
+            const idx = copyPalettes.findIndex(() => id)
+            if (idx !== -1) copyPalettes.splice(idx, 1)
+        }
+        setData({ ...data, printsPalettes: copyPalettes })
     }
 
     return (
@@ -114,10 +123,10 @@ const NewPrint = ({
                 />
                 <div className="new-color-variants">
                     <NewPrintVariant />
-                    <DropdownUI
+                    <DropdownCheckboxUI
                         options={printVariants}
-                        onChange={(data) => handleDropdownChange(data)}
-                        label="Print type"
+                        onChange={(e: any, option: ObjectType) => handleDropdownChange(e, option)}
+                        label="Print palettes"
                     />
                 </div>
                 <div className="new-print-zone">

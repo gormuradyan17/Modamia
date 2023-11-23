@@ -3,6 +3,7 @@ import ColorVariantModel from '../models/ColorVariant'
 import ColorPaletteModel from '../models/ColorPalette'
 import PrintModel from '../models/Print'
 import PrintVariantMotel from '../models/PrintVariant'
+import PrintPaletteModel from '../models/PrintPalette'
 import MannequinModel from '../models/Mannequin'
 import SilhouetteModel from '../models/Silhouette'
 import SizeModel from '../models/Size'
@@ -76,6 +77,53 @@ class PublicService {
     async getPrintsVariants() {
         const prints = await PrintVariantMotel.find({});
         return prints;
+    }
+
+    async getPrintsPalettes(print_id: string = '', variant_id: string = '') {
+        const printsPalettes = await PrintPaletteModel.aggregate([
+            {
+                $match: {
+                    ...(print_id && { print_id }),
+                    ...(variant_id && { variant_id })
+                }
+            },
+            {
+                $lookup: {
+                    from: "prints",
+                    localField: "print_id",
+                    foreignField: "_id",
+                    as: "prints"
+                },
+            },
+            { $sort : { order : 1 } },
+            {
+                $lookup: {
+                    from: "prints_variants",
+                    localField: "variant_id",
+                    foreignField: "_id",
+                    as: "variant"
+                },
+            },
+            {
+                $group: {
+                    _id: {
+                        variant_id: "$variant_id",
+                    },
+                    grouped: {
+                        $push: {
+                            print_id: "$print_id",
+                            _id: "$_id",
+                            order: "$order",
+                            createdAt: "$createdAt",
+                            prints: "$prints",
+                            variant: "$variant"
+                        }
+                    }
+                }
+            },
+        ])
+
+        return printsPalettes;
     }
 
     async getSizes() {

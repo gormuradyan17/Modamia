@@ -6,7 +6,6 @@ export const API_URL_ADMIN = '/admin/'
 export const COLORS_URL = API_URL + 'colors'
 export const COLORS_VARIANTS_URL = API_URL + 'colors-variants'
 export const COLORS_PALETTES_URL = API_URL + 'colors-palettes'
-export const PRINTS_URL = API_URL + 'prints'
 export const MANNEQUINS_URL = API_URL + 'mannequins'
 
 export const BASE_UPLOADS_MANNEQUINS_URL = BASE_UPLOADS_URL + 'mannequins/'
@@ -85,7 +84,9 @@ export const BASE_UPLOADS_SILHOUETTES_SLEEVES_URL = BASE_UPLOADS_SILHOUETTES_URL
 
 // Print
 
+export const PRINTS_URL = API_URL + 'prints'
 export const PRINTS_VARIANTS_URL = API_URL + 'prints-variants'
 export const ADD_PRINT_URL = API_URL_ADMIN + 'add-print'
 export const ADD_PRINT_VARIANT_URL = API_URL_ADMIN + 'add-print-variant'
 export const EDIT_PRINT_URL = API_URL_ADMIN + 'edit-print'
+export const PRINTS_PALETTES_URL = API_URL + 'prints-palettes'

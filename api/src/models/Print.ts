@@ -30,10 +30,6 @@ const PrintSchema: PrintInterface = new mongoose.Schema(
       type: String,
       required: false,
     },
-    printVariant: {
-      type: String,
-      required: false
-    }
   },
   { timestamps: true }
 );
