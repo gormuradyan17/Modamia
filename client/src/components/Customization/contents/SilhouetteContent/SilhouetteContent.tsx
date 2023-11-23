@@ -17,7 +17,7 @@ const dispatch=useDispatch()
 
 
     return (
-        <div id="customization" className="ds_content dotted-bdr-top mt-0 clearfix mob-mTB0">
+        <div id="customization">
             <div className="cntrlHolderrowtop">
             <SilhouetteCntrlHolder cntrlData={silhouettes} setKindSilhouette={setKindSilhouette}/>
             <SilhouetteContentTabs silhouettesData={silhouettes[kindSilhouette]}/>

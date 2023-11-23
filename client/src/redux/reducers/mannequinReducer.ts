@@ -20,7 +20,10 @@ interface stateProps {
 	activeMannequin: MannequinInterface,
 	activeColor: string,
 	activePrint: MannequinPrintInterface,
-	activeCategory: string
+	activeCategory: string,
+	url:'',
+	type:'',
+	position:string
 }
 
 export const defaultMannequinState: MannequinStateInterface = {
@@ -36,7 +39,7 @@ export const defaultMannequinState: MannequinStateInterface = {
 		highresurl: '',
 		previewurl: ''
 	},
-	activeCategory: ''
+	activeCategory: '',
 }
 
 const initialState: stateProps = {
@@ -52,7 +55,10 @@ const initialState: stateProps = {
 		highresurl: '',
 		previewurl: ''
 	},
-	activeCategory: 'color'
+	activeCategory: 'silhouette',
+	url:'',
+	type:'',
+	position:'front',
 }
 
 export const mannequinSlice = createSlice({
@@ -84,6 +90,15 @@ export const mannequinSlice = createSlice({
 		setMannequinLoading: (state, action) => {
 			state.loading = action.payload;
 		},
+		setMannequinUrl: (state, action) => {
+			state.url = action.payload;
+		},
+		setMannequinType: (state, action) => {
+		   state.type = action.payload;
+		},
+		setMannequinPosition: (state, action) => {
+			state.position = action.payload;
+		},
 	}
 });
 
@@ -95,7 +110,10 @@ export const {
 	setActiveColor,
 	setActivePrint,
 	setActiveCategory,
-	setMannequinLoading
+	setMannequinLoading,
+	setMannequinUrl,
+	setMannequinType,
+	setMannequinPosition
 } = mannequinSlice.actions;
 
 export const availableMannequins = (state: ObjectType) => state.mannequinReducer.mannequins;
@@ -105,5 +123,8 @@ export const getMannequinActiveColor = (state: ObjectType) => state.mannequinRed
 export const getMannequinActivePrint = (state: ObjectType) => state.mannequinReducer.activePrint;
 export const getMannequinActiveCategory = (state: ObjectType) => state.mannequinReducer.activeCategory;
 export const getMannequinLoading = (state: ObjectType) => state.mannequinReducer.loading;
+export const getMannequinUrl= (state: ObjectType) => state.mannequinReducer.url;
+export const getMannequinType= (state: ObjectType) => state.mannequinReducer.type;
+export const getMannequinPosition= (state: ObjectType) => state.mannequinReducer.position;
 
 export default mannequinSlice.reducer;

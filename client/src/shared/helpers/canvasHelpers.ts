@@ -1,4 +1,3 @@
-import {B_I2, T_I4} from "shared/constants/genericApiRoutes";
 import {ObjectType} from "./helpers";
 
 export async function addModel(src: string, color: string, context: any, width: number, height: number) {
@@ -12,7 +11,8 @@ export async function addModel(src: string, color: string, context: any, width: 
 
 async function colorImage(image: string, color: string, width: number, height: number): Promise<string> {
 	const img = new Image();
-	img.src = image
+	img.src = image;
+	img.crossOrigin="*"
 	await new Promise((res) => {
 		img.onload = res
 	})
@@ -25,7 +25,7 @@ async function colorImage(image: string, color: string, width: number, height: n
 	// imageCtx.save();
 	//Then export our canvas to png image
 	imageCtx.clearRect(0, 0, width, height);
-	imageCtx.drawImage(img, 0, 0, width, height);
+	imageCtx.drawImage(img, 0, 0, width, height);	
 	
 	if (color) {
 		const imageData = imageCtx.getImageData(0, 0, width, height);
@@ -58,6 +58,7 @@ async function colorImage(image: string, color: string, width: number, height: n
 export async function addImageProcess(printImageURL: string, imageSrc: string, context: any, width: number, height: number, rangeValue: number) {
 	const image = new Image();
 	image.src = imageSrc;
+	image.crossOrigin = "*";
 	await new Promise(res => {
 		image.onload = res
 	})
@@ -74,7 +75,7 @@ export async function addImageProcess(printImageURL: string, imageSrc: string, c
 	const imageData = ctx.getImageData(0, 0, width, height);
 	const data = imageData.data;
 	let img = new Image()
-	img.src = printImageURL
+	img.src = printImageURL;
 	img.crossOrigin = "*";
 	await new Promise(res => {
 		img.onload = res
@@ -86,12 +87,13 @@ export async function addImageProcess(printImageURL: string, imageSrc: string, c
 	// ctxBg.save();
 	ctxBg.globalAlpha = 1;
 	ctxBg.globalCompositeOperation = 'multiply';
-	ctx.clearRect(0, 0, width, height);
+	ctxBg.clearRect(0, 0, width, height);
 	ctxBg.drawImage(image, 0, 0, width, height);
-	// ctxBg.drawImage(img, 0, 0, width, height);
-	for (let i = 0; i * width * rangeValue <= width; i++) {
-		for (let j = 0; j * height * rangeValue <= height; j++) {
-			ctxBg.drawImage(img, 50, 50, width, height,  i * width * rangeValue, j * height * rangeValue, width * rangeValue, height * rangeValue);
+	// ctxBg.drawImage(img, 0, 0, width, height);	
+	for (let i = 0; i * img.width * rangeValue < width; i++) {
+		for (let j = 0; j * height * rangeValue < height; j++) {
+			
+			ctxBg.drawImage(img, 0, 0, width, height,  i * img.width * rangeValue, j * height * rangeValue, width * rangeValue, height * rangeValue);
 		}
 	}
 	const bgImageData = ctxBg.getImageData(0, 0, width, height);
@@ -106,9 +108,7 @@ export async function addImageProcess(printImageURL: string, imageSrc: string, c
 	return context.drawImage(x, 0, 0, width, height);
 }
 
-export const getModelData = (activeColor: string = '', activePrint: ObjectType = {}, category = 'color') => {
-	return [
-		{src: B_I2, color: activeColor, printImageURL: activePrint?.highresurl, category: category},
-		{src: T_I4, color: activeColor, printImageURL: activePrint?.highresurl, category: category},
-	]
+export const getModelData = (url: string = '', activeColor: string = '', activePrint: ObjectType = {}, category = 'silhouette') => {
+	return {src: url, color: activeColor, printImageURL: activePrint?.highresurl, category: category}
+	
 }
