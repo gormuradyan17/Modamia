@@ -17,10 +17,10 @@ const dispatch=useDispatch()
 
 
     return (
-        <div id="customization">
+        <div className="customization-contents">
             <div className="cntrlHolderrowtop">
-            <SilhouetteCntrlHolder cntrlData={silhouettes} setKindSilhouette={setKindSilhouette}/>
-            <SilhouetteContentTabs silhouettesData={silhouettes[kindSilhouette]}/>
+                <SilhouetteCntrlHolder cntrlData={silhouettes} setKindSilhouette={setKindSilhouette}/>
+                <SilhouetteContentTabs silhouettesData={silhouettes[kindSilhouette]}/>
             </div>
         </div>
     );

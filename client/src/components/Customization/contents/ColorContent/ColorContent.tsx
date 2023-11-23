@@ -70,7 +70,7 @@ const ColorContent = () => {
           </ButtonUI>
         ))}
       </div>
-      <div className="color-content">
+      <div className="color-content customYScrollbar">
         {activePalette?.colors.map((color: ObjectType) => {
           const {
             name = "",

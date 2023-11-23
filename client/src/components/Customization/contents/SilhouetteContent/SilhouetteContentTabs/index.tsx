@@ -8,10 +8,10 @@ const SilhouetteContentTabs:React.FC<Props>=({silhouettesData})=>{
    const bottomData=silhouettesData && silhouettesData.length && silhouettesData.filter((silhouettes:any)=>silhouettes.type==="Bottom" && silhouettes.type )
    
    return(
-    <>
+    <div className="silhouette-content">
          <SilhouetteClothes data={topData} type="tops" />
          <SilhouetteClothes data={bottomData} type="bottoms"/>
-    </>
+    </div>
    )
 }
 
