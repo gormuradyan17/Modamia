@@ -3,6 +3,7 @@ $colorFill: var(--colorFill);
 
 .color-content {
   display: flex;
+  
   &.-container {
     width: 100%;
     display: flex;
@@ -47,15 +48,15 @@ $colorFill: var(--colorFill);
 .btnContent {
   display: flex;
 }
-.DropdownUI {
-    margin: unset;
-    width: 115%;
-    &__button{
+.color-dropdown-styles {
+    margin: 0;
+    .DropdownUI__button{
         background: none;
         box-shadow: unset;
         border: none;
         color: white;
         padding: unset;
+        text-transform: uppercase;
     }
    svg{
     right: 0;

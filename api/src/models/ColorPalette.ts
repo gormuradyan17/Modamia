@@ -8,18 +8,26 @@ export interface ColorPaletteInterface {
 const ColorPaletteSchema: ColorPaletteInterface = new mongoose.Schema(
   {
     color_id: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
       ref: 'Color',
       required: true,
     },
     variant_id: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
       ref: 'colors_variants',
       required: true,
     },
     order: {
       type: Number,
       required: true,
+    },
+    colors: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Color',
+    }],
+    variant: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'colors_variants',
     }
   },
   { timestamps: true }

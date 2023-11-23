@@ -13,6 +13,7 @@ const PrintContent = () => {
 
     const prints = useSelector(availablePrints)
     const dispatch = useDispatch()
+
     useEffect(() => {
         getAvPrintsVariants(dispatch)
     }, [])
@@ -24,43 +25,43 @@ const PrintContent = () => {
         }
         dispatch(setActivePrint(obj))
     }
-    const btns=[
+    const btns = [
         {
-            id:1,
-            colorPosition:"All over"
+            id: 1,
+            colorPosition: "All over"
         },
         {
-            id:2,
-            colorPosition:"Top"
+            id: 2,
+            colorPosition: "Top"
         },
         {
-            id:3,
-            colorPosition:"Bottom"
+            id: 3,
+            colorPosition: "Bottom"
         },
     ]
 
     return (
-        <div className="print-content-container">    
-         <div className="btnContent">
-            {btns.map(opt=>(
-                <ButtonUI key={opt.id} version="gray">{opt.colorPosition}</ButtonUI>
-            ))}
-         </div>    
-         <div className="print-content">
-         {prints?.map((print: ObjectType) => {
-                return <div 
-                    className="print-content-print" 
-                    key={print._id}
-                    onClick={() => updateActivePrint(print)}>
-                    <HeadingUI classN="print-content-text _ellipsis" text={print.name} size="16px" />
-                    <div className="print-content-image">
-                        <img src={`${BASE_UPLOADS_PRINTS_PREVIEWS_URL}${print.previewurl}`} className="print-content-img" alt={print.name} />
+        <div className="print-content-container">
+            <div className="btnContent">
+                {btns.map(opt => (
+                    <ButtonUI key={opt.id} version="gray">{opt.colorPosition}</ButtonUI>
+                ))}
+            </div>
+            <div className="print-content">
+                {prints?.map((print: ObjectType) => {
+                    return <div
+                        className="print-content-print"
+                        key={print._id}
+                        onClick={() => updateActivePrint(print)}>
+                        <HeadingUI classN="print-content-text _ellipsis" text={print.name} size="16px" />
+                        <div className="print-content-image">
+                            <img src={`${BASE_UPLOADS_PRINTS_PREVIEWS_URL}${print.previewurl}`} className="print-content-img" alt={print.name} />
+                        </div>
+                        <span></span>
                     </div>
-                    <span></span>
-                </div>
-            })}
-            </div> 
-            
+                })}
+            </div>
+
         </div>
     );
 };

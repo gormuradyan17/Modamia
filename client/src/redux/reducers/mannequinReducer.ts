@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getAvailableMannequins } from 'redux/features/mannequinApi';
 import { ArrayType, ObjectType } from 'shared/helpers/helpers';
 
 type MannequinStateInterface = Record<string, any>
@@ -85,24 +84,7 @@ export const mannequinSlice = createSlice({
 		setMannequinLoading: (state, action) => {
 			state.loading = action.payload;
 		},
-	},
-	extraReducers: (builder) => {
-		builder
-            .addCase(getAvailableMannequins.pending, (state, action) => {
-                state.mannequins = [];
-                state.loading = true;
-                mannequinSlice.caseReducers.setMannequinData(state, action);
-            })
-			.addCase(getAvailableMannequins.fulfilled, (state, action) => {
-				state.mannequins = action.payload.data;
-				state.loading = false;
-				mannequinSlice.caseReducers.setMannequinData(state, action);
-			})
-			.addCase(getAvailableMannequins.rejected, (state) => {
-				state.mannequins = [];
-				state.loading = false;
-			})
-	},
+	}
 });
 
 export const { 
