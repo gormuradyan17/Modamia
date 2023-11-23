@@ -25,9 +25,9 @@ export const CardBarPanelAnimations: AnimationObject = {
     ],
 };
 
-export const getManipulatedDataFromPalettes = (palettes: ArrayType, paletteName: string) => {
+export const getManipulatedDataFromPalettes = (palettes: ArrayType, paletteName: string, paletteField: string) => {
   let result = {
-    colors: [],
+    [paletteField]: [],
     name: '',
     _id: ''
   }
@@ -39,7 +39,7 @@ export const getManipulatedDataFromPalettes = (palettes: ArrayType, paletteName:
       const { name = '', _id = ''} = variant[0] || {}
 
       if (paletteName.toLowerCase() === name.toLowerCase()) {
-        result.colors = grouped;
+        result[paletteField] = grouped;
         result.name = name
         result._id = _id
 

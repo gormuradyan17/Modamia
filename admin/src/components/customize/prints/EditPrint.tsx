@@ -4,12 +4,11 @@ import { ButtonUI } from "shared/ui/ButtonUI/ButtonUI";
 import HeadingUI from "shared/ui/HeadingUI/HeadingUI";
 import InputUI from "shared/ui/InputUI/InputUI";
 import './style.scss'
-import { ArrayType, ObjectType, appColor, getActiveItemTypeById, getDropdownOptionsFromItemsVariants } from "shared/helpers/helpers";
+import { ArrayType, ObjectType, appColor, getDropdownOptionsFromItemsVariants } from "shared/helpers/helpers";
 import DropzoneUI from "shared/ui/DropzoneUI/DropzoneUI";
 import { BASE_UPLOADS_PRINTS_HIGHS_URL, BASE_UPLOADS_PRINTS_PREVIEWS_URL } from "shared/constants/genericApiRoutes";
 import { printFilesOptions } from "utils/validators/validatorOptions";
 import { formValidator } from "utils/validators/validator";
-import DropdownUI from "shared/ui/DropdownUI/DropdownUI";
 import { useSelector } from "react-redux";
 import { printsVariants } from "redux/reducers/printReducer";
 
@@ -61,12 +60,6 @@ const EditPrint = ({
         return true
     }
 
-    const handleDropdownChange = (data: ObjectType) => {
-        const value = data.id
-        setPrint({ ...print, printVariant: value })
-    }
-
-
     return (
         <div className="new-print">
             <HeadingUI text={`Edit ${printInfo.name} print`} align="center" color="#aa8a75" />
@@ -94,14 +87,6 @@ const EditPrint = ({
                     label="Tags"
                     name="tags"
                     callback={handleInputChange}
-                />
-            </div>
-            <div className="new-print-variants">
-                <DropdownUI
-                    options={printVariants}
-                    onChange={(data) => handleDropdownChange(data)}
-                    label="Print type"
-                    defaultValue={getActiveItemTypeById(printVariants, print?.printVariant)}
                 />
             </div>
             <div className="new-print-zone">

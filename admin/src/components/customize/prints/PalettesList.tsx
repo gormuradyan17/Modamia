@@ -1,20 +1,20 @@
 import { useSelector } from "react-redux";
-import { colorsPalettes } from "redux/reducers/colorReducer";
+import { printsPalettes } from "redux/reducers/printReducer";
 import { ObjectType } from "shared/helpers/helpers";
 
 interface Props {
     options: string[],
     onChange: any,
-    activeColor: ObjectType
+    activePrint: ObjectType
 }
 
 const PalettesList = ({
     options,
     onChange,
-    activeColor
+    activePrint
 }: Props) => {
 
-    const colorPalettes = useSelector(colorsPalettes)
+    const printPalettes = useSelector(printsPalettes)
 
     return (
         <div
@@ -22,11 +22,11 @@ const PalettesList = ({
             {Boolean(options?.length) &&
                 options?.map((option: any, index: number) => {
                     const { _id: optionId = '', name = '' } = option || {};
-                    const foundItem = colorPalettes.find((palette: ObjectType) => {
+                    const foundItem = printPalettes.find((palette: ObjectType) => {
                         const { grouped = [], _id: { variant_id = ''} = {} } = palette || {};
-                        const foundColor = grouped.some((group: ObjectType) => group?.color_id === activeColor?._id)
+                        const foundPrint = grouped.some((group: ObjectType) => group?.print_id === activePrint?._id)
                         const foundPalette = variant_id === optionId
-                        if (foundColor && foundPalette) return true
+                        if (foundPrint && foundPalette) return true
                     })
 
                     return <label

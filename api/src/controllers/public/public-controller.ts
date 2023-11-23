@@ -49,6 +49,16 @@ class PublicController {
         }
     }
 
+    async getPrintsPalettes(req: any, res: any, next: any) {
+        try {
+            const {print_id = '', variant_id = ''} = req.query
+            const palettes = await publicService.getPrintsPalettes(print_id, variant_id);
+            return res.json(palettes);
+        } catch (error) {
+            next(error);
+        }
+    }
+
     async getSizes(req: any, res: any, next: any) {
         try {
             const colors = await publicService.getSizes();

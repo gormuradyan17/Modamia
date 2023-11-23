@@ -83,3 +83,49 @@
         top: 50%;
     }
 }
+
+.palettes-list-buttons {
+    display: flex;
+    position: relative;
+}
+
+.palettes-list-content {
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+    width: max-content;
+    border: 1px solid variables.$appColor;
+    border-radius: 5px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.palettes-list-option {
+    cursor: pointer;
+    padding: 10px 15px;
+    color: variables.$appColor;
+    background-color: #f9f1f1;
+    font-size: 16px;
+    user-select: none;
+    transition: .3s all ease 0s;
+    text-transform: capitalize;
+    position: relative;
+    display: flex;
+    padding-right: 60px;
+    &:hover {
+        background-color: #fff;
+    }
+}
+
+.palettes-list-checkbox {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    accent-color: variables.$appColor
+}

@@ -66,12 +66,17 @@
 
 .DropdownUI__content {
     box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.2);
-    position: fixed;
+    position: absolute;
     z-index: 1000;
-    border: 1px solid variables.$appColor;
+    outline: 1px solid #aa8a75;
+    top: 100%;
+    height: auto;
+    max-height: 300px;
+    width: 100%;
+    left: 0;
     display: none;
+    overflow-y: auto;
     border-radius: 5px;
-
     &._active {
         box-shadow: 0 2px 3px 0 rgba(34, 36, 38, .15);
         display: block;

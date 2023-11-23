@@ -22,6 +22,10 @@ import {
 	REMOVE_COLOR_PALETTE_URL,
 	ADD_COLOR_PALETTE_URL,
 	ORDER_PALETTE_COLORS_URL,
+	PRINTS_PALETTES_URL,
+	ADD_PRINT_PALETTE_URL,
+	REMOVE_PRINT_PALETTE_URL,
+	ORDER_PALETTE_PRINTS_URL,
 } from "shared/constants/genericApiRoutes";
 import { BaseApi } from "./baseApi";
 
@@ -82,6 +86,26 @@ export const getPrints = (body: Record<string, any> = {}) => {
 export const getPrintsVariants = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');
 	return http.get(PRINTS_VARIANTS_URL, body)
+}
+
+export const getPrintsPalettes = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.get(PRINTS_PALETTES_URL, body)
+}
+
+export const addPrintPalette = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(ADD_PRINT_PALETTE_URL, body)
+}
+
+export const removePrintPalette = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(REMOVE_PRINT_PALETTE_URL, body)
+}
+
+export const orderPalettePrints = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(ORDER_PALETTE_PRINTS_URL, body)
 }
 
 export const addPrint = (body: Record<string, any> = {}) => {

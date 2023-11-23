@@ -14,7 +14,7 @@ const ColorPalette = () => {
   const options = getConvertedDropdownOptionsFromVariants(variants)
 
   const handlePaletteDispatchChange = (name: string) => {
-    const group = getManipulatedDataFromPalettes(palettes, name)
+    const group = getManipulatedDataFromPalettes(palettes, name, 'colors')
     if (group?._id) {
       dispatch(setActivePaletteItem({
         name: group?.name,

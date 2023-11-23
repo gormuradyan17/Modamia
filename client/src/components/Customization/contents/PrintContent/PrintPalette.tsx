@@ -1,34 +1,46 @@
-import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { printsVariants } from "redux/reducers/printReducer";
-import { getAvPrints } from "services/printService";
 import DropdownUI from "shared/ui/DropdownUI";
+import './style.scss'
+import { ObjectType, getConvertedDropdownOptionsFromVariants, getManipulatedDataFromPalettes } from "shared/helpers/helpers";
+import { useEffect } from "react";
+import { activePaletteItem, printsPalettes, printsVariants, setActivePaletteItem } from "redux/reducers/printReducer";
 
 const PrintPalette = () => {
-  // const pVariants = useSelector(printsVariants);
-  // const dispatch = useDispatch();
-  // const {name,_id}=pVariants.find((item:any)=>item.name==="Parisian You")
-  // const [choosenOptName, setChoosenOptName] = useState(name);
-  // const [choosenOptId, setChoosenOptId] = useState(_id);
 
-  // const handleDropdownChange = (e: any) => {
-  //   setChoosenOptId(e._id);
-  //   setChoosenOptName(e.name);
-  // };
+  const palettes = useSelector(printsPalettes);
+  const dispatch = useDispatch();
+  const activePalette = useSelector(activePaletteItem)
+  const variants = useSelector(printsVariants)
+  const options = getConvertedDropdownOptionsFromVariants(variants)
 
-  // useEffect(()=>{
-  //   getAvPrints(dispatch,choosenOptId)
-  // },[choosenOptId])
+  const handlePaletteDispatchChange = (name: string) => {
+    const group = getManipulatedDataFromPalettes(palettes, name, 'prints')
+    if (group) {
+      dispatch(setActivePaletteItem({
+        name,
+        prints: group?.prints,
+        _id: group?._id
+      }))
+    }
+  }
+
+  const handlePaletteChange = (option: ObjectType) => {
+    const { text = '' } = option;
+    handlePaletteDispatchChange(text)
+  }
+
+  useEffect(() => {
+    handlePaletteDispatchChange(activePalette?.name)
+  }, [])
+
   return (
-    <div>
-      Prints
-      {/* <DropdownUI
-        options={pVariants}
-        onChange={(e) => handleDropdownChange(e)}
-        defaultValue={choosenOptName}
-        classN=""
-      /> */}
-    </div>
+    <DropdownUI
+      options={options}
+      onChange={(option) => handlePaletteChange(option)}
+      defaultValue={activePalette?.name}
+      classN="print-dropdown-styles"
+    />
   );
 };
+
 export default PrintPalette;

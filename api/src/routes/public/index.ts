@@ -11,6 +11,7 @@ router.get('/colors-palettes', publicController.getColorsPalettes)
 
 router.get('/prints', publicController.getPrints)
 router.get('/prints-variants', publicController.getPrintsVariants)
+router.get('/prints-palettes', publicController.getPrintsPalettes)
 
 // Mannequin
 

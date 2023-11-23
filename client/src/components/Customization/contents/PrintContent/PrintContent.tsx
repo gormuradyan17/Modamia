@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { availablePrints } from "redux/reducers/printReducer";
-import { getAvPrints, getAvPrintsVariants } from "services/printService";
+import { activePaletteItem } from "redux/reducers/printReducer";
+import { getAvPrintsPalettes, getAvPrintsVariants } from "services/printService";
 import { BASE_UPLOADS_PRINTS_HIGHS_URL, BASE_UPLOADS_PRINTS_PREVIEWS_URL } from "shared/constants/genericApiRoutes";
 import { ObjectType } from "shared/helpers/helpers";
 import HeadingUI from "shared/ui/HeadingUI/HeadingUI";
@@ -11,11 +11,12 @@ import { ButtonUI } from "shared/ui/ButtonUI/ButtonUI";
 
 const PrintContent = () => {
 
-    const prints = useSelector(availablePrints)
+    const activePalette = useSelector(activePaletteItem)
     const dispatch = useDispatch()
 
     useEffect(() => {
         getAvPrintsVariants(dispatch)
+        getAvPrintsPalettes(dispatch)
     }, [])
 
     const updateActivePrint = (print: ObjectType) => {
@@ -25,6 +26,7 @@ const PrintContent = () => {
         }
         dispatch(setActivePrint(obj))
     }
+    
     const btns = [
         {
             id: 1,
@@ -48,14 +50,18 @@ const PrintContent = () => {
                 ))}
             </div>
             <div className="print-content">
-                {prints?.map((print: ObjectType) => {
+                {activePalette?.prints?.map((print: ObjectType) => {
+                    const { name = '', previewurl = '', highresurl = '', _id = ''  } = print?.prints?.[0] || {}
                     return <div
                         className="print-content-print"
-                        key={print._id}
-                        onClick={() => updateActivePrint(print)}>
-                        <HeadingUI classN="print-content-text _ellipsis" text={print.name} size="16px" />
+                        key={_id}
+                        onClick={() => updateActivePrint({
+                            previewurl,
+                            highresurl,
+                        })}>
+                        <HeadingUI classN="print-content-text _ellipsis" text={name} size="16px" />
                         <div className="print-content-image">
-                            <img src={`${BASE_UPLOADS_PRINTS_PREVIEWS_URL}${print.previewurl}`} className="print-content-img" alt={print.name} />
+                            <img src={`${BASE_UPLOADS_PRINTS_PREVIEWS_URL}${previewurl}`} className="print-content-img" alt={name} />
                         </div>
                         <span></span>
                     </div>

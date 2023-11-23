@@ -1,10 +1,9 @@
 import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import './style.scss'
 import useClickOutSide from 'utils/hooks/useClickOutside';
 import HeadingUI from '../HeadingUI/HeadingUI';
-import ReactPortal from 'layout/ReactPortal/ReactPortal';
 
 interface DropdownPropsi {
     text?: string | number;
@@ -34,26 +33,9 @@ const DropdownCheckboxUI = ({
 
     useClickOutSide([ref, contentRef], () => setIsActive(false), isActive)
 
-    const getContentPositioned = () => {
-        if (ref?.current && contentRef?.current) {
-            const posY = ref.current.getBoundingClientRect().top + 60
-            const posX = ref.current.getBoundingClientRect().left
-            const posW = ref.current.offsetWidth - 3
-            contentRef.current.style.top = `${posY}px`
-            contentRef.current.style.left = `${posX}px`
-            contentRef.current.style.width = `${posW}px`
-        }
-    }
-
     const toggleDropdown = () => {
         setIsActive(!isActive);
-        getContentPositioned()
     }
-
-    useEffect(() => {
-        getContentPositioned()
-    }, [contentRef, ref])
-
     return (
         <>
             {label && <HeadingUI size='18px' color='#aa8a75' text={label} />}
@@ -70,8 +52,6 @@ const DropdownCheckboxUI = ({
                         <FontAwesomeIcon className='DropdownCheckboxUI__icon' icon={faCaretDown} />
                     )}
                 </div>
-            </div>
-            {!disabled && <ReactPortal>
                 <div
                     className={`DropdownCheckboxUI__content${isActive ? ' _active' : ''}`}
                     ref={contentRef}
@@ -95,7 +75,7 @@ const DropdownCheckboxUI = ({
                             </label>
                         })}
                 </div>
-            </ReactPortal>}
+            </div>
         </>
     );
 };

@@ -1,4 +1,4 @@
-import { COLORS_URL, PRINTS_URL, MANNEQUINS_URL, SILHOUETTES_URL, ADD_SILHOUETTE_URL, EDIT_SILHOUETTE_URL, COLORS_VARIANTS_URL, PRINTS_VARIANTS_URL, ADD_PRINT_URL, ADD_PRINT_VARIANT_URL, EDIT_PRINT_URL, SILHOUETTES_TYPES_URL, COLORS_PALETTES_URL } from "shared/constants/genericApiRoutes";
+import { COLORS_URL, PRINTS_URL, MANNEQUINS_URL, SILHOUETTES_URL, ADD_SILHOUETTE_URL, EDIT_SILHOUETTE_URL, COLORS_VARIANTS_URL, PRINTS_VARIANTS_URL, ADD_PRINT_URL, ADD_PRINT_VARIANT_URL, EDIT_PRINT_URL, SILHOUETTES_TYPES_URL, COLORS_PALETTES_URL, PRINTS_PALETTES_URL } from "shared/constants/genericApiRoutes";
 import { BaseApi } from "./baseApi";
 
 export const getColors = (body: Record<string, any> = {}) => {
@@ -27,6 +27,11 @@ export const getPrints = (body: Record<string, any> = {}) => {
 export const getPrintsVariants = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');
 	return http.get(PRINTS_VARIANTS_URL, body)
+}
+
+export const getPrintsPalettes = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.get(PRINTS_PALETTES_URL, body)
 }
 
 export const addPrint = (body: Record<string, any> = {}) => {

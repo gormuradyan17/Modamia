@@ -87,6 +87,33 @@ class AdminController {
         }
     }
 
+    async addPrintPalette(req: any, res: any, next: any) {
+        try {
+            const printPalette = await adminService.addPrintPalette(req.body);
+            return res.json(printPalette);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async removePrintPalette(req: any, res: any, next: any) {
+        try {
+            const printPalette = await adminService.removePrintPalette(req.body);
+            return res.json(printPalette);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async orderPalettePrints(req: any, res: any, next: any) {
+        try {
+            const printPalette = await adminService.orderPalettePrints(req.body);
+            return res.json(printPalette);
+        } catch (error) {
+            next(error);
+        }
+    }
+
     // Mannequins
 
     async addManequin(req: any, res: any, next: any) {

@@ -70,3 +70,24 @@ code {
     border-radius: 10px;
   }
 }
+
+.customYScrollbar {
+  &::-webkit-scrollbar-track {
+    border: 3px solid #fff;
+    background-color: $appColor;
+  }
+
+  &::-webkit-scrollbar {
+    width: 6px;
+    background-color: $appColor;
+
+    &:hover, &:focus, &:active {
+      background-color: $appColor;
+    }
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $appColor;
+    border-radius: 10px;
+  }
+}
