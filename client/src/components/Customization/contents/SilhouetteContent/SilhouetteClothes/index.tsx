@@ -16,8 +16,8 @@ export default function SilhouetteClothes({ data, type }: any) {
 
   return (
     <div className="clothes_content customXScrollbar">
-      {data && Boolean(data.length) ? data.map((clothes: any) => (
-        <div className={`clothes_item ${type === "tops" ? "clothes_tops" : "clothes_bottoms"}`}
+      {data && Boolean(data.length) ? data.map((clothes: any, idx: number) => (
+        <div key={idx} className={`clothes_item ${type === "tops" ? "clothes_tops" : "clothes_bottoms"}`}
           onClick={() => {
             setActiveImageUrl(`${BASE_UPLOADS_SILHOUETTES_URL}${type}/${clothes.silhouetteurl}`)
             setActiveType(type)

@@ -2,6 +2,11 @@
 
 .print-content {
     display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    overflow-y: auto;
+    max-height: 400px;
+    height: 400px;
     &-container{
         width: 100%;
         display: flex;
@@ -10,10 +15,10 @@
     }
     &-print{
         display: flex;
-        justify-content: center;
         align-items: center;
         margin: 10px 20px 10px 0;
         flex-direction: column;
+        flex: 0 1 calc(33.333% - 20px);
     }
     &-image{
         width: 100px;
@@ -39,6 +44,11 @@
 
 .btnContent{
     display: flex;
+    .ButtonUI {
+        &:first-child {
+            margin-left: 0;
+        }
+    }
 }
 
 .print-dropdown-styles {
@@ -55,6 +65,7 @@
         color: white;
         padding: unset;
         text-transform: uppercase;
+        font-size: 15px;
     }
    svg{
     right: 0;

@@ -1,49 +1,86 @@
-.btn_container{
-    display: flex;
+.btn_container {
+  display: flex;
+  .ButtonUI {
+    &:first-child {
+      margin-left: 0;
+    }
+  }
 }
-.clothes{
-  &_content{
-    width: 400px;
+
+.clothes {
+  &_content {
+    width: 100%;
     display: flex;
     overflow-y: hidden;
     background: #F9F6EF;
     gap: 10px;
   }
-  &_item img{
+
+  &_item img {
     height: 100%;
     width: 100%;
-    }
-  &_tops{
-    height: 160px;
-    width:160px;
-    background: #F9F6EF;
-    flex-shrink: 0;
-    border: 1px dotted #ebe6df !important
-
   }
-  &_bottoms{
-    height:270px;
-    width:160px;
+
+  &_tops {
+    flex: 0 0 calc(33.333% - 10px);
+    height: 160px;
     background: #F9F6EF;
     flex-shrink: 0;
-    border: 1px dotted #ebe6df !important
+    border: 1px dotted #ebe6df !important;
+    cursor: pointer;
+    overflow: hidden;
+    img {
+      transition: .3s all ease 0s;
+    }
+    &:hover {
+      img {
+        transform: scale(1.5);
+      }
+    }
+  }
+
+  &_bottoms {
+    height: 240px;
+    flex: 0 0 calc(33.333% - 10px);
+    background: #F9F6EF;
+    flex-shrink: 0;
+    border: 1px dotted #ebe6df !important;
+    cursor: pointer;
+    overflow: hidden;
+    img {
+      transition: .3s all ease 0s;
+    }
+    &:hover {
+      img {
+        transform: scale(1.5);
+      }
+    }
   }
 }
-.positionBtns{
+
+.positionBtns {
   display: flex;
   flex-direction: column;
-  gap:10px;
+  gap: 10px;
 }
-.positionBtns span{
-    font-family: 'Poppins';
-    color: #a57867;
-    font-size: 13px;
-    font-weight: 400;
-    width: 50px;
-    line-height: 15px;
-    display: block;
-    cursor: pointer;
-    margin-right: 0px;
-    text-align: left;
-    letter-spacing: 2px;
+
+.positionBtns span {
+  font-family: 'Poppins';
+  color: #a57867;
+  font-size: 13px;
+  font-weight: 400;
+  width: 50px;
+  line-height: 15px;
+  display: block;
+  cursor: pointer;
+  margin-right: 0px;
+  text-align: left;
+  letter-spacing: 2px;
+}
+.SilhouetteCntrlHolder {
+  display: flex;
+  flex-direction: column;
+}
+.silhouette-content {
+  height: 400px;
 }

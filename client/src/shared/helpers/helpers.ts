@@ -2,6 +2,7 @@ import { AnimationObject } from "shared/objectModels/AnimationModel";
 
 export type ArrayType = Array<Record<string, any>>
 export type ObjectType = Record<string, any>
+export const appColor = '#aa8a75';
 
 export const PortalAnimations: AnimationObject = {
     fadeIn: [
