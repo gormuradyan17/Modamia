@@ -28,11 +28,11 @@ const PrintsPalette = () => {
     }, [])
 
     return (
-        <div className='color-palettes'>
+        <div className='print-palettes'>
             <MainHead text="Customize Palettes" />
             <ButtonUI classN="add-button" onClick={() => setIsVisible(true)} type="button">New Palette</ButtonUI>
             <MainBody>
-                <div className="colors-palettes-list">
+                <div className="prints-palettes-list">
                     <HeadingUI text="Palettes List" size="22px" />
                     {palettes?.length ? <PalettesList palettes={palettes} /> : null}
                 </div>
