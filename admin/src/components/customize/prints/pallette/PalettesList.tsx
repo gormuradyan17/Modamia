@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { availablePrints, printsVariants, setPrintsPalettesData } from "redux/reducers/printReducer";
 import { orderPalettePrints } from "shared/api/dataApi";
+import { BASE_UPLOADS_PRINTS_PREVIEWS_URL } from "shared/constants/genericApiRoutes";
 import { ArrayType, ObjectType, appColor } from "shared/helpers/helpers";
 import HeadingUI from "shared/ui/HeadingUI/HeadingUI";
 
@@ -48,12 +49,12 @@ const PalettesList = ({
                 const { grouped = [] } = palette || {}
                 return <div key={variant?._id + index} className="palette-body">
                     <HeadingUI classN="palette-variantname" text={name} color={appColor} size="18px" />
-                    <div className="palette-content customXScrollbar">
+                    {grouped?.length ? <div className="palette-content customXScrollbar">
                         {grouped?.map((group: ObjectType, idx: number) => {
                             const print = printsList?.find((print: ObjectType) => print._id === group?.print_id)
                             const { previewurl = '', name = '' } = print || {}
-                            return <div key={group?.color_id + idx} style={{
-                                backgroundImage: `url(${previewurl})`
+                            return <div key={group?.print_id + idx} style={{
+                                backgroundImage: `url(${BASE_UPLOADS_PRINTS_PREVIEWS_URL}${previewurl || ''})`
                             }}
                                 className="palette-elem"
                                 draggable
@@ -61,11 +62,10 @@ const PalettesList = ({
                                 onDragOver={onDragOver}
                                 onDrop={(e) => onDrop(e, idx, paletteIdx)}
                             >
-                                <HeadingUI classN="palette-elem-text" align="center" text={name} size="12px" color='#fff' />
+                                <HeadingUI classN="palette-text" align="center" text={name} size="12px" color='#fff' />
                             </div>
                         })}
-
-                    </div>
+                    </div> : null }
                 </div>
             })}
         </div>

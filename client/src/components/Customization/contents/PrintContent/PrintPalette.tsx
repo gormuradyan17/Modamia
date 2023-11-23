@@ -14,13 +14,26 @@ const PrintPalette = () => {
   const options = getConvertedDropdownOptionsFromVariants(variants)
 
   const handlePaletteDispatchChange = (name: string) => {
-    const group = getManipulatedDataFromPalettes(palettes, name, 'prints')
-    if (group) {
+    if (name === 'All') {
+      const allPrints = palettes?.reduce((acc: any = [], palette: ObjectType) => {
+        const { grouped = [] } = palette || {};
+        grouped?.map((group: ObjectType) => acc.push(group))
+        return acc
+      },[])
       dispatch(setActivePaletteItem({
         name,
-        prints: group?.prints,
-        _id: group?._id
+        prints: allPrints,
+        _id: 'All'
       }))
+    } else {
+      const group = getManipulatedDataFromPalettes(palettes, name, 'prints')
+      if (group) {
+        dispatch(setActivePaletteItem({
+          name,
+          prints: group?.prints,
+          _id: group?._id
+        }))
+      }
     }
   }
 
@@ -35,7 +48,10 @@ const PrintPalette = () => {
 
   return (
     <DropdownUI
-      options={options}
+      options={[
+        {id: 'All', text: 'All', value: 'All'},
+        ...options
+      ]}
       onChange={(option) => handlePaletteChange(option)}
       defaultValue={activePalette?.name}
       classN="print-dropdown-styles"
