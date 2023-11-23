@@ -1,3 +1,49 @@
 .btn_container{
     display: flex;
 }
+.clothes{
+  &_content{
+    width: 400px;
+    display: flex;
+    overflow-y: hidden;
+    background: #F9F6EF;
+    gap: 10px;
+  }
+  &_item img{
+    height: 100%;
+    width: 100%;
+    }
+  &_tops{
+    height: 160px;
+    width:160px;
+    background: #F9F6EF;
+    flex-shrink: 0;
+    border: 1px dotted #ebe6df !important
+
+  }
+  &_bottoms{
+    height:270px;
+    width:160px;
+    background: #F9F6EF;
+    flex-shrink: 0;
+    border: 1px dotted #ebe6df !important
+  }
+}
+.positionBtns{
+  display: flex;
+  flex-direction: column;
+  gap:10px;
+}
+.positionBtns span{
+    font-family: 'Poppins';
+    color: #a57867;
+    font-size: 13px;
+    font-weight: 400;
+    width: 50px;
+    line-height: 15px;
+    display: block;
+    cursor: pointer;
+    margin-right: 0px;
+    text-align: left;
+    letter-spacing: 2px;
+}

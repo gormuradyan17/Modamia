@@ -1,9 +1,7 @@
-import { useSelector } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
 import contents from 'routes/contentRoutes';
 import {ArrayType, ObjectType} from 'shared/helpers/helpers';
 import React from 'react';
-// import { isLoggedIn } from '../redux/reducers/authReducer';
 
 const AppRouter = () => {
 

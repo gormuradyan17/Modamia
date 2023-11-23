@@ -50,8 +50,7 @@ const CustomizationTabs = ({
                                     className={`CustomizationTabs-head ${tab.heading === activeTab ? '_active' : ''}`}
                                     onClick={() => {
                                         setActiveTab(tab.heading);
-                                        const category = tab.heading === 'Color' ? 'color' : tab.heading === 'Print' ? 'print' : '';
-                                        
+                                        const category = tab.heading === 'Color' ? 'color' : tab.heading === 'Print' ? 'print' : tab.heading === 'Silhouette' ? "silhouette" : "" ;
                                         updateActiveCategory(category);
                                     }}
                                 >

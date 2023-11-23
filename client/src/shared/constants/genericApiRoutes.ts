@@ -43,25 +43,6 @@ export const S_I1 = "/image/Silhouettes/sleeve/sleeve-1.png"
 export const S_I2 = "/image/Silhouettes/sleeve/sleeve-2.png"
 export const S_I3 = "/image/Silhouettes/sleeve/sleeve-3.png"
 
-const topModels = [
-	{src: T_I1, isActive: false},
-	{src: T_I2, isActive: false},
-	{src: T_I3, isActive: false},
-	{src: T_I4, isActive: false}
-];
-const sleeveModels = [
-	{src: S_I1, isActive: false},
-	{src: S_I2, isActive: false},
-	{src: S_I3, isActive: false}
-];
-const bottomModels = [
-	{src: B_I1, isActive: false},
-	{src: B_I2, isActive: false},
-	{src: B_I3, isActive: false},
-	{src: B_I4, isActive: false},
-	{src: B_I5, isActive: false},
-	{src: B_I6, isActive: false}
-];
 
 export const modelData = [
 	{src: B_I2, color: '#cb0e2a', printImageURL: B_G2},
