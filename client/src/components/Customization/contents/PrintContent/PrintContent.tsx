@@ -51,7 +51,8 @@ const PrintContent = () => {
             </div>
             <div className="print-content">
                 {activePalette?.prints?.map((print: ObjectType) => {
-                    const { name = '', previewurl = '', highresurl = '', _id = ''  } = print?.prints?.[0] || {}
+                    const { _id = '' } = print || {}
+                    const { name = '', previewurl = '', highresurl = '' } = print?.prints?.[0] || {}
                     return <div
                         className="print-content-print"
                         key={_id}
