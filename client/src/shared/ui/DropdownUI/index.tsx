@@ -89,13 +89,13 @@ const DropdownUI = ({
                     ref={contentRef}
                 >
                     {Boolean(options?.length) &&
-                        options?.map(({ id, text, value,name,_id }: any, index: number) => (
+                        options?.map(({ id, text, value }: any, index: number) => (
                             <div
-                                key={id || _id}
+                                key={id}
                                 onClick={(event) => handleClick(event, index)}
                                 className='DropdownUI__option'
                             >
-                                {text || value || name}
+                                {text || value}
                             </div>
                         ))}
                 </div>

@@ -5,6 +5,7 @@ export const API_URL_ADMIN = '/admin/'
 
 export const COLORS_URL = API_URL + 'colors'
 export const COLORS_VARIANTS_URL = API_URL + 'colors-variants'
+export const COLORS_PALETTES_URL = API_URL + 'colors-palettes'
 export const PRINTS_URL = API_URL + 'prints'
 export const MANNEQUINS_URL = API_URL + 'mannequins'
 

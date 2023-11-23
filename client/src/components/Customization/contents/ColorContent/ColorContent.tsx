@@ -1,7 +1,7 @@
 import { CSSProperties, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { availableColors } from "redux/reducers/colorReducer";
-import { getAvColors, getAvColorsVariants } from "services/colorService";
+import { activePaletteItem, availableColors } from "redux/reducers/colorReducer";
+import { getAvColors, getAvColorsPalettes, getAvColorsVariants } from "services/colorService";
 import { ObjectType } from "shared/helpers/helpers";
 import HeadingUI from "shared/ui/HeadingUI/HeadingUI";
 import './style.scss'
@@ -14,12 +14,11 @@ interface colorFillInterface extends CSSProperties {
 }
 
 const ColorContent = () => {
-    const [chooseOption,setChooseOption]=useState()
-    const colors = useSelector(availableColors)
+    const activePalette = useSelector(activePaletteItem)
     const dispatch = useDispatch()
     
     useEffect(() => {
-        getAvColors(dispatch)
+        getAvColorsPalettes(dispatch)
         getAvColorsVariants(dispatch)
     }, [])
 
@@ -42,22 +41,23 @@ const ColorContent = () => {
     ]
 
     return (
-        <div className="color-content-">
+        <div className="color-content-body">
          <div className="btnContent">
             {btns.map(opt=>(
                 <ButtonUI version="gray" key={opt.id}>{opt.colorPosition}</ButtonUI>
             ))}
          </div>
            <div className="color-content">
-           {colors.map((color: ObjectType) => {
+           {activePalette?.colors.map((color: ObjectType) => {
+                const { name = '', hexcode = '', _id = ''  } = color?.colors?.[0] || {}
                 const style: colorFillInterface = {
-                    '--colorFill': color.hexcode
+                    '--colorFill': hexcode
                 }
                 return <div 
                     className="color-content-color" 
-                    key={color._id}
-                    onClick={() => updateActiveColor(color.hexcode)}>
-                    <HeadingUI classN="color-text _ellipsis" text={color.name} size="16px" />
+                    key={_id}
+                    onClick={() => updateActiveColor(hexcode)}>
+                    <HeadingUI classN="color-text _ellipsis" text={name} size="16px" />
                     <span className="color-span" style={style}></span>
                 </div>
             })}

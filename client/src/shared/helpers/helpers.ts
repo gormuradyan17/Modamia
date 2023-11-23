@@ -24,3 +24,42 @@ export const CardBarPanelAnimations: AnimationObject = {
         { opacity: 1, transform: "translateX(0%)" },
     ],
 };
+
+export const getManipulatedDataFromPalettes = (palettes: ArrayType, paletteName: string) => {
+  let result = {
+    colors: [],
+    name: '',
+    _id: ''
+  }
+
+  palettes?.find((palette: ObjectType) => {
+    const { grouped = [] } = palette || {}
+    grouped?.find((group: ObjectType) => {
+      const { variant = [] } = group || {}
+      const { name = '', _id = ''} = variant[0] || {}
+
+      if (paletteName.toLowerCase() === name.toLowerCase()) {
+        result.colors = grouped;
+        result.name = name
+        result._id = _id
+
+        return result
+      }
+    })
+  })
+
+  return result
+}
+
+export const getConvertedDropdownOptionsFromVariants = (variants: ObjectType) => {
+  return variants?.reduce((acc: any, variant: ObjectType) => {
+    
+    acc.push({
+      id: variant?._id,
+      text: variant?.name,
+      value: variant?.name,
+    })
+
+    return acc
+  },[])
+}

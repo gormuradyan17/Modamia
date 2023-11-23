@@ -1,32 +1,45 @@
-import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { colorsVariants } from "redux/reducers/colorReducer";
-import { getAvColors, getAvColorsVariants } from "services/colorService";
+import { activePaletteItem, colorsPalettes, colorsVariants, setActivePaletteItem } from "redux/reducers/colorReducer";
 import DropdownUI from "shared/ui/DropdownUI";
+import './style.scss'
+import { ObjectType, getConvertedDropdownOptionsFromVariants, getManipulatedDataFromPalettes } from "shared/helpers/helpers";
+import { useEffect } from "react";
 
 const ColorPalette = () => {
-  const cVariants = useSelector(colorsVariants);
+
+  const palettes = useSelector(colorsPalettes);
   const dispatch = useDispatch();
-  const {name,_id}=cVariants.find((item:any)=>item.name==="Parisian You")
-  const [choosenOptName, setChoosenOptName] = useState(name);
-  const [choosenOptId, setChoosenOptId] = useState(_id);
+  const activePalette = useSelector(activePaletteItem)
+  const variants = useSelector(colorsVariants)
+  const options = getConvertedDropdownOptionsFromVariants(variants)
+
+  const handlePaletteDispatchChange = (name: string) => {
+    const group = getManipulatedDataFromPalettes(palettes, name)
+    if (group?._id) {
+      dispatch(setActivePaletteItem({
+        name: group?.name,
+        colors: group?.colors,
+        _id: group?._id
+      }))
+    }
+  }
+
+  const handlePaletteChange = (option: ObjectType) => {
+    const { text = '' } = option;
+    handlePaletteDispatchChange(text)
+  }
 
   useEffect(() => {
-    getAvColors(dispatch, choosenOptId);
-  }, [choosenOptId]);
-  const handleDropdownChange = (e: any) => {
-    setChoosenOptId(e._id);
-    setChoosenOptName(e.name);
-  };
+    handlePaletteDispatchChange(activePalette?.name)
+  }, [])
+
   return (
-    <div>
-      <DropdownUI
-        options={cVariants}
-        onChange={(e) => handleDropdownChange(e)}
-        defaultValue={choosenOptName}
-        classN=""
-      />
-    </div>
+    <DropdownUI
+      options={options}
+      onChange={(option) => handlePaletteChange(option)}
+      defaultValue={activePalette?.name}
+      classN="color-dropdown-styles"
+    />
   );
 };
 

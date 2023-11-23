@@ -1,7 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getAvailableSilhouettes } from 'redux/features/silhouetteApi';
 import { ArrayType, ObjectType } from 'shared/helpers/helpers';
-import { getDefaultMiddleware } from '@reduxjs/toolkit';
 
 type SilhouetteInterface = Record<string, any>
 
@@ -39,24 +37,7 @@ export const silhouetteSlice = createSlice({
 		resetSilhouetteState: (state) => {
 			state.silhouetteState = defaultSilhouetteState
 		}
-	},
-	extraReducers: (builder) => {
-		builder
-            .addCase(getAvailableSilhouettes.pending, (state, action) => {
-                state.silhouettes = [];
-                state.loading = true;
-                silhouetteSlice.caseReducers.setSilhouetteData(state, action);
-            })
-			.addCase(getAvailableSilhouettes.fulfilled, (state, action) => {
-				state.silhouettes = action.payload.data;
-				state.loading = false;
-				silhouetteSlice.caseReducers.setSilhouetteData(state, action);
-			})
-			.addCase(getAvailableSilhouettes.rejected, (state) => {
-				state.silhouettes = [];
-				state.loading = false;
-			})
-	},
+	}
 });
 
 export const { setSilhouetteData, setSilhouetteState, resetSilhouetteState } = silhouetteSlice.actions;

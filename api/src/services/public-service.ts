@@ -27,7 +27,23 @@ class PublicService {
                     ...(variant_id && { variant_id })
                 }
             },
+            {
+                $lookup: {
+                    from: "colors",
+                    localField: "color_id",
+                    foreignField: "_id",
+                    as: "colors"
+                },
+            },
             { $sort : { order : 1 } },
+            {
+                $lookup: {
+                    from: "colors_variants",
+                    localField: "variant_id",
+                    foreignField: "_id",
+                    as: "variant"
+                },
+            },
             {
                 $group: {
                     _id: {
@@ -39,6 +55,8 @@ class PublicService {
                             _id: "$_id",
                             order: "$order",
                             createdAt: "$createdAt",
+                            colors: "$colors",
+                            variant: "$variant"
                         }
                     }
                 }
