@@ -9,14 +9,65 @@ import PrintMotel from '../models/Print'
 import MannequinModel from '../models/Mannequin'
 import SilhouetteModel from '../models/Silhouette'
 import SizeModel from '../models/Size'
+import AdminModel from '../models/Admin'
 import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs'
 import mongoose from 'mongoose';
 import { ColorPaletteInterface } from '../models/ColorPalette';
 import { PrintPaletteInterface } from '../models/PrintPalette';
 import { ObjectId } from 'mongodb';
+import AdminDto from '../dtos/admin-dto';
+import tokenService from './token-service';
+import ApiError from '../exceptions/api-error';
+import bcrypt from 'bcryptjs'
 
 class AdminService {
+
+    // Auth
+
+    async signin(req: any) {
+        try {
+            const { email } = req
+
+            var admin = await AdminModel.findOne({ email })
+            const adminDto = new AdminDto(admin);
+            const tokens = tokenService.generateTokens({...adminDto});
+            await tokenService.saveToken(adminDto.id, tokens.refreshToken);
+    
+            return {...tokens, admin: adminDto}
+            
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async refresh(refreshToken: any) {
+        try {
+            if (!refreshToken) {
+                throw ApiError.UnauthorizedError();
+            }
+            const adminData = tokenService.validateRefreshToken(refreshToken);
+            const tokenFromDb = await tokenService.findToken(refreshToken);
+            if (!adminData || !tokenFromDb) {
+                throw ApiError.UnauthorizedError();
+            }
+            if (await tokenService.verifyExpiration(refreshToken) === true) {
+                tokenService.removeToken(refreshToken);
+                throw ApiError.UnauthorizedError();
+            }
+            const admin = await AdminModel.findById(adminData.id);
+            const adminDto = new AdminDto(admin);
+    
+            return {admin: adminDto}
+        } catch (error) {
+            throw ApiError.UnauthorizedError();
+        }
+    }
+
+    async signout(refreshToken: any) {
+        await tokenService.removeToken(refreshToken);
+        return true;
+    }
 
     // Colors 
 
@@ -500,6 +551,51 @@ class AdminService {
         try {
             const query = { '_id': req._id };
             return await SizeModel.findOneAndUpdate(query, req, { upsert: true });
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    
+    // Super Admins
+
+    async addSuperAdmin(req: any) {
+        try {
+            const { email = '' , password = '' } = req;
+            const hashPassword = await bcrypt.hash(password, 10)
+            const admin = await AdminModel.create({
+                email,
+                password: hashPassword
+            })
+            return admin;
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async editSuperAdmin(req: any) {
+        try {
+            const query = { '_id': req._id };
+            return await AdminModel.findOneAndUpdate(query, req, { upsert: true });
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async getSuperAdmins(req: any) {
+        try {
+            return await AdminModel.find({});
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async removeSuperAdmin(req: any) {
+        try {
+            const { removableAdmin: { _id = '' } = {} } = req
+            const query = { '_id': _id };
+            await AdminModel.deleteOne(query);
+            return true
         } catch (error) {
             console.log(error)
         }

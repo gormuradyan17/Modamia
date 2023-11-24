@@ -75,3 +75,12 @@ export const variantFormOptions = {
         {rule: { required : true }, error: {message: 'Name is required'} },
     ],
 }
+
+export const superAdminFormOptions = {
+    email: [
+        {rule: { required : true }, error: {message: 'Email is required'} },
+    ],
+    password: [
+        {rule: { required : true }, error: {message: 'Password is required'} },
+    ]
+}

@@ -2,7 +2,13 @@ export const BASE_URL = process.env.REACT_APP_BASE_API_URL || ''
 export const API_URL = '/'
 export const API_URL_ADMIN = '/admin/'
 export const BASE_UPLOADS_URL = BASE_URL + '/api/uploads/'
-
+export const ADMIN_SIGNIN_URL = API_URL_ADMIN + 'signin'
+export const ADMIN_REFRESH_URL = API_URL_ADMIN + 'refresh'
+export const ADMIN_SIGNOUT_URL = API_URL_ADMIN + 'signout'
+export const ADD_SUPER_ADMIN_URL = API_URL_ADMIN + 'add-super-admin'
+export const EDIT_SUPER_ADMIN_URL = API_URL_ADMIN + 'edit-super-admin'
+export const REMOVE_SUPER_ADMIN_URL = API_URL_ADMIN + 'remove-super-admin'
+export const GET_SUPER_ADMINS_URL = API_URL_ADMIN + 'get-super-admins'
 // Color
 
 export const COLORS_URL = API_URL + 'colors'

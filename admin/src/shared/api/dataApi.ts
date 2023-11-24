@@ -26,8 +26,51 @@ import {
 	ADD_PRINT_PALETTE_URL,
 	REMOVE_PRINT_PALETTE_URL,
 	ORDER_PALETTE_PRINTS_URL,
+	ADMIN_SIGNIN_URL,
+	ADMIN_REFRESH_URL,
+	ADMIN_SIGNOUT_URL,
+	ADD_SUPER_ADMIN_URL,
+	EDIT_SUPER_ADMIN_URL,
+	GET_SUPER_ADMINS_URL,
+	REMOVE_SUPER_ADMIN_URL,
 } from "shared/constants/genericApiRoutes";
 import { BaseApi } from "./baseApi";
+
+
+export const signinAdmin = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(ADMIN_SIGNIN_URL, body)
+}
+
+export const checkAdmin = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(ADMIN_REFRESH_URL, body)
+}
+
+export const signoutAdmin = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(ADMIN_SIGNOUT_URL, body)
+}
+
+export const addNewSAdmin = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(ADD_SUPER_ADMIN_URL, body)
+}
+
+export const editSuperAdmin = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(EDIT_SUPER_ADMIN_URL, body)
+}
+
+export const removeSAdmin = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(REMOVE_SUPER_ADMIN_URL, body)
+}
+
+export const getSuperAdmins = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(GET_SUPER_ADMINS_URL, body)
+}
 
 // Color
 
