@@ -1,0 +1,43 @@
+
+[
+    {
+        "id":1,
+        "title":"About Us"
+    },
+    {
+        "id":2,
+        "title":"How ModaMia Works"
+    },
+    {
+        "id":3,
+        "title":"Shop on ModaMia"
+    },
+    {
+        "id":4,
+        "title":"Shipping"
+    },
+    {
+        "id":5,
+        "title":"Returns"
+    },
+    {
+        "id":6,
+        "title":"Size"
+    },
+    {
+        "id":7,
+        "title":"FAQs"
+    },
+    {
+        "id":8,
+        "title":"Terms Of Use"
+    },
+    {
+        "id":9,
+        "title":"Privacy"
+    },
+    {
+        "id":10,
+        "title":"Contact Us"
+    }
+]

@@ -1,4 +1,5 @@
 import { AnimationObject } from "shared/objectModels/AnimationModel";
+import NoSleeve from 'assets/images/no-sleeve.png'
 
 export type ArrayType = Array<Record<string, any>>
 export type ObjectType = Record<string, any>
@@ -63,4 +64,14 @@ export const getConvertedDropdownOptionsFromVariants = (variants: ObjectType) =>
 
     return acc
   },[])
+}
+
+export const NoSleeveObject = {
+  "_id": "",
+  "name": "No Sleeve",
+  "price": 0,
+  "tags": "",
+  "type": "Sleeve",
+  "orientation": "Front",
+  "silhouetteurl": NoSleeve,
 }

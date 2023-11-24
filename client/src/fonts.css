@@ -15,3 +15,7 @@
     src: url("./assets/fonts/Poppins/Poppins-Bold.ttf");
     font-weight: 700;
 }
+@font-face {
+    font-family: PlayFair-Regular;
+    src: url("./assets/fonts/Playfair/PlayfairDisplay-Regular.ttf");
+}

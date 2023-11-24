@@ -38,10 +38,20 @@ const NewSilhouette = ({
         Object.keys(sDetails).forEach((key: string) => {
             formData.append(key, sDetails[key]); // Add other data properties as needed
         });
-        formData.append('silhouetteurl', file[0]);
-        await addSilhouette(formData)
-        await getAvSilhouettes(dispatch)
-        closePopup()
+        if (file?.[0]) {
+            formData.append('silhouetteurl', file[0]);
+            await addSilhouette(formData)
+            await getAvSilhouettes(dispatch)
+            closePopup()
+        } else {
+            console.log('sadsadsadasasdsadadsdasd')
+            setFileErrors({
+                silhouetteurl: {
+                    message: 'Incorrect format for Silhouette Url'
+                }
+            })
+        }
+
     }
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {

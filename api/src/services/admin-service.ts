@@ -413,7 +413,7 @@ class AdminService {
                 tags,
                 type,
                 orientation,
-                silhouetteurl: silhouetteImage,
+                silhouetteurl: silhouetteImage || '',
             })
             return silhouette;
 
