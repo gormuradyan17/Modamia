@@ -1,0 +1,87 @@
+.header{
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    z-index: 99;
+    position: fixed;
+    background: #EEE9E6;
+
+}
+.header-wrapper{
+    width: 96%;
+    margin: auto;
+    vertical-align: baseline;
+    background: transparent;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    height: 48px;
+    align-items: center;
+}
+.topmenu{
+    display: flex;
+    gap: 3em;
+    list-style:none;
+    justify-content: space-between;
+    padding: 0;
+
+}
+.topmenu a{
+    color: #a57867;
+    display: inline-block;
+    font-family: 'Playfair Display regular';
+    text-transform: capitalize;
+    font-size: 1.1rem;
+    text-decoration: none;
+    letter-spacing: 1.35px;
+    font-weight: 400;
+}
+.logo{
+    display: inline-block;
+    text-decoration: none;
+    font-family:PlayFair-Regular;
+    font-size: 28px;
+    line-height: 31px;
+    color: #545554;
+    letter-spacing: 2px;
+    margin-bottom: 0px;
+    text-transform: uppercase;
+}
+.user-menu{
+    display: flex;
+    gap: 15px;
+    list-style: none;
+    padding: 0;
+    align-items: baseline;
+    position: relative;
+    left: -20px;
+}
+.svg-inline--fa{
+    font-size: 20px;
+    color: #bbaa9a;
+    background-color: transparent;
+    border: 0;
+    outline: 0;
+    margin-right: 10px;
+    cursor: pointer;
+    font-weight: 900;
+}
+.login_user a, .join_user a{
+    font-family:Poppins ;
+    font-weight: 300;
+    color: #a57867;
+    font-size: 15px;
+    display: inline-block;
+    text-decoration: none;
+    letter-spacing: 1.2px;
+}
+.login_user::after{
+    content: "";
+    display: inline-block;
+    width: 1px;
+    height: 15px;
+    background: #bbaa9a;
+    position: relative;
+    top: 2px;
+    left: 8px;
+}

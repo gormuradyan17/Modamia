@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect,useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { activePaletteItem } from "redux/reducers/printReducer";
 import { getAvPrintsPalettes, getAvPrintsVariants } from "services/printService";
@@ -6,17 +6,18 @@ import { BASE_UPLOADS_PRINTS_HIGHS_URL, BASE_UPLOADS_PRINTS_PREVIEWS_URL } from 
 import { ObjectType, appColor } from "shared/helpers/helpers";
 import HeadingUI from "shared/ui/HeadingUI/HeadingUI";
 import './style.scss'
-import { setActivePrint } from "redux/reducers/mannequinReducer";
+import { setActivePrint, setMannequinType } from "redux/reducers/mannequinReducer";
 import { ButtonUI } from "shared/ui/ButtonUI/ButtonUI";
 
 const PrintContent = () => {
-
+    const [activeType,setActiveType]=useState()
     const activePalette = useSelector(activePaletteItem)
     const dispatch = useDispatch()
 
     useEffect(() => {
         getAvPrintsVariants(dispatch)
         getAvPrintsPalettes(dispatch)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const updateActivePrint = (print: ObjectType) => {
@@ -30,23 +31,29 @@ const PrintContent = () => {
     const btns = [
         {
             id: 1,
-            colorPosition: "All over"
+            colorPosition: "All over",
+            type:"all"
         },
         {
             id: 2,
-            colorPosition: "Top"
+            colorPosition: "Top",
+            type:"top"
         },
         {
             id: 3,
-            colorPosition: "Bottom"
+            colorPosition: "Bottom",
+            type:"bottom"
         },
     ]
-
+    useEffect(() => {
+        dispatch(setMannequinType(activeType))
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [activeType])
     return (
         <div className="print-content-container">
             <div className="btnContent">
-                {btns.map(opt => (
-                    <ButtonUI key={opt.id} version="gray">{opt.colorPosition}</ButtonUI>
+                {btns.map((opt:any) => (
+                    <ButtonUI key={opt.id} version="gray" onClick={()=>setActiveType(opt.type)}>{opt.colorPosition}</ButtonUI>
                 ))}
             </div>
             <div className="print-content customYScrollbar">

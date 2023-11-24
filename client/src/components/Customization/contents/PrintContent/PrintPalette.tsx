@@ -43,7 +43,8 @@ const PrintPalette = () => {
   }
 
   useEffect(() => {
-    handlePaletteDispatchChange(activePalette?.name)
+    handlePaletteDispatchChange(activePalette?.name)  
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

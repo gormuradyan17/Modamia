@@ -2,6 +2,8 @@ import { Route, Routes } from 'react-router-dom';
 import contents from 'routes/contentRoutes';
 import {ArrayType, ObjectType} from 'shared/helpers/helpers';
 import React from 'react';
+import { Header } from './Header';
+import Footer from './Footer';
 
 const AppRouter = () => {
 
@@ -23,10 +25,14 @@ const AppRouter = () => {
     }
 
     return (
+        <>
+        <Header/>
         <Routes>
             {publicPages && renderRoutes(publicPages)}
             {privatePages && renderRoutes(privatePages)}
         </Routes>
+        <Footer/>
+        </>
     );
 }
 export default AppRouter;

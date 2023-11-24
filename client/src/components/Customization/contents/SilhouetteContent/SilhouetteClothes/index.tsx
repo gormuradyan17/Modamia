@@ -12,19 +12,23 @@ export default function SilhouetteClothes({ data, type }: any) {
   useEffect(() => {
     dispatch(setMannequinUrl(activeImageUrl))
     dispatch(setMannequinType(activeType))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeImageUrl, activeType])
 
   return (
     <div className="clothes_content customXScrollbar">
-      {data && Boolean(data.length) ? data.map((clothes: any, idx: number) => (
-        <div key={idx} className={`clothes_item ${type === "tops" ? "clothes_tops" : "clothes_bottoms"}`}
-          onClick={() => {
-            setActiveImageUrl(`${BASE_UPLOADS_SILHOUETTES_URL}${type}/${clothes.silhouetteurl}`)
-            setActiveType(type)
-          }}>
-          <img key={clothes._id} src={`${BASE_UPLOADS_SILHOUETTES_URL}${type}/${clothes.silhouetteurl}`} alt="" />
-        </div>
-      )): null}
+      {data && Boolean(data.length) ? data.map((clothes: any, idx: number) => {
+        const imgUrl = clothes?._id 
+          ?`${BASE_UPLOADS_SILHOUETTES_URL}${type}/${clothes.silhouetteurl}`
+          : clothes?.silhouetteurl
+        return <div key={idx} className={`clothes_item ${type === "tops" ? "clothes_tops" : "clothes_bottoms"}`}
+        onClick={() => {
+          setActiveImageUrl(clothes?._id ? imgUrl : '')
+          setActiveType(type)
+        }}>
+        <img key={clothes._id} src={imgUrl} alt="" />
+      </div>
+      }): null}
     </div>
   )
 }

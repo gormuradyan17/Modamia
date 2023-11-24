@@ -1,0 +1,38 @@
+[
+    {
+        "id": 0,
+        "title": "AMD",
+        "flagImg":"https://upload.wikimedia.org/wikipedia/commons/2/2f/Flag_of_Armenia.svg"
+    },
+    {
+        "id": 2,
+        "title": "USD",
+        "flagImg":"https://upload.wikimedia.org/wikipedia/commons/2/2f/Flag_of_Armenia.svg"
+    },
+    {
+        "id": 3,
+        "title": "RUB",
+        "flagImg":"https://upload.wikimedia.org/wikipedia/commons/2/2f/Flag_of_Armenia.svg"
+    },
+    {
+        "id": 4,
+        "title": "EURO",
+        "flagImg":"https://upload.wikimedia.org/wikipedia/commons/2/2f/Flag_of_Armenia.svg"
+    },
+    {
+        "id": 5,
+        "title": "ZWL",
+        "flagImg":"https://upload.wikimedia.org/wikipedia/commons/2/2f/Flag_of_Armenia.svg"
+    },
+    {
+        "id":6,
+        "title": "ZWL",
+        "flagImg":"https://upload.wikimedia.org/wikipedia/commons/2/2f/Flag_of_Armenia.svg"
+    },
+    {
+        "id": 7,
+        "title": "ZWL",
+        "flagImg":"https://upload.wikimedia.org/wikipedia/commons/2/2f/Flag_of_Armenia.svg"
+    }
+
+  ]
