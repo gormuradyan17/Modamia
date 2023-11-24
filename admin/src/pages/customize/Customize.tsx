@@ -1,5 +1,4 @@
 import MainHead from 'layout/MainHead/MainHead';
-import React from 'react';
 
 const Customize = () => {
     return (

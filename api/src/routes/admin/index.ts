@@ -1,5 +1,18 @@
 const router = require("express").Router();
 import adminController from '../../controllers/admin/admin-controller'
+import { authMiddleware } from '../../middlewares/auth';
+
+import { adminSigninValidators, newAdminValidators } from '../../utils/validators/validators'
+
+
+router.post('/signin', adminSigninValidators, adminController.signin)
+
+// auth
+
+router.use(authMiddleware);
+
+router.post('/refresh', adminController.refresh)
+router.post('/signout', adminController.signout)
 
 // Colors
 
@@ -33,5 +46,11 @@ router.post('/edit-silhouette', adminController.editSilhouette)
 
 router.post('/add-size', adminController.addSize)
 router.post('/edit-size', adminController.editSize)
+// Super Admins
+
+router.post('/add-super-admin', newAdminValidators, adminController.addSuperAdmin)
+router.post('/edit-super-admin', adminController.editSuperAdmin)
+router.post('/get-super-admins', adminController.getSuperAdmins)
+router.post('/remove-super-admin', adminController.removeSuperAdmin)
 
 export default router

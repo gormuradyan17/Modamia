@@ -1,0 +1,59 @@
+@use 'variables';
+
+.FullPageLoaderUI {
+
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    aspect-ratio: 1/1;
+    background-color: rgba(variables.$appColor, .5);
+}
+
+.FullPageLoaderUI-svg {
+    --_circle-radius: 45px;
+    --_svg-width: 100px;
+    --_stroke-width: 10px;
+    /* svg-width - (circle-radius * 2) */
+
+    width: var(--_svg-width);
+    height: var(--_svg-width);
+
+    stroke: variables.$appColor;
+    /*   stroke-linecap: round; */
+    stroke-width: var(--_stroke-width);
+
+    stroke-dashoffset: 1;
+    stroke-dasharray: 1 1000;
+
+    animation: loader 700ms infinite linear, spin 1800ms infinite linear;
+}
+
+@keyframes loader {
+    0% {
+        stroke-dashoffset: 1;
+        stroke-dasharray: 1 1000;
+    }
+
+    100% {
+        stroke-dashoffset: calc(var(--_circle-radius) * -2 * 3.1415);
+        stroke-dasharray: calc(var(--_circle-radius) * 2 * 3.1415) 1000;
+    }
+}
+
+@keyframes spin {
+    0% {
+        rotate: 0deg;
+    }
+
+    100% {
+        rotate: 360deg;
+    }
+}

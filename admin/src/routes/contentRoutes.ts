@@ -1,13 +1,14 @@
 import { lazy } from 'react';
-import { faChildReaching, faDiceD20, faDroplet, faHome, faLayerGroup, faMaximize, faPalette, faPaw, faPersonDress, faRibbon, faShirt } from '@fortawesome/free-solid-svg-icons';
+import { faChildReaching, faDiceD20, faDroplet, faHome, faLayerGroup, faMaximize, faPalette, faPaw, faPersonDress, faRibbon, faShirt, faUserGroup } from '@fortawesome/free-solid-svg-icons';
 
 const AUTH = {
 	PAGE_404: lazy(() => import('pages/auth/page404/Page404')),
-	LOGIN: lazy(() => import('pages/auth/login/Login')),
+	LOGIN: lazy(() => import('pages/auth/signin/Signin')),
 };
 
 const LANDING = {
 	DASHBOARD: lazy(() => import('pages/dashboard/Dashboard')),
+	SUPER_ADMIN: lazy(() => import('pages/super-admin/SuperAdmin')),
 	CUSTOMIZE: lazy(() => import('pages/customize/Customize')),
 	// Colors
 	CUSTOMIZE_COLORS: lazy(() => import('components/customize/colors/CustomizeColors')),
@@ -32,6 +33,7 @@ const CustomizeChildrens = [
 		icon: faPersonDress,
 		element: LANDING.CUSTOMIZE_MANNEQUINS,
 		exact: true,
+		isPrivate: true,
 	},
 	{
 		id: 'silhouettes',
@@ -40,6 +42,7 @@ const CustomizeChildrens = [
 		icon: faLayerGroup,
 		element: LANDING.CUSTOMIZE_SILHOUETTES,
 		exact: true,
+		isPrivate: true,
 		children: [
 			{
 				id: 'silhouettes-top',
@@ -48,6 +51,7 @@ const CustomizeChildrens = [
 				icon: faShirt,
 				element: LANDING.CUSTOMIZE_SILHOUETTES_TOP,
 				exact: true,
+				isPrivate: true,
 			},
 			{
 				id: 'silhouettes-bottom',
@@ -56,6 +60,7 @@ const CustomizeChildrens = [
 				icon: faChildReaching,
 				element: LANDING.CUSTOMIZE_SILHOUETTES_BOTTOM,
 				exact: true,
+				isPrivate: true,
 			},
 			{
 				id: 'silhouettes-sleeve',
@@ -64,6 +69,7 @@ const CustomizeChildrens = [
 				icon: faRibbon,
 				element: LANDING.CUSTOMIZE_SILHOUETTES_SLEEVE,
 				exact: true,
+				isPrivate: true,
 			},
 		]
 	},
@@ -74,6 +80,7 @@ const CustomizeChildrens = [
 		icon: faDroplet,
 		element: LANDING.CUSTOMIZE_COLORS,
 		exact: true,
+		isPrivate: true,
 		children: [
 			{
 				id: 'colors-pallette',
@@ -82,6 +89,7 @@ const CustomizeChildrens = [
 				icon: faPalette,
 				element: LANDING.CUSTOMIZE_COLORS_PALLETTE,
 				exact: true,
+				isPrivate: true,
 			},
 		]
 	},
@@ -92,6 +100,7 @@ const CustomizeChildrens = [
 		icon: faPaw,
 		element: LANDING.CUSTOMIZE_PRINTS,
 		exact: true,
+		isPrivate: true,
 		children: [
 			{
 				id: 'prints-pallette',
@@ -100,6 +109,7 @@ const CustomizeChildrens = [
 				icon: faPalette,
 				element: LANDING.CUSTOMIZE_PRINTS_PALLETTE,
 				exact: true,
+				isPrivate: true,
 			},
 		]
 	},
@@ -110,6 +120,7 @@ const CustomizeChildrens = [
 		icon: faMaximize,
 		element: LANDING.CUSTOMIZE_SIZES,
 		exact: true,
+		isPrivate: true,
 	},
 ]
 
@@ -121,6 +132,7 @@ export const adminPages = [
 		element: LANDING.DASHBOARD,
 		icon: faHome,
 		exact: true,
+		isPrivate: true,
 	},
 	{
 		id: 'customize',
@@ -129,24 +141,35 @@ export const adminPages = [
 		icon: faDiceD20,
 		element: LANDING.CUSTOMIZE,
 		exact: true,
-		children: CustomizeChildrens
+		children: CustomizeChildrens,
+		isPrivate: true,
 	},
+	{
+		id: 'super-admin',
+		text: 'Super-Admins List',
+		path: '/super-admins',
+		icon: faUserGroup,
+		element: LANDING.SUPER_ADMIN,
+		exact: true,
+		isPrivate: true,
+	},
+	
 ]
 
 export const publicPages = [
 	{
 		id: 'Page404',
 		text: '404 Page',
-		path: '404',
+		path: '/404',
 		icon: faHome,
 		element: AUTH.PAGE_404,
 		exact: true,
 	},
 	{
-		id: 'login',
-		text: 'Login',
-		path: 'login',
-		icon: faHome,
+		id: 'admin-login',
+		text: 'Admin Login',
+		path: '/login',
+		icon: faDiceD20,
 		element: AUTH.LOGIN,
 		exact: true,
 	},

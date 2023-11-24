@@ -10,6 +10,7 @@ interface Props {
     label?: string,
     name: string,
     error?: string,
+    autoComplete?: string,
 }
 
 const InputUI = ({
@@ -20,6 +21,7 @@ const InputUI = ({
     label = '',
     name,
     error,
+    autoComplete = ''
 }: Props) => {
     // const refInput = useRef<HTMLInputElement | null>(null)
     // const refSpan = useRef<HTMLInputElement | null>(null)
@@ -55,6 +57,7 @@ const InputUI = ({
                 type={type}
                 defaultValue={value}
                 onChange={callback}
+                {...(autoComplete) && {autoComplete}}
                 {...(placeholder && {placeholder})}
             />
         </div>

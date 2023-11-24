@@ -1,6 +1,50 @@
 import adminService from '../../services/admin-service'
 
+import { validationResult } from 'express-validator'
+import ApiError from '../../exceptions/api-error'
+
 class AdminController {
+
+    // Auth
+
+    async signin(req: any, res: any, next: any) {
+        try {
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                res.status(400).json({ msg: 'Validation error', errors: errors.array() });
+            }
+            const adminData = await adminService.signin(req.body);
+            res.cookie('refreshToken', adminData?.refreshToken, {
+                maxAge: 30 * 24 * 60 * 60 * 1000,
+                httpOnly: true
+            })
+
+            return res.json(adminData);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async refresh(req: any, res: any, next: any) {
+        try {
+            const { refreshToken } = req.cookies;
+            const adminData = await adminService.refresh(refreshToken);
+            return res.json(adminData);
+        } catch (error) {
+            return res.status(400).json({ msg: 'User is not authentificated', errors: [] });
+        }
+    }
+
+    async signout(req: any, res: any, next: any) {
+        try {
+            const { refreshToken } = req.cookies;
+            const token = await adminService.signout(refreshToken)
+            res.clearCookie('refreshToken');
+            return res.json(token);
+        } catch (error) {
+            next(error);
+        }
+    }
 
     // Colors
 
@@ -169,6 +213,48 @@ class AdminController {
         try {
             const size = await adminService.editSize(req.body);
             return res.json(size);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    // Super Admins
+
+    async getSuperAdmins(req: any, res: any, next: any) {
+        try {
+            const superAdmins = await adminService.getSuperAdmins(req.body);
+            return res.json(superAdmins);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async addSuperAdmin(req: any, res: any, next: any) {
+        try {
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                res.status(400).json({ msg: 'Validation error', errors: errors.array() });
+            }
+            const superAdmin = await adminService.addSuperAdmin(req.body);
+            return res.json(superAdmin);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async editSuperAdmin(req: any, res: any, next: any) {
+        try {
+            const superAdmin = await adminService.editSuperAdmin(req.body);
+            return res.json(superAdmin);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async removeSuperAdmin(req: any, res: any, next: any) {
+        try {
+            const admin = await adminService.removeSuperAdmin(req.body);
+            return res.json(admin)
         } catch (error) {
             next(error);
         }

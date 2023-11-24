@@ -22,6 +22,10 @@ code {
   &._expanded {
     width: calc(100% - 300px);
   }
+  &._auth {
+    width: 100%;
+    padding: 0;
+  }
 }
 
 .error-message {

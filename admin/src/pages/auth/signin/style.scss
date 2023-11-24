@@ -1,0 +1,97 @@
+@use 'variables';
+
+// Colors
+
+.auth-signin {
+    background-color: variables.$appColor;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-signin-form {
+    overflow: hidden;
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    width: 400px;
+    transition: box-shadow 300ms;
+    box-shadow: 5px 10px 10px rgba(variables.$appColor, 0.2);
+    position: relative;
+    min-height: 240px;
+    max-height: max-content;
+    &::before,
+    &::after {
+        content: '';
+        position: absolute;
+        width: 600px;
+        height: 600px;
+        border-top-left-radius: 40%;
+        border-top-right-radius: 45%;
+        border-bottom-left-radius: 35%;
+        border-bottom-right-radius: 40%;
+        z-index: 0;
+    }
+
+    &::before {
+        left: 40%;
+        bottom: -85%;
+        background-color: rgba(variables.$appColor, 0.3);
+        animation: wawes 6s infinite linear;
+    }
+
+    &::after {
+        left: 35%;
+        bottom: -75%;
+        background-color: rgba(variables.$appColor, 0.3);
+        animation: wawes 7s infinite;
+    }
+
+    .InputUI {
+       position: relative;
+       z-index: 1;
+    }
+
+    >button {
+        cursor: pointer;
+        color: #fff;
+        font-size: 16px;
+        text-transform: uppercase;
+        width: 80px;
+        border: 0;
+        padding: 10px 0;
+        margin-top: 10px;
+        margin-left: -5px;
+        border-radius: 5px;
+        background-color: variables.$appColor;
+        transition: background-color 300ms;
+
+        &:hover {
+            background-color: darken(variables.$appColor, 5%);
+        }
+    }
+}
+
+.auth-signin-title {
+    text-transform: uppercase;
+    margin: 0 0 30px !important;
+}
+
+.auth-signin-buton {
+    width: 100% !important;
+    margin: 20px 0 0 !important;
+    position: relative;
+    z-index: 1;
+}
+
+@keyframes wawes {
+    from {
+        transform: rotate(0);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
