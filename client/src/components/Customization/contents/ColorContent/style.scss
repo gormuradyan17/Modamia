@@ -8,7 +8,7 @@ $colorFill: var(--colorFill);
   overflow-y: auto;
   max-height: 400px;
   height: 400px;
-  
+
   &.-container {
     width: 100%;
     display: flex;
@@ -56,20 +56,23 @@ $colorFill: var(--colorFill);
 .color-dropdown-styles {
   margin: 0;
   .DropdownUI__content {
-      top: 50px;
-      width: calc(100% + 35px);
-      left: -18px;
+    top: 50px;
+    width: calc(100% + 35px);
+    left: -18px;
   }
-  .DropdownUI__button{
-      background: none;
-      box-shadow: unset;
-      border: none;
-      color: white;
-      padding: unset;
-      text-transform: uppercase;
-      font-size: 15px;
+  .DropdownUI__button {
+    background: none;
+    box-shadow: unset;
+    border: none;
+    color: white;
+    padding: unset;
+    text-transform: uppercase;
+    font-size: 15px;
   }
- svg{
-  right: 0;
- }
+  svg {
+    right: 0;
+  }
+}
+.active {
+  background-color: lightgray !important;
 }

@@ -6,6 +6,7 @@ interface Props{
     setKindSilhouette:any
 }
 const SilhouetteCntrlHolder:React.FC<Props>=({cntrlData,setKindSilhouette})=> {
+  
   return (
     <div className='btn_container'>
         {Boolean( Object.keys(cntrlData).length) && 

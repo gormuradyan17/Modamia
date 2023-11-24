@@ -2,10 +2,8 @@ import { CSSProperties, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   activePaletteItem,
-  availableColors,
 } from "redux/reducers/colorReducer";
 import {
-  getAvColors,
   getAvColorsPalettes,
   getAvColorsVariants,
 } from "services/colorService";
@@ -16,7 +14,6 @@ import {
   setActiveColor,
   setMannequinType,
 } from "redux/reducers/mannequinReducer";
-import ColorPalette from "./ColorPalette";
 import { ButtonUI } from "shared/ui/ButtonUI/ButtonUI";
 
 interface colorFillInterface extends CSSProperties {
@@ -31,6 +28,7 @@ const ColorContent = () => {
   useEffect(() => {
     getAvColorsPalettes(dispatch);
     getAvColorsVariants(dispatch);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const updateActiveColor = (hexcode: string) => {
@@ -55,8 +53,10 @@ const ColorContent = () => {
   ];
   useEffect(() => {
     dispatch(setMannequinType(type));
-  });
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[type]);
+  
   return (
     <div className="color-content-body">
       <div className="btnContent">
@@ -65,6 +65,7 @@ const ColorContent = () => {
             version="gray"
             key={opt.id}
             onClick={() => setType(opt.type)}
+            classN={type===opt.type ? "active" : ""}
           >
             {opt.colorPosition}
           </ButtonUI>
@@ -82,7 +83,7 @@ const ColorContent = () => {
           };
           return (
             <div
-              className="color-content-color"
+              className={`color-content-color ${name}`}
               key={_id}
               onClick={() => updateActiveColor(hexcode)}
             >

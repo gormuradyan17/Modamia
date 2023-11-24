@@ -1,6 +1,7 @@
 import {ObjectType} from "./helpers";
 
 export async function addModel(src: string, color: string, context: any, width: number, height: number) {
+	if(!src) return;
 	const img: HTMLImageElement = new Image();
 	img.src = await colorImage(src, color, width, height);
 	await new Promise((res) => {
@@ -56,6 +57,7 @@ async function colorImage(image: string, color: string, width: number, height: n
 }
 
 export async function addImageProcess(printImageURL: string, imageSrc: string, context: any, width: number, height: number, rangeValue: number) {
+	if (!imageSrc) return context;
 	const image = new Image();
 	image.src = imageSrc;
 	image.crossOrigin = "*";
