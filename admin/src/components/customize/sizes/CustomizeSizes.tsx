@@ -25,6 +25,8 @@ const CustomizeSizes = () => {
 
     useEffect(() => {
         getAvSizes(dispatch)
+        
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const addNewSize = async (e: HTMLFormElement) => {

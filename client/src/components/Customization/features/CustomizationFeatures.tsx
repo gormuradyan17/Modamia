@@ -7,7 +7,7 @@ const ColorContent = lazy(() => import('../contents/ColorContent/ColorContent'))
 const PrintContent = lazy(() => import('../contents/PrintContent/PrintContent'))
 
 const CustomizationFeatures = () => {
-	const [tabs, _] = useState<Record<string, any>[]>([
+	const [tabs] = useState<Record<string, any>[]>([
 		{
 			id: 1,
 			heading: 'Silhouette',

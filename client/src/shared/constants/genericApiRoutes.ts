@@ -16,10 +16,10 @@ export const BASE_UPLOADS_PRINTS_URL = BASE_UPLOADS_URL + 'prints/'
 export const BASE_UPLOADS_PRINTS_HIGHS_URL = BASE_UPLOADS_PRINTS_URL + 'highs/'
 export const BASE_UPLOADS_PRINTS_PREVIEWS_URL = BASE_UPLOADS_PRINTS_URL + 'previews/'
 
-export const width = 600;
-export const height = 900;
-// export const width = 483;
-// export const height = 1056;
+// export const width = 600;
+// export const height = 900;
+export const width = 483;
+export const height = 894;
 
 export const M_I = "/image/Mannequin/mannequin2.png";
 
@@ -42,7 +42,9 @@ export const B_I6 = "/image/Silhouettes/bottom/skirt-4.png";
 export const S_I1 = "/image/Silhouettes/sleeve/sleeve-1.png"
 export const S_I2 = "/image/Silhouettes/sleeve/sleeve-2.png"
 export const S_I3 = "/image/Silhouettes/sleeve/sleeve-3.png"
-
+ 
+export const T_B1="/image/Silhouettes/sleeve/sleeve-1.png"
+export const B_B1="/image/Silhouettes/sleeve/sleeve-1.png"
 
 export const modelData = [
 	{src: B_I2, color: '#cb0e2a', printImageURL: B_G2},
@@ -71,3 +73,10 @@ export const ADD_PRINT_URL = API_URL_ADMIN + 'add-print'
 export const ADD_PRINT_VARIANT_URL = API_URL_ADMIN + 'add-print-variant'
 export const EDIT_PRINT_URL = API_URL_ADMIN + 'edit-print'
 export const PRINTS_PALETTES_URL = API_URL + 'prints-palettes'
+
+
+// Size
+
+export const SIZE_URL = API_URL + 'sizes'
+export const ADD_SIZE_URL = API_URL_ADMIN + 'add-size'
+export const EDIT_SIZE_URL = API_URL_ADMIN + 'edit-size'
