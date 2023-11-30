@@ -15,6 +15,7 @@ const AppRouter = () => {
 
     const { publicPages, privatePages } = contents;
 
+
     const renderRoutes = (pages: ArrayType) => {
         return pages.map((RouteElem: ObjectType) => (
             <React.Fragment key={RouteElem.id}>

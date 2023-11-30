@@ -20,8 +20,7 @@ interface colorFillInterface extends CSSProperties {
   "--colorFill": string;
 }
 
-const ColorContent = () => {
-  const [type, setType] = useState("all");
+const ColorContent = ({type,setType}:any) => {
   const activePalette = useSelector(activePaletteItem);
   const dispatch = useDispatch();
 
@@ -30,6 +29,7 @@ const ColorContent = () => {
     getAvColorsVariants(dispatch);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+// console.log(type);
 
   const updateActiveColor = (hexcode: string) => {
     dispatch(setActiveColor(hexcode));
@@ -51,9 +51,15 @@ const ColorContent = () => {
       type: "bottom",
     },
   ];
-  useEffect(() => {
-    dispatch(setMannequinType(type));
+  useEffect(()=>{
+    setType("all")
+    // console.log(type,"type");
+    
+  },[])
+  useEffect(() => {    
+    // console.log(121221,"type");
 
+    dispatch(setMannequinType(type));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[type]);
   

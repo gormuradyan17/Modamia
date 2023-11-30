@@ -13,13 +13,11 @@ const SilhouetteContentTabs:React.FC<Props>=({silhouettesData,kindSilhouette})=>
         NoSleeveObject
     ]
    
-   
    return(
     <div className="silhouette-content">
          <SilhouetteClothes data={topData} type="tops" />
          <SilhouetteClothes data={bottomData} type="bottoms"/>
-         {kindSilhouette && <SilhouetteClothes data={sleeveData} type="sleeves" />
-}
+         {kindSilhouette==="sleeve" && <SilhouetteClothes data={sleeveData} type="sleeves" />}
     </div>
    )
 }

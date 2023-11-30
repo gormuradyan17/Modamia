@@ -44,7 +44,6 @@ const NewSilhouette = ({
             await getAvSilhouettes(dispatch)
             closePopup()
         } else {
-            console.log('sadsadsadasasdsadadsdasd')
             setFileErrors({
                 silhouetteurl: {
                     message: 'Incorrect format for Silhouette Url'
