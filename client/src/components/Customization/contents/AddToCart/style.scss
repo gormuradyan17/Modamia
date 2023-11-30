@@ -1,0 +1,18 @@
+.add_to_cart {
+  width: 100%;
+  border: 1px solid #f28382;
+  background-color: #f28382;
+  color: white;
+  transition: all 0.2s linear;
+  padding: 13px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  &:hover {
+    border-color: #d0a7a0;
+    background-color: #d0a7a0;
+  }
+}

@@ -1,6 +1,7 @@
 import { lazy } from 'react';
 
 const AUTH = {
+	DASHBOARD:lazy(()=>import('pages/Dashboard'))
 	// PAGE_404: lazy(() => import('pages/auth/page404/Page404')),
 	// LOGIN: lazy(() => import('pages/auth/login/Login')),
 };
@@ -8,6 +9,7 @@ const AUTH = {
 const LANDING = {
 	// DASHBOARD: lazy(() => import('pages/dashboard/Dashboard')),
 	CUSTOMIZATION: lazy(() => import('pages/Customization/Customization')),
+	SHOPCART:lazy(()=>import('pages/ShopCart'))
 };
 
 export const privatePages = [
@@ -19,6 +21,14 @@ export const privatePages = [
 		element: LANDING.CUSTOMIZATION,
 		exact: true,
 	},
+	{
+		id: 'ShopCart',
+		text: 'Shop Page',
+		path: 'shopcart',
+		icon: '',
+		element: LANDING.SHOPCART,
+		exact: true,
+	}
 ]
 
 export const publicPages = [
@@ -38,6 +48,14 @@ export const publicPages = [
 	// 	element: AUTH.LOGIN,
 	// 	exact: true,
 	// },
+	{
+	 id:"Dashboard",
+		text:"Home Page",
+		path:"/",
+		icon:"",
+		element:AUTH.DASHBOARD,
+		exact:true
+	}
 ];
 
 const contents = { publicPages, privatePages };

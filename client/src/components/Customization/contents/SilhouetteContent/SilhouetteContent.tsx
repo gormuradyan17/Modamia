@@ -6,7 +6,7 @@ import { getAvSilhouettes } from "services/silhouetteService";
 import SilhouetteCntrlHolder from "./SilhouetteCntrlHolder";
 import './style.scss'
 import SilhouetteContentTabs from "./SilhouetteContentTabs";
-import { setMannequinType } from "redux/reducers/mannequinReducer";
+import { setMannequinPosition, setMannequinType } from "redux/reducers/mannequinReducer";
 
 const SilhouetteContent = () => {
     const silhouettes = useSelector(availableSilhouettes)
@@ -18,6 +18,7 @@ const dispatch=useDispatch()
     }, [])
     useEffect(() => {
         dispatch(setMannequinType(kindSilhouette))
+        dispatch(setMannequinPosition(kindSilhouette))
     }, [kindSilhouette])
 
     return (

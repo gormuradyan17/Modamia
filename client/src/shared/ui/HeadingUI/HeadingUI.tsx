@@ -5,7 +5,8 @@ interface Props {
     classN?: string,
     color?: string,
     size?: string,
-    align?: 'center' | 'left' | 'right'
+    align?: 'center' | 'left' | 'right',
+    handleEvent?:()=>void;
 }
 
 const HeadingUI = ({
@@ -13,16 +14,17 @@ const HeadingUI = ({
     classN = '',
     color = '',
     size = '',
-    align = 'left'
+    align = 'left',
+    handleEvent
 }: Props) => {
     return (
-        <h1 className={`headingUI ${classN}`}
+        <h2 className={`headingUI ${classN}`} onClick={handleEvent}
             style={{
                 color: color || '#000',
                 fontSize: size || '30px',
                 textAlign: align
             }}
-        >{text}</h1>
+        >{text}</h2>
     );
 };
 

@@ -10,7 +10,7 @@ import { setActivePrint, setMannequinType } from "redux/reducers/mannequinReduce
 import { ButtonUI } from "shared/ui/ButtonUI/ButtonUI";
 
 const PrintContent = () => {
-    const [activeType,setActiveType]=useState()
+    const [activeType,setActiveType]=useState("all")
     const activePalette = useSelector(activePaletteItem)
     const dispatch = useDispatch()
 

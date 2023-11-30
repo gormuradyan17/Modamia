@@ -1,19 +1,23 @@
 
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { setMannequinType, setMannequinUrl } from "redux/reducers/mannequinReducer";
+import {  setMannequinPrice, setMannequinType, setMannequinUrl } from "redux/reducers/mannequinReducer";
 import { BASE_UPLOADS_SILHOUETTES_URL } from "shared/constants/genericApiRoutes";
 
 export default function SilhouetteClothes({ data, type }: any) {
   const [activeImageUrl, setActiveImageUrl] = useState<string>()
   const [activeType, setActiveType] = useState<string>(type)
+  const [price, setPrice] = useState<number>(0)
   const dispatch = useDispatch()
 
   useEffect(() => {
     dispatch(setMannequinUrl(activeImageUrl))
     dispatch(setMannequinType(activeType))
+    dispatch(setMannequinPrice(price))
+    // dispatch(setMannequinPosition(activeType))
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeImageUrl, activeType])
+  }, [activeImageUrl, activeType,price])
 
   return (
     <div className="clothes_content customXScrollbar">
@@ -25,6 +29,7 @@ export default function SilhouetteClothes({ data, type }: any) {
         onClick={() => {
           setActiveImageUrl(clothes?._id ? imgUrl : '')
           setActiveType(type)
+          setPrice(clothes.price)
         }}>
         <img key={clothes._id} src={imgUrl} alt="" />
       </div>

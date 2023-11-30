@@ -34,7 +34,6 @@ const DropdownUI = ({
 
     function handleClick(e: React.MouseEvent, index: number) {
         const val = (e.target as HTMLElement).textContent;
-
         if (val) {
             setSelected(val);
         }
@@ -48,7 +47,7 @@ const DropdownUI = ({
     const toggleDropdown = () => {
         setIsActive(!isActive);
     }
-
+    
     return (
         <>
             {label && <HeadingUI size='18px' color='#aa8a75' text={label} />}
