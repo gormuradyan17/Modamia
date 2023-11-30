@@ -47,7 +47,6 @@ export const S_I3 = "/image/Silhouettes/sleeve/sleeve-3.png"
 export const T_B1="/image/Silhouettes/sleeve/sleeve-1.png"
 export const B_B1="/image/Silhouettes/sleeve/sleeve-1.png"
 
-
 // Silhouette
 
 export const SILHOUETTES_URL = API_URL + 'silhouettes'

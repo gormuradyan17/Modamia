@@ -166,7 +166,7 @@ useEffect(()=>{
           <ChangeSize />
           <AddToCart />
         </div>
-        <input type="range" min="0.01" max="1" step="0.01" value={rangeValue} onChange={changRange} />
+        {/* <input type="range" min="0.01" max="1" step="0.01" value={rangeValue} onChange={changRange} /> */}
       </div>
     </Container>
   );
