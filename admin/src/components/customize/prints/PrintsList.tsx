@@ -6,16 +6,17 @@ import './style.scss'
 import { ChangeEvent, useRef, useState } from "react";
 import PopupUI from "shared/ui/PopupUI/PopupUI";
 import EditPrint from "./EditPrint";
-import { addPrintPalette, removePrintPalette, updatePrint } from "shared/api/dataApi";
+import { addPrintPalette, removePrint, removePrintPalette, updatePrint } from "shared/api/dataApi";
 import { getAvPrints, getAvPrintsPalettes } from "services/printService";
 import { useDispatch, useSelector } from "react-redux";
 import { formValidator } from "utils/validators/validator";
 import { printFormOptions } from "utils/validators/validatorOptions";
 import { printsVariants } from "redux/reducers/printReducer";
-import { faPalette } from "@fortawesome/free-solid-svg-icons";
+import { faPalette, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PalettesList from "./PalettesList";
 import useClickOutSide from "utils/hooks/useClickOutside";
+import RemoveSome from "../removeSome/RemoveSome";
 
 interface Props {
     prints: ArrayType
@@ -35,6 +36,9 @@ const PrintsList = ({
     const dispatch = useDispatch()
 
     useClickOutSide([paletteRef], () => setIsVisiblePalettes(false), isVisiblePalettes)
+
+    const [isVisibleRemove, setIsVisibleRemove] = useState<boolean>(false)
+    const [removableItem, setRemovableItem] = useState<ObjectType>({})
 
     const editPrint = (print: ObjectType) => {
         if (print) {
@@ -109,19 +113,36 @@ const PrintsList = ({
         await getAvPrintsPalettes(dispatch)
     }
 
+    const prepareToRemoveItem = (item: ObjectType) => {
+        setRemovableItem(item)
+        setIsVisibleRemove(true)
+    }
+
+    const removeItem = async () => {
+        if (removableItem?._id) {
+           await removePrint(removableItem)
+           await getAvPrints(dispatch)
+           await getAvPrintsPalettes(dispatch)
+           setIsVisibleRemove(false)
+        }
+    }
+
+    const closePopupRemove = () => {
+        setIsVisibleRemove(false)
+        setRemovableItem({})
+    }
+
     return (
         <div className="print-list">
             {prints?.map((print: ObjectType) => {
-
                 return <div className="prints-list-print" key={print._id}>
                     <HeadingUI classN="print-list-text _ellipsis" text={print.name} size="16px" />
                     <div className="print-list-image">
                         <img src={`${BASE_UPLOADS_PRINTS_PREVIEWS_URL}${print.previewurl}`} className="print-list-img" alt={print.name} />
                     </div>
-                    <span></span>
                     <div className="palettes-list-buttons">
                         <ButtonUI classN="print-list-button" onClick={() => editPrint(print)}>Edit</ButtonUI>
-                        <div {...(print?._id === editablePrint?._id) && { ref: paletteRef }}>
+                        <div className="print-list-action-buttons" {...(print?._id === editablePrint?._id) && { ref: paletteRef }}>
                             <ButtonUI classN="print-button" onClick={() => togglePalettes(print)}><FontAwesomeIcon icon={faPalette} /></ButtonUI>
                             {isVisiblePalettes && print?._id === editablePrint?._id &&
                                 <PalettesList
@@ -130,6 +151,7 @@ const PrintsList = ({
                                     options={printVariants}
                                 />
                             }
+                            <ButtonUI classN="print-button" onClick={() => prepareToRemoveItem(print)}><FontAwesomeIcon icon={faTrash} /></ButtonUI>
                         </div>
                     </div>
                 </div>
@@ -142,6 +164,14 @@ const PrintsList = ({
                     errors={errors}
                     setPrint={setEditablePrint}
                     printInfo={printInfo}
+                />
+            </PopupUI>}
+            {isVisibleRemove && <PopupUI callback={closePopupRemove}>
+                <RemoveSome
+                    header="Remove Print"
+                    text={`Do you want to remove the print <span> ${removableItem?.name} ?</span>`}
+                    discardCallback={closePopupRemove}
+                    removeCallback={removeItem}
                 />
             </PopupUI>}
         </div>

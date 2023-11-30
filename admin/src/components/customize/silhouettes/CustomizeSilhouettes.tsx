@@ -8,6 +8,7 @@ import PopupUI from "shared/ui/PopupUI/PopupUI";
 import NewSilhouette from "./NewSilhouette";
 import SilhouettesList from "./SilhouettesList";
 import './style.scss'
+import { resetSilhouetteState } from "redux/reducers/silhouetteReducer";
 
 const CustomizeSilhouettes = () => {
 
@@ -15,6 +16,7 @@ const CustomizeSilhouettes = () => {
     const dispatch = useDispatch()
     const closePopup = () => {
         setIsVisible(false)
+        dispatch(resetSilhouetteState())
     }
 
     useEffect(() => {

@@ -33,6 +33,17 @@ import {
 	EDIT_SUPER_ADMIN_URL,
 	GET_SUPER_ADMINS_URL,
 	REMOVE_SUPER_ADMIN_URL,
+	REMOVE_COLOR_URL,
+	REMOVE_PRINT_URL,
+	REMOVE_MANNEQUIN_URL,
+	REMOVE_SILHOUETTE_URL,
+	REMOVE_SIZE_URL,
+	GARMENTS_URL,
+	EDIT_GARMENT_URL,
+	REMOVE_GARMENT_URL,
+	ADD_GARMENT_URL,
+	GARMENTS_ADMIN_URL,
+	GARMENT_ADMIN_URL,
 } from "shared/constants/genericApiRoutes";
 import { BaseApi } from "./baseApi";
 
@@ -119,6 +130,11 @@ export const updateColor = (body: Record<string, any> = {}) => {
 	return http.post(EDIT_COLOR_URL, body)
 }
 
+export const removeColor = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(REMOVE_COLOR_URL, body)
+}
+
 // Print
 
 export const getPrints = (body: Record<string, any> = {}) => {
@@ -168,6 +184,11 @@ export const updatePrint = (body: Record<string, any> = {}) => {
 	return http.post(EDIT_PRINT_URL, body, undefined, true)
 }
 
+export const removePrint = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(REMOVE_PRINT_URL, body)
+}
+
 // Mannequin
 
 export const getMannequins = (body: Record<string, any> = {}) => {
@@ -185,6 +206,11 @@ export const updateMannequin = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');
 	http.removeDefaultHeader()
 	return http.post(EDIT_MANNEQUIN_URL, body, undefined, true)
+}
+
+export const removeMannequin = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(REMOVE_MANNEQUIN_URL, body)
 }
 
 // Silhouette
@@ -206,6 +232,11 @@ export const updateSilhouette = (body: Record<string, any> = {}) => {
 	return http.post(EDIT_SILHOUETTE_URL, body, undefined, true)
 }
 
+export const removeSilhouette = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(REMOVE_SILHOUETTE_URL, body)
+}
+
 // Size
 
 export const getSizes = (body: Record<string, any> = {}) => {
@@ -221,4 +252,41 @@ export const addSize = (body: Record<string, any> = {}) => {
 export const updateSize = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');
 	return http.post(EDIT_SIZE_URL, body)
+}
+
+export const removeSize = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(REMOVE_SIZE_URL, body)
+}
+
+// Garment
+
+export const getGarments = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.get(GARMENTS_URL, body)
+}
+
+export const getGarmentsAdmin = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(GARMENTS_ADMIN_URL, body)
+}
+
+export const getGarmentAdmin = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(GARMENT_ADMIN_URL, body)
+}
+
+export const addGarment = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(ADD_GARMENT_URL, body)
+}
+
+export const editGarment = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(EDIT_GARMENT_URL, body)
+}
+
+export const removeGarment = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(REMOVE_GARMENT_URL, body)
 }

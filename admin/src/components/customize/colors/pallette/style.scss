@@ -19,6 +19,12 @@ $colorFill: va(--colorFill);
     flex-direction: column;
     margin: 10px;
 }
+.palette-body-top {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 .palette-variantname {
     text-transform: capitalize;
 }
@@ -48,6 +54,7 @@ $colorFill: va(--colorFill);
     
 }
 
-.palette-text {
-    text-shadow: 0 0 5px #000;
+.palette-elem-text {
+    position: relative;
+    z-index: 1;
 }

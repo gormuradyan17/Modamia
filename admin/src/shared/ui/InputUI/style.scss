@@ -46,6 +46,10 @@
     &._errorShake {
       animation: shake 0.2s ease-in-out 0s 2;
     }
+    &._disabled {
+      pointer-events: none;
+      opacity: .3;
+    }
   }
 
   input.padding-right {

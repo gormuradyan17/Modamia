@@ -61,8 +61,8 @@ class PublicController {
 
     async getSizes(req: any, res: any, next: any) {
         try {
-            const colors = await publicService.getSizes();
-            return res.json(colors);
+            const sizes = await publicService.getSizes();
+            return res.json(sizes);
         } catch (error) {
             next(error);
         }
@@ -70,8 +70,17 @@ class PublicController {
 
     async getMannequins(req: any, res: any, next: any) {
         try {
-            const prints = await publicService.getMannequins();
-            return res.json(prints);
+            const mannequins = await publicService.getMannequins();
+            return res.json(mannequins);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getGarments(req: any, res: any, next: any) {
+        try {
+            const garments = await publicService.getGarments();
+            return res.json(garments);
         } catch (error) {
             next(error);
         }
@@ -79,8 +88,8 @@ class PublicController {
 
     async getSilhouettes(req: any, res: any, next: any) {
         try {
-            const prints = await publicService.getSilhouettes();
-            return res.json(prints);
+            const silhouettes = await publicService.getSilhouettes();
+            return res.json(silhouettes);
         } catch (error) {
             next(error);
         }
@@ -88,8 +97,8 @@ class PublicController {
 
     async getSilhouettesTypes(req: any, res: any, next: any) {
         try {
-            const prints = await publicService.getSilhouettesTypes();
-            return res.json(prints);
+            const silhouettes = await publicService.getSilhouettesTypes();
+            return res.json(silhouettes);
         } catch (error) {
             next(error);
         }

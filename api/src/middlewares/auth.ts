@@ -1,16 +1,17 @@
 import ApiError from "../exceptions/api-error";
+import { getCookieValue } from "../helpers/helper";
 
 import tokenService from '../services/token-service';
 
 export const authMiddleware = (req: any, res: any, next: any) => {
     try {
-        var authorizationHeader = req.headers.cookie;
-        if (!authorizationHeader) {
+        const httpRequest = req.headers;
+        if (!httpRequest) {
             res.clearCookie("refreshToken");
             res.status(400).json({ msg: 'Validation error', errors: 'User is not authentificated' });
         }
 
-        const accessToken = authorizationHeader.split(' ')[1]?.split('accessToken=')?.[1];
+        const accessToken = getCookieValue(httpRequest.cookie, 'accessToken');
         if (!accessToken) {
             res.clearCookie("refreshToken");
             res.status(400).json({ msg: 'Validation error', errors: 'User is not authentificated' });

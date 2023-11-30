@@ -1,0 +1,36 @@
+@use 'variables';
+
+.customization-mannequins {
+    margin-top: 48px;
+    padding: 50px;
+}
+
+.customization-mannequins-list {
+    width: 100%;
+    display: flex;
+    margin-top: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.customization-mannequin {
+    width: 400px;
+    height: 500px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid variables.$appColor;
+    border-radius: 10px;
+    margin: 10px;
+    cursor: pointer;
+    img {
+        transition: .3s all ease 0s;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+    &:hover {
+        img {
+            transform: scale(1.3);
+        }
+    }
+}

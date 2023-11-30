@@ -8,6 +8,7 @@ const AUTH = {
 const LANDING = {
 	// DASHBOARD: lazy(() => import('pages/dashboard/Dashboard')),
 	CUSTOMIZATION: lazy(() => import('pages/Customization/Customization')),
+	CUSTOMIZATION_MANNEQUINS: lazy(() => import('pages/CustomizationMannequins/CustomizationMannequins')),
 };
 
 export const privatePages = [
@@ -15,6 +16,14 @@ export const privatePages = [
 		id: 'Customization',
 		text: 'Customization Page',
 		path: 'customization',
+		icon: '',
+		element: LANDING.CUSTOMIZATION_MANNEQUINS,
+		exact: true,
+	},
+	{
+		id: 'Customization',
+		text: 'Customization Page',
+		path: 'customization/:id',
 		icon: '',
 		element: LANDING.CUSTOMIZATION,
 		exact: true,

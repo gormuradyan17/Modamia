@@ -34,11 +34,6 @@ const SilhouetteSchema: SilhouetteInterface = new mongoose.Schema(
       type: String,
       required: false,
     },
-    // mannequin_id: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: 'Mannequin',
-    //   required: true,
-    // },
   },
   { timestamps: true }
 );

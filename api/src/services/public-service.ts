@@ -7,6 +7,10 @@ import PrintPaletteModel from '../models/PrintPalette'
 import MannequinModel from '../models/Mannequin'
 import SilhouetteModel from '../models/Silhouette'
 import SizeModel from '../models/Size'
+import GarmentModel from '../models/Garment'
+import GarmentSilhouettesModel from '../models/GarmentSilhouettes'
+import { getGarmentsQuery } from '../queries/GarmentsQueries'
+import mongoose from 'mongoose';
 
 class PublicService {
 
@@ -36,7 +40,7 @@ class PublicService {
                     as: "colors"
                 },
             },
-            { $sort : { order : 1 } },
+            { $sort: { order: 1 } },
             {
                 $lookup: {
                     from: "colors_variants",
@@ -95,7 +99,7 @@ class PublicService {
                     as: "prints"
                 },
             },
-            { $sort : { order : 1 } },
+            { $sort: { order: 1 } },
             {
                 $lookup: {
                     from: "prints_variants",
@@ -134,6 +138,11 @@ class PublicService {
     async getMannequins() {
         const mannequins = await MannequinModel.find({});
         return mannequins;
+    }
+
+    async getGarments() {
+        const garments = await getGarmentsQuery(true)
+        return garments
     }
 
     async getSilhouettes() {

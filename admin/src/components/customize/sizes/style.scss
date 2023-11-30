@@ -36,7 +36,11 @@
     size: variables.$appColor !important;
     max-width: 100px;
 }
-
+.size-buttons {
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
 .size-button {
     padding: 10px 15px !important;
     min-height: 15px !important;

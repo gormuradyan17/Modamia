@@ -12,6 +12,7 @@ import { silhouetteFilesOptions, silhouetteFormOptions } from "utils/validators/
 import DropzoneUI from "shared/ui/DropzoneUI/DropzoneUI";
 import { addSilhouette } from "shared/api/dataApi";
 import { getAvSilhouettes } from "services/silhouetteService";
+import { getAvMannequins } from "services/mannequinService";
 
 interface Props {
     closePopup: CallbackSkeletonType,
@@ -29,6 +30,10 @@ const NewSilhouette = ({
     const [fileErrors, setFileErrors] = useState<ObjectType>({})
     const [file, setFile] = useState<any>(null)
 
+    useEffect(() => {
+        getAvMannequins(dispatch)
+    },[])
+
     const addNewSilhouette: CallbackSkeletonType = async (e: HTMLFormElement) => {
         e.preventDefault()
         const errors = formValidator(sDetails, silhouetteFormOptions);
@@ -44,7 +49,6 @@ const NewSilhouette = ({
             await getAvSilhouettes(dispatch)
             closePopup()
         } else {
-            console.log('sadsadsadasasdsadadsdasd')
             setFileErrors({
                 silhouetteurl: {
                     message: 'Incorrect format for Silhouette Url'
@@ -86,9 +90,9 @@ const NewSilhouette = ({
 
     useEffect(() => {
         if (selectedType) {
-            dispatch(setSilhouetteState({name: 'type', value: selectedType }))
+            dispatch(setSilhouetteState({ name: 'type', value: selectedType }))
         }
-    },[selectedType])
+    }, [selectedType])
 
     return (
         <form onSubmit={addNewSilhouette} className="new-silhouette">
@@ -118,16 +122,16 @@ const NewSilhouette = ({
                     name="tags"
                     callback={handleInputChange}
                 />
-                <DropdownUI 
-                    options={silhouetteTypeOptions} 
+                <DropdownUI
+                    options={silhouetteTypeOptions}
                     onChange={(data) => handleDropdownChange(data, 'type')}
                     label="Silhouette type*"
                     error={errors?.type?.message || ''}
-                    {...(selectedType && {defaultValue: selectedType})}
+                    {...(selectedType && { defaultValue: selectedType })}
                     disabled={!!selectedType}
                 />
-                <DropdownUI 
-                    options={silhouetteOrientationOptions} 
+                <DropdownUI
+                    options={silhouetteOrientationOptions}
                     onChange={(data) => handleDropdownChange(data, 'orientation')}
                     label="Silhouette orientation*"
                     error={errors?.orientation?.message || ''}

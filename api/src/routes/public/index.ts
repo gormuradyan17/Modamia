@@ -16,6 +16,7 @@ router.get('/prints-palettes', publicController.getPrintsPalettes)
 // Mannequin
 
 router.get('/mannequins', publicController.getMannequins)
+router.get('/garments', publicController.getGarments)
 
 // Size
 

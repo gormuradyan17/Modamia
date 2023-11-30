@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { addModel, addImageProcess } from "../../shared/helpers/canvasHelpers";
 import {
 	width,
@@ -15,6 +15,7 @@ import CustomizationInfo from "components/Customization/customizationInfo/Custom
 import { useDispatch, useSelector } from "react-redux";
 import {
 	availableMannequins,
+	getActiveMannequinDetails,
 	getMannequinActiveCategory,
 	getMannequinActiveColor,
 	getMannequinActivePrint,
@@ -22,15 +23,18 @@ import {
 	getMannequinPosition,
 	getMannequinType,
 	getMannequinUrl,
+	setActiveMannequinDetails,
 	setMannequinLoading
 } from "redux/reducers/mannequinReducer";
-import { getAvMannequins } from "services/mannequinService";
+import { getMannequinWithSill } from "services/mannequinService";
 import { ArrayType } from "../../shared/helpers/helpers";
 import CustomizationLoader from "components/Customization/customizationLoader/CustomizationLoader";
 import SilhouettePositionBtn from "components/Customization/contents/SilhouetteContent/SilhouettePositionBtn";
+import { useParams } from "react-router-dom";
 
 const Customization = () => {
-	const mannequins = useSelector(availableMannequins)
+	const params = useParams()
+	const mannequin_id = params?.id;
 	const activeColor = useSelector(getMannequinActiveColor)
 	const activePrint = useSelector(getMannequinActivePrint)
 	const activeCategory = useSelector(getMannequinActiveCategory)
@@ -46,15 +50,18 @@ const Customization = () => {
 	const dispatch = useDispatch()
 	const canvasRef = useRef<HTMLCanvasElement | null>(null);
 	const [rangeValue, setRangeValue] = useState<number>(0.1);
+
+	const activeMannequin = useSelector(getActiveMannequinDetails)
+
 	const canvasModelInit = (num: number, modData: ArrayType, frontBack: string = "front") => {
-		if (!canvasRef.current || !mannequins?.length) return;
+		if (!canvasRef.current || !activeMannequin?.mannequin) return;
 		dispatch(setMannequinLoading(true))
 		const canvas = canvasRef.current;
 		canvas.width = width;
 		canvas.height = height;
 		let ctx = canvasRef.current?.getContext("2d");
 		const img = new Image();
-		img.src = frontBack === "front" ? `${BASE_UPLOADS_MANNEQUINS_FRONTS_URL}${mannequins?.[1]?.fronturl}` : `${BASE_UPLOADS_MANNEQUINS_FRONTS_URL}${mannequins?.[1]?.backurl}`
+		img.src = frontBack === "front" ? `${BASE_UPLOADS_MANNEQUINS_FRONTS_URL}${activeMannequin?.mannequin?.fronturl}` : `${BASE_UPLOADS_MANNEQUINS_FRONTS_URL}${activeMannequin?.mannequin?.backurl}`
 		// img.src = M_I;
 		img.onload = async () => {
 			await ctx?.drawImage(img, 0, 0, width, height);
@@ -70,13 +77,16 @@ const Customization = () => {
 			await dispatch(setMannequinLoading(false))
 		};
 	};
+
 	useEffect(() => {
-		getAvMannequins(dispatch)
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [])
+		if (mannequin_id) {
+			getMannequinWithSill(dispatch, mannequin_id)
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [mannequin_id])
 	
 	useEffect(() => {
-		if (mannequins?.length) {
+		if (activeMannequin?.mannequin) {
 			const drawManequin = async () => {
 				for (let i = 0; i < modelData.length; i++) {
 					modelData[i].activeCategory = activeCategory;
@@ -119,7 +129,7 @@ const Customization = () => {
 			drawManequin()
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [mannequins, activeColor, activePrint, activeCategory, activeImgUrl, modelData, activeType, frontBack]);
+	}, [activeMannequin, activeColor, activePrint, activeCategory, activeImgUrl, modelData, activeType, frontBack]);
 
 	function changRange(e: ChangeEvent<HTMLInputElement>) {
 		// console.log(e.target.value);

@@ -4,16 +4,17 @@ import { ButtonUI } from "shared/ui/ButtonUI/ButtonUI";
 import HeadingUI from "shared/ui/HeadingUI/HeadingUI";
 import PopupUI from "shared/ui/PopupUI/PopupUI";
 import EditColor from "./EditColor";
-import { addColorPalette, removeColorPalette, updateColor } from "shared/api/dataApi";
+import { addColorPalette, removeColor, removeColorPalette, updateColor } from "shared/api/dataApi";
 import { getAvColors, getAvColorsPalettes, getAvColorsVariants } from "services/colorService";
 import { useDispatch, useSelector } from "react-redux";
 import { formValidator } from "utils/validators/validator";
 import { colorFormOptions } from "utils/validators/validatorOptions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPalette } from "@fortawesome/free-solid-svg-icons";
+import { faPalette, faTrash } from "@fortawesome/free-solid-svg-icons";
 import PalettesList from "./PalettesList";
 import { colorsVariants } from "redux/reducers/colorReducer";
 import useClickOutSide from "utils/hooks/useClickOutside";
+import RemoveSome from "../removeSome/RemoveSome";
 
 interface Props {
     colors: ArrayType
@@ -35,6 +36,9 @@ const ColorsList = ({
     const [colorInfo, setColorInfo] = useState<ObjectType>({})
     const [errors, setErrors] = useState<ObjectType>({})
     const paletteRef = useRef<HTMLDivElement>(null)
+
+    const [isVisibleRemove, setIsVisibleRemove] = useState<boolean>(false)
+    const [removableItem, setRemovableItem] = useState<ObjectType>({})
 
     const editColor = (color: ObjectType) => {
         if (color) {
@@ -93,6 +97,25 @@ const ColorsList = ({
         await getAvColorsPalettes(dispatch)
     }
 
+    const prepareToRemoveItem = (item: ObjectType) => {
+        setRemovableItem(item)
+        setIsVisibleRemove(true)
+    }
+
+    const removeItem = async () => {
+        if (removableItem?._id) {
+           await removeColor(removableItem)
+           await getAvColors(dispatch)
+           await getAvColorsPalettes(dispatch)
+           setIsVisibleRemove(false)
+        }
+    }
+
+    const closePopupRemove = () => {
+        setIsVisibleRemove(false)
+        setRemovableItem({})
+    }
+
     return (
         <div className="colors-list">
             {colors.map((color: ObjectType) => {
@@ -113,6 +136,7 @@ const ColorsList = ({
                                     options={colorVariants}
                                 />
                             }
+                            <ButtonUI classN="color-button" onClick={() => prepareToRemoveItem(color)}><FontAwesomeIcon icon={faTrash} /></ButtonUI>
                         </div>
                     </div>
                 </div>
@@ -125,6 +149,14 @@ const ColorsList = ({
                     defaultColor={colorInfo}
                     errors={errors}
                     setColor={setEditableColor}
+                />
+            </PopupUI>}
+            {isVisibleRemove && <PopupUI callback={closePopupRemove}>
+                <RemoveSome
+                    header="Remove Color"
+                    text={`Do you want to remove the color <span> ${removableItem?.name} ?</span>`}
+                    discardCallback={closePopupRemove}
+                    removeCallback={removeItem}
                 />
             </PopupUI>}
         </div>

@@ -1,0 +1,46 @@
+@use 'variables';
+
+.garments-list {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+.garments-list-garment {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 20px 10px 0;
+    flex-direction: column;
+    position: relative;
+}
+.garments-list-image {
+    width: 200px;
+    height: 300px;
+    border-radius: 5px;
+    border: 1px solid variables.$appColor;
+    box-sizing: border-box;
+    margin: 10px 0;
+    overflow: hidden;
+    position: relative;
+}
+.garments-list-img {
+    cursor: pointer;
+    transition: .2s transform;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    &:hover {
+        transform: scale(1.2);
+    }
+}
+.garments-list-button {
+    position: absolute;
+    right: 2px;
+    top: 15px;
+    width: 20px;
+    height: 20px;
+    padding: 15px;
+    min-height: initial;
+}

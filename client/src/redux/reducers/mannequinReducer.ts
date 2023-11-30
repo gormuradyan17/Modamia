@@ -23,7 +23,9 @@ interface stateProps {
 	activeCategory: string,
 	url:'',
 	type:'',
-	position:string
+	position:string,
+	mannequinWithSilhouettes: ObjectType,
+	activeMannequinDetails: ObjectType,
 }
 
 export const defaultMannequinState: MannequinStateInterface = {
@@ -59,6 +61,8 @@ const initialState: stateProps = {
 	url:'',
 	type:'',
 	position:'front',
+	mannequinWithSilhouettes: {},
+	activeMannequinDetails: {},
 }
 
 export const mannequinSlice = createSlice({
@@ -99,6 +103,12 @@ export const mannequinSlice = createSlice({
 		setMannequinPosition: (state, action) => {
 			state.position = action.payload;
 		},
+		setMannequinWithSilhouettes: (state, action) => {
+			state.mannequinWithSilhouettes = action.payload;
+		},
+		setActiveMannequinDetails: (state, action) => {
+			state.activeMannequinDetails = action.payload;
+		},
 	}
 });
 
@@ -113,7 +123,9 @@ export const {
 	setMannequinLoading,
 	setMannequinUrl,
 	setMannequinType,
-	setMannequinPosition
+	setMannequinPosition,
+	setMannequinWithSilhouettes,
+	setActiveMannequinDetails
 } = mannequinSlice.actions;
 
 export const availableMannequins = (state: ObjectType) => state.mannequinReducer.mannequins;
@@ -126,5 +138,7 @@ export const getMannequinLoading = (state: ObjectType) => state.mannequinReducer
 export const getMannequinUrl= (state: ObjectType) => state.mannequinReducer.url;
 export const getMannequinType= (state: ObjectType) => state.mannequinReducer.type;
 export const getMannequinPosition= (state: ObjectType) => state.mannequinReducer.position;
+export const getMannequinWithSilhouettesData = (state: ObjectType) => state.mannequinReducer.mannequinWithSilhouettes;
+export const getActiveMannequinDetails = (state: ObjectType) => state.mannequinReducer.activeMannequinDetails;
 
 export default mannequinSlice.reducer;
