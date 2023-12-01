@@ -1,5 +1,6 @@
 import { AnimationObject } from "shared/objectModels/AnimationModel";
 import NoSleeve from 'assets/images/no-sleeve.png'
+import { BASE_UPLOADS_SILHOUETTES_URL } from "shared/constants/genericApiRoutes";
 
 export type ArrayType = Array<Record<string, any>>
 export type ObjectType = Record<string, any>
@@ -75,3 +76,42 @@ export const NoSleeveObject = {
   "orientation": "Front",
   "silhouetteurl": NoSleeve,
 }
+
+export const getCanvasDefaultImages = (silhouettes: ObjectType) => {
+
+  const frontBottom = silhouettes?.fronts?.bottoms[0]?.silhouetteurl ? `${BASE_UPLOADS_SILHOUETTES_URL}fronts/${silhouettes?.fronts?.bottoms[0]?.silhouetteurl}` : ''
+  const frontTop = silhouettes?.fronts?.tops[0]?.silhouetteurl ? `${BASE_UPLOADS_SILHOUETTES_URL}fronts/${silhouettes?.fronts?.tops[0]?.silhouetteurl}` : ''
+  const backBottom = silhouettes?.backs?.bottoms[0]?.silhouetteurl ? `${BASE_UPLOADS_SILHOUETTES_URL}backs/${silhouettes?.backs?.bottoms[0]?.silhouetteurl}` : ''
+  const backTop = silhouettes?.backs?.tops[0]?.silhouetteurl ? `${BASE_UPLOADS_SILHOUETTES_URL}backs/${silhouettes?.backs?.tops[0]?.silhouetteurl}` : ''
+  const sleeveTop = silhouettes?.sleeves?.tops[0]?.silhouetteurl ? `${BASE_UPLOADS_SILHOUETTES_URL}sleeves/${silhouettes?.sleeves?.tops[0]?.silhouetteurl}` : ''
+
+  return {
+    frontBottom,
+    frontTop,
+    backBottom,
+    backTop,
+    sleeveTop
+  }
+}
+
+// export const getPosition=(position:string,img:any,newImage:any,context:any,width:number,height:number)=>{
+//   if (position === "top") {
+// 		img.width = 483
+// 		img.height = 327
+// 		if (newImage.naturalHeight === img.height) {
+// 			context.drawImage(img, 0, 0, width, img.height);
+// 		} else {
+// 			context.drawImage(img, 0, 0, width, height);
+// 		}
+// 	} else if (position === 'bottom') {
+// 		img.width = 483
+// 		img.height = 821
+// 		if (newImage.naturalHeight === img.height) {
+// 			context.drawImage(img, 0, height - img.height, width, height);
+
+// 		} else {
+// 			context.drawImage(img, 0, 0, width, height);
+
+// 		}
+// 	}
+// }

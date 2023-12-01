@@ -1,9 +1,10 @@
-import { BASE_UPLOADS_MANNEQUINS_BACKS_URL, BASE_UPLOADS_MANNEQUINS_FRONTS_URL, B_N, T_N } from "shared/constants/genericApiRoutes";
-import {ObjectType} from "./helpers";
+import { BASE_UPLOADS_MANNEQUINS_BACKS_URL, BASE_UPLOADS_MANNEQUINS_FRONTS_URL, B_N, T_N, heightM, widthM } from "shared/constants/genericApiRoutes";
+import { ObjectType } from "./helpers";
 import {
-    width,
-    height,
-  } from "../../shared/constants/genericApiRoutes";
+	width,
+	height,
+} from "../../shared/constants/genericApiRoutes";
+
 
 export async function addModel(src: string, color: string, context: any, width: number, height: number, position: string) {
 	if(!src) return;
@@ -11,14 +12,35 @@ export async function addModel(src: string, color: string, context: any, width: 
 	const img: HTMLImageElement = new Image();
 
 	img.src = await colorImage(src, color, width, height);
+	const newImage=new Image()
+	newImage.src=src
 	await new Promise((res) => {
 		img.onload = res;
 	})
+	await new Promise((res) => {
+		newImage.onload = res;
+	})
 	
-	if(position === 'bottom' ) {		
-		context.drawImage(img, 0, 235, width, height);
-	}else{
-		context.drawImage(img, 0, 0, width, 327);
+		if (position === "top") {
+		img.width = 483
+		img.height = 327
+		if (newImage.naturalHeight === img.height) {
+			context.drawImage(img, 0, 0, width, img.height);
+
+		} else {
+			context.drawImage(img, 0, 0, width, height);
+
+		}
+	} else if (position === 'bottom') {
+		img.width = 483
+		img.height = 821
+		if (newImage.naturalHeight === img.height) {
+			context.drawImage(img, 0, height - img.height, width, height);
+
+		} else {
+			context.drawImage(img, 0, 0, width, height);
+
+		}
 	}
 }
 
@@ -69,6 +91,7 @@ async function colorImage(image: string, color: string, width: number, height: n
 	}
 	return imageCtx.canvas.toDataURL("image/png");
 }
+
 
 export async function addImageProcess(printImageURL: string, imageSrc: string, context: any, width: number, height: number, rangeValue: number,position:string) {
 	
@@ -132,46 +155,75 @@ export async function addImageProcess(printImageURL: string, imageSrc: string, c
 }
 
 export const getModelData = (url: string = '', activeColor: string = '', activePrint: ObjectType = {}, category = 'silhouette') => {
-	return{
+	return {
 		front: [
-				{position:"bottom", src: B_N, color: activeColor, printImageURL: activePrint?.highresurl, activeCategory:category },
-				{position:"top",src: T_N, color: activeColor, printImageURL: activePrint?.highresurl, activeCategory:category },
+			{ position: "bottom", src: B_N, color: activeColor, printImageURL: activePrint?.highresurl, activeCategory: category },
+			{ position: "top", src: T_N, color: activeColor, printImageURL: activePrint?.highresurl, activeCategory: category },
 		],
 		back: [
-				{position:"bottom", src:B_N, color: activeColor, printImageURL: activePrint?.highresurl, activeCategory:category },
-				{position:"top", src: T_N, color: activeColor, printImageURL: activePrint?.highresurl, activeCategory:category },
+			{ position: "bottom", src: B_N, color: activeColor, printImageURL: activePrint?.highresurl, activeCategory: category },
+			{ position: "top", src: T_N, color: activeColor, printImageURL: activePrint?.highresurl, activeCategory: category },
 		],
 		sleeve: [
-				{position:"top", src: '', color: activeColor, printImageURL: activePrint?.highresurl, activeCategory:category }
+			{ position: "top", src: '', color: activeColor, printImageURL: activePrint?.highresurl, activeCategory: category }
 		]
-	  }
+	}
 }
 
 
-export const canvasModelInit = (num: number, modData: any, frontBack: string = "front",canvasRef:any,mannequin:any) => {
-    if (!canvasRef.current || !mannequin?._id) return;
-	
-    const canvas = canvasRef.current;
-    canvas.width = width;
-    canvas.height = height;
+export const canvasModelInit = (num: number, modData: any, frontBack: string = "front", canvasRef: any, mannequin: any) => {
+	if (!canvasRef.current || !mannequin?._id) return;
 
-    let ctx = canvasRef.current?.getContext("2d");
-    const img = new Image();
-    img.src = frontBack === "fronts" ? `${BASE_UPLOADS_MANNEQUINS_FRONTS_URL}${mannequin?.fronturl}` : frontBack === "backs" ? `${BASE_UPLOADS_MANNEQUINS_BACKS_URL}${mannequin?.backurl}` : `${BASE_UPLOADS_MANNEQUINS_FRONTS_URL}${mannequin?.fronturl}`
-    img.onload = async () => {		
-      await ctx?.drawImage(img, 0, 0, width, height);
-      for (let i = 0; i < modData[frontBack].length; i++) {		
-        if (modData[frontBack][i].activeCategory === 'color') {
-          await addModel(modData[frontBack][i].src, modData[frontBack][i].color, ctx, width, height, modData[frontBack][i].position);
-        } else if (modData[frontBack][i].activeCategory === 'print') {			
-          await addImageProcess(modData[frontBack][i].printImageURL, modData[frontBack][i].src, ctx, width, height, num, modData[frontBack][i].position);
-        } else {			
-          await addModel(modData[frontBack][i].src, modData[frontBack][i].color, ctx, width, height, modData[frontBack][i].position)
-        }
-        if (frontBack === "sleeve") {
-          await addModel(modData.fronts[0].src, modData.fronts[0].color, ctx, width, height, modData.fronts[0].position);
-          await addModel(modData.fronts[1].src, modData.fronts[1].color, ctx, width, 327, modData.fronts[1].position);
-        }
-      }
-    };
-  };
+	const canvas = canvasRef.current;
+
+
+	let ctx = canvas?.getContext("2d");
+	const img = new Image();
+	img.height = 821;
+	img.width = 483;
+	img.src = frontBack === "fronts" ? `${BASE_UPLOADS_MANNEQUINS_FRONTS_URL}${mannequin?.fronturl}` : frontBack === "backs" ? `${BASE_UPLOADS_MANNEQUINS_BACKS_URL}${mannequin?.backurl}` : `${BASE_UPLOADS_MANNEQUINS_FRONTS_URL}${mannequin?.fronturl}`
+	img.onload = async () => {
+		let canvasWidth;
+		let canvasHeight;
+		if (img.height < img.width) {
+			canvasWidth = width;
+			canvasHeight = height
+		} else {
+			canvasWidth = widthM;
+			canvasHeight = heightM;
+		}
+
+		canvasRef.current.width = canvasWidth
+		canvasRef.current.height = canvasHeight
+
+		const aspectRatio = canvasWidth / canvasHeight;
+
+		let drawWidth = canvasWidth;
+		let drawHeight = canvasWidth / aspectRatio;
+
+		if (drawHeight > canvasHeight) {
+			drawHeight = canvasHeight;
+			drawWidth = canvasHeight * aspectRatio;
+		}
+
+		const x = (canvasWidth - drawWidth) / 2;
+		const y = (canvasHeight - drawHeight) / 2;
+
+		ctx?.clearRect(0, 0, canvasWidth, canvasHeight);
+		ctx?.drawImage(img, x, y, drawWidth, drawHeight);
+
+		for (let i = 0; i < modData[frontBack].length; i++) {
+			if (modData[frontBack][i].activeCategory === 'color') {
+				await addModel(modData[frontBack][i].src, modData[frontBack][i].color, ctx, canvasWidth, canvasHeight, modData[frontBack][i].position);
+			} else if (modData[frontBack][i].activeCategory === 'print') {
+				await addImageProcess(modData[frontBack][i].printImageURL, modData[frontBack][i].src, ctx, canvasWidth, canvasHeight, num, modData[frontBack][i].position);
+			} else {
+				await addModel(modData[frontBack][i].src, modData[frontBack][i].color, ctx, canvasWidth, canvasHeight, modData[frontBack][i].position)
+			}
+			if (frontBack === "sleeves") {
+				await addModel(modData.fronts[0].src, modData.fronts[0].color, ctx, canvasWidth, canvasHeight, modData.fronts[0].position);
+				await addModel(modData.fronts[1].src, modData.fronts[1].color, ctx, canvasWidth, canvasHeight, modData.fronts[1].position);
+			}
+		}
+	};
+};
