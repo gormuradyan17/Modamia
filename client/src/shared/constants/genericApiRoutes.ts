@@ -17,8 +17,11 @@ export const BASE_UPLOADS_PRINTS_URL = BASE_UPLOADS_URL + 'prints/'
 export const BASE_UPLOADS_PRINTS_HIGHS_URL = BASE_UPLOADS_PRINTS_URL + 'highs/'
 export const BASE_UPLOADS_PRINTS_PREVIEWS_URL = BASE_UPLOADS_PRINTS_URL + 'previews/'
 
-export const width = 483;
-export const height = 1056;
+export const widthM = 483;
+export const heightM = 1056;
+export const width = 1056;
+export const height= 483;
+
 
 
 export const M_I = "/image/Mannequin/mannequin2.png";
