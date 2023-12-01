@@ -43,6 +43,7 @@ import {
 	REMOVE_GARMENT_URL,
 	ADD_GARMENT_URL,
 	GARMENTS_ADMIN_URL,
+	GARMENT_URL,
 	GARMENT_ADMIN_URL,
 } from "shared/constants/genericApiRoutes";
 import { BaseApi } from "./baseApi";
@@ -269,6 +270,11 @@ export const getGarments = (body: Record<string, any> = {}) => {
 export const getGarmentsAdmin = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');
 	return http.post(GARMENTS_ADMIN_URL, body)
+}
+
+export const getGarment = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(GARMENT_URL, body)
 }
 
 export const getGarmentAdmin = (body: Record<string, any> = {}) => {

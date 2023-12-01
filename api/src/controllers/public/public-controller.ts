@@ -86,6 +86,16 @@ class PublicController {
         }
     }
 
+    async getGarment(req: any, res: any, next: any) {
+        try {
+            const { garment_id = '' } = req.body
+            const garment = await publicService.getGarment(garment_id);
+            return res.json(garment);
+        } catch (error) {
+            next(error);
+        }
+    }
+
     async getSilhouettes(req: any, res: any, next: any) {
         try {
             const silhouettes = await publicService.getSilhouettes();

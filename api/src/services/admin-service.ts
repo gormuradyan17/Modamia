@@ -735,14 +735,14 @@ class AdminService {
         }
     }
 
-    async getGarmentAdmin(garment_id: string = '') {
-        const garment = await getGarmentQuery(garment_id)
-        return garment?.[0] || {}
-    }
-
     async getGarmentsAdmin() {
         const garments = await getGarmentsQuery(true)
         return garments
+    }
+
+    async getGarmentAdmin(garment_id: string = '') {
+        const garment = await getGarmentQuery(garment_id, true)
+        return garment?.[0] || {}
     }
 
     async editGarment(req: Record<string, any>) {

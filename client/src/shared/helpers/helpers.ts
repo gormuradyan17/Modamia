@@ -58,8 +58,8 @@ export const getConvertedDropdownOptionsFromVariants = (variants: ObjectType) =>
     
     acc.push({
       id: variant?._id,
-      text: variant?.name,
-      value: variant?.name,
+      text: variant?.name || variant?.size ,
+      value: variant?.name ||  variant?.size,
     })
 
     return acc

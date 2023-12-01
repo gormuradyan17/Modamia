@@ -67,8 +67,9 @@ export const ADD_SIZE_URL = API_URL_ADMIN + 'add-size'
 export const EDIT_SIZE_URL = API_URL_ADMIN + 'edit-size'
 export const REMOVE_SIZE_URL = API_URL_ADMIN + 'remove-size'
 
-// Size
+// Garment
 
+export const GARMENT_URL = API_URL + 'garment'
 export const GARMENTS_URL = API_URL + 'garments'
 export const GARMENT_ADMIN_URL = API_URL_ADMIN + 'garment-admin'
 export const GARMENTS_ADMIN_URL = API_URL_ADMIN + 'garments-admin'

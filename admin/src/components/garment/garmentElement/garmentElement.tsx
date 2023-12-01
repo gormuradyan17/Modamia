@@ -13,7 +13,7 @@ import { availableSilhouettes } from "redux/reducers/silhouetteReducer";
 import { ObjectType, getIsEditGarmentApproved } from "shared/helpers/helpers";
 import GarmentsSilhouettesListWrapper from "../newGarment/GarmentsSilhouettesListWrapper";
 import GarmentsMannequinsList from "../newGarment/GarmentsMannequinsList";
-import { getAvGarments, getSelectedGarmentAdmin } from "services/garmentService";
+import { getAvGarments, getSelectedGarment } from "services/garmentService";
 import { useParams } from "react-router-dom";
 import './style.scss'
 
@@ -34,7 +34,7 @@ const GarmentElement = () => {
     }, [])
 
     useEffect(() => {
-        if (id) getSelectedGarmentAdmin(dispatch, id)
+        if (id) getSelectedGarment(dispatch, id)
     }, [id])
 
     useMemo(() => {

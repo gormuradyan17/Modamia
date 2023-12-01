@@ -11,7 +11,6 @@ const SilhouetteCntrlHolder:React.FC<Props>=({cntrlData,setKindSilhouette})=> {
     <div className='btn_container'>
         {Boolean( Object.keys(cntrlData).length) && 
          Object.keys(cntrlData).map((option,index)=> {
-            if (option === 'mannequin') return ''
             return <ButtonUI key={index} version='gray' onClick={()=>setKindSilhouette(option)}>{option}</ButtonUI>
          }) }
     </div>

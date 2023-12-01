@@ -9,7 +9,7 @@ export const getAvGarments = (dispatch: any) => {
     }).catch(err => console.log(err))
 }
 
-export const getSelectedGarmentAdmin = (dispatch: any, id: string) => {
+export const getSelectedGarment = (dispatch: any, id: string) => {
     getGarmentAdmin({garment_id: id}).then(res => {
         const { silhouettes: {
             bottoms = [],

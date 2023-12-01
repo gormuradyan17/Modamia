@@ -29,7 +29,7 @@ export const getGarmentsQuery = async (isAdmin: boolean = false) => {
     const bottomQuery = [
         {
             $lookup: {
-                from: 'mannequins', 
+                from: 'mannequins',
                 localField: 'garment.mannequin_id',
                 foreignField: '_id',
                 as: 'mannequin'
@@ -251,7 +251,7 @@ export const getGarmentsQuery = async (isAdmin: boolean = false) => {
     ]);
 }
 
-export const getGarmentQuery = async (garment_id: string = '') => {
+export const getGarmentQuery = async (garment_id: string = '', isAdmin: boolean = false) => {
     const topQuery = [
         {
             $match: {
@@ -284,7 +284,7 @@ export const getGarmentQuery = async (garment_id: string = '') => {
     const bottomQuery = [
         {
             $lookup: {
-                from: 'mannequins', 
+                from: 'mannequins',
                 localField: 'garment.mannequin_id',
                 foreignField: '_id',
                 as: 'mannequin'
@@ -294,28 +294,115 @@ export const getGarmentQuery = async (garment_id: string = '') => {
             $unwind: '$mannequin'
         }
     ]
+    if (isAdmin) {
+        return await GarmentSilhouettesModel.aggregate([
+            ...topQuery,
+            {
+                $group: {
+                    _id: '$garment_id',
+                    garment: { $first: '$garment' },
+                    tops: {
+                        $push: {
+                            $cond: {
+                                if: {
+                                    $eq: ['$silhouette.type', 'Top']
+                                },
+                                then: '$silhouette',
+                                else: null
+                            }
+                        }
+                    },
+                    bottoms: {
+                        $push: {
+                            $cond: {
+                                if: {
+                                    $eq: ['$silhouette.type', 'Bottom']
+                                },
+                                then: '$silhouette',
+                                else: null
+                            }
+                        }
+                    },
+                    sleeves: {
+                        $push: {
+                            $cond: {
+                                if: {
+                                    $eq: ['$silhouette.type', 'Sleeve']
+                                },
+                                then: '$silhouette',
+                                else: null
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    garment: '$garment',
+                    mannequin: '$mannequin',
+                    silhouettes: {
+                        tops: {
+                            $filter: {
+                                input: '$tops',
+                                as: 'top',
+                                cond: {
+                                    $ne: ['$$top', null]
+                                }
+                            }
+                        },
+                        bottoms: {
+                            $filter: {
+                                input: '$bottoms',
+                                as: 'bottom',
+                                cond: {
+                                    $ne: ['$$bottom', null]
+                                }
+                            }
+                        },
+                        sleeves: {
+                            $filter: {
+                                input: '$sleeves',
+                                as: 'sleeve',
+                                cond: {
+                                    $ne: ['$$sleeve', null]
+                                }
+                            }
+                        },
+                    }
+                }
+            },
+            ...bottomQuery
+        ]);
+    }
     return await GarmentSilhouettesModel.aggregate([
         ...topQuery,
         {
             $group: {
                 _id: '$garment_id',
                 garment: { $first: '$garment' },
-                tops: {
+                fronts: {
                     $push: {
                         $cond: {
                             if: {
-                                $eq: ['$silhouette.type', 'Top']
+                                $and: [
+                                    { $eq: ['$silhouette.orientation', 'Front'] },
+                                    { $ne: ['$silhouette.type', 'Sleeve'] }
+                                ]
                             },
                             then: '$silhouette',
                             else: null
                         }
                     }
                 },
-                bottoms: {
+                backs: {
                     $push: {
                         $cond: {
                             if: {
-                                $eq: ['$silhouette.type', 'Bottom']
+                                $and: [
+                                    { $eq: ['$silhouette.orientation', 'Back'] },
+                                    { $ne: ['$silhouette.type', 'Sleeve'] }
+                                ]
                             },
                             then: '$silhouette',
                             else: null
@@ -325,9 +412,7 @@ export const getGarmentQuery = async (garment_id: string = '') => {
                 sleeves: {
                     $push: {
                         $cond: {
-                            if: {
-                                $eq: ['$silhouette.type', 'Sleeve']
-                            },
+                            if: { $eq: ['$silhouette.type', 'Sleeve'] },
                             then: '$silhouette',
                             else: null
                         }
@@ -339,35 +424,69 @@ export const getGarmentQuery = async (garment_id: string = '') => {
             $project: {
                 _id: 0,
                 garment: '$garment',
-                mannequin: '$mannequin',
                 silhouettes: {
-                    tops: {
-                        $filter: {
-                            input: '$tops',
-                            as: 'top',
-                            cond: {
-                                $ne: ['$$top', null]
+                    fronts: {
+                        tops: {
+                            $filter: {
+                                input: '$fronts',
+                                as: 'front',
+                                cond: {
+                                    $and: [
+                                        { $ne: ['$$front', null] },
+                                        { $eq: ['$$front.type', 'Top'] }
+                                    ]
+                                }
+                            }
+                        },
+                        bottoms: {
+                            $filter: {
+                                input: '$fronts',
+                                as: 'front',
+                                cond: {
+                                    $and: [
+                                        { $ne: ['$$front', null] },
+                                        { $eq: ['$$front.type', 'Bottom'] }
+                                    ]
+                                }
                             }
                         }
                     },
-                    bottoms: {
-                        $filter: {
-                            input: '$bottoms',
-                            as: 'bottom',
-                            cond: {
-                                $ne: ['$$bottom', null]
+                    backs: {
+                        tops: {
+                            $filter: {
+                                input: '$backs',
+                                as: 'back',
+                                cond: {
+                                    $and: [
+                                        { $ne: ['$$back', null] },
+                                        { $eq: ['$$back.type', 'Top'] }
+                                    ]
+                                }
+                            }
+                        },
+                        bottoms: {
+                            $filter: {
+                                input: '$backs',
+                                as: 'back',
+                                cond: {
+                                    $and: [
+                                        { $ne: ['$$back', null] },
+                                        { $eq: ['$$back.type', 'Bottom'] }
+                                    ]
+                                }
                             }
                         }
                     },
                     sleeves: {
-                        $filter: {
-                            input: '$sleeves',
-                            as: 'sleeve',
-                            cond: {
-                                $ne: ['$$sleeve', null]
+                        tops: {
+                            $filter: {
+                                input: '$sleeves',
+                                as: 'sleeve',
+                                cond: { $ne: ['$$sleeve', null] }
                             }
-                        }
-                    },
+                        },
+                        bottoms: []
+                    }
                 }
             }
         },

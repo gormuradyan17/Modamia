@@ -3,13 +3,15 @@ import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux";
 import { getAvSilhouettes } from "services/silhouetteService";
 import SilhouetteCntrlHolder from "./SilhouetteCntrlHolder";
-import './style.scss'
 import SilhouetteContentTabs from "./SilhouetteContentTabs";
-import { getActiveMannequinDetails, setMannequinType } from "redux/reducers/mannequinReducer";
+import { setMannequinType, setMannequinPosition } from "redux/reducers/mannequinReducer";
+import './style.scss'
+import { garmentDetails } from "redux/reducers/garmentReducer";
 
 const SilhouetteContent = () => {
-    const silhouettes = useSelector(getActiveMannequinDetails)
-    const [kindSilhouette, setKindSilhouette] = useState("front")
+    const activeGarment = useSelector(garmentDetails)
+    const { silhouettes = {} } = activeGarment
+    const [kindSilhouette, setKindSilhouette] = useState("fronts")
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -17,11 +19,9 @@ const SilhouetteContent = () => {
     }, [])
 
     useEffect(() => {
-        if (kindSilhouette !== 'mannequin') {
-            dispatch(setMannequinType(kindSilhouette))
-        }
+        dispatch(setMannequinType(kindSilhouette))
+        dispatch(setMannequinPosition(kindSilhouette))
     }, [kindSilhouette])
-
     return (
         <div className="customization-contents">
             <div className="cntrlHolderrowtop">
