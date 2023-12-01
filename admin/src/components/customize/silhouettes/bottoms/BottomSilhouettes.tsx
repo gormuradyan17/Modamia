@@ -7,6 +7,8 @@ import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { getAvSilhouettes } from 'services/silhouetteService';
 import BottomSilhouettesList from './BottomSilhouettesList';
+import { resetSilhouetteState } from 'redux/reducers/silhouetteReducer';
+import { getAvMannequins } from 'services/mannequinService';
 
 const BottomSilhouettes = () => {
     const [isVisible, setIsVisible] = useState<boolean>(false)
@@ -14,10 +16,12 @@ const BottomSilhouettes = () => {
     
     const closePopup = () => {
         setIsVisible(false)
+        dispatch(resetSilhouetteState())
     }
 
     useEffect(() => {
         getAvSilhouettes(dispatch)
+        getAvMannequins(dispatch)
     }, [])
 
     return (

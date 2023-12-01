@@ -7,6 +7,7 @@ export const COLORS_URL = API_URL + 'colors'
 export const COLORS_VARIANTS_URL = API_URL + 'colors-variants'
 export const COLORS_PALETTES_URL = API_URL + 'colors-palettes'
 export const MANNEQUINS_URL = API_URL + 'mannequins'
+export const MANNEQUIN_WITH_SILHOUETTES_URL = API_URL + 'mannequin-with-silhouettes'
 
 export const BASE_UPLOADS_MANNEQUINS_URL = BASE_UPLOADS_URL + 'mannequins/'
 export const BASE_UPLOADS_MANNEQUINS_FRONTS_URL = BASE_UPLOADS_MANNEQUINS_URL + 'fronts/'
@@ -75,3 +76,8 @@ export const PRINTS_PALETTES_URL = API_URL + 'prints-palettes'
 export const SIZE_URL = API_URL + 'sizes'
 export const ADD_SIZE_URL = API_URL_ADMIN + 'add-size'
 export const EDIT_SIZE_URL = API_URL_ADMIN + 'edit-size'
+
+// Garment
+
+export const GARMENTS_URL = API_URL + 'garments'
+export const GARMENT_URL = API_URL + 'garment'

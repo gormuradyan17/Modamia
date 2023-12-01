@@ -10,9 +10,9 @@ const AppRouter = () => {
 
     const isAuth = useSelector(isLoggedIn)
 
-    const { publicPages, adminPages } = contents;
+    const { publicPages, adminPages, garmentPages } = contents;
 
-    const allPages = [...publicPages, ...adminPages]
+    const allPages = [...publicPages, ...adminPages, ...garmentPages]
 
     const renderRoutes = (pages: ArrayType) => {
         return pages.map(RouteElem => (

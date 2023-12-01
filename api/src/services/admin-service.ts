@@ -5,11 +5,13 @@ import ColorVariantModel from '../models/ColorVariant'
 import ColorPaletteModel from '../models/ColorPalette'
 import PrintPaletteModel from '../models/PrintPalette'
 import PrintVariantModel from '../models/PrintVariant'
-import PrintMotel from '../models/Print'
+import PrintModel from '../models/Print'
 import MannequinModel from '../models/Mannequin'
 import SilhouetteModel from '../models/Silhouette'
 import SizeModel from '../models/Size'
 import AdminModel from '../models/Admin'
+import GarmentModel from '../models/Garment'
+import GarmentSilhouettesModel from '../models/GarmentSilhouettes'
 import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs'
 import mongoose from 'mongoose';
@@ -20,6 +22,7 @@ import AdminDto from '../dtos/admin-dto';
 import tokenService from './token-service';
 import ApiError from '../exceptions/api-error';
 import bcrypt from 'bcryptjs'
+import { getGarmentQuery, getGarmentsQuery, updateGarments } from '../queries/GarmentsQueries';
 
 class AdminService {
 
@@ -31,11 +34,11 @@ class AdminService {
 
             var admin = await AdminModel.findOne({ email })
             const adminDto = new AdminDto(admin);
-            const tokens = tokenService.generateTokens({...adminDto});
+            const tokens = tokenService.generateTokens({ ...adminDto });
             await tokenService.saveToken(adminDto.id, tokens.refreshToken);
-    
-            return {...tokens, admin: adminDto}
-            
+
+            return { ...tokens, admin: adminDto }
+
         } catch (error) {
             console.log(error)
         }
@@ -57,8 +60,8 @@ class AdminService {
             }
             const admin = await AdminModel.findById(adminData.id);
             const adminDto = new AdminDto(admin);
-    
-            return {admin: adminDto}
+
+            return { admin: adminDto }
         } catch (error) {
             throw ApiError.UnauthorizedError();
         }
@@ -137,13 +140,14 @@ class AdminService {
 
     async removeColorPalette(req: any) {
         try {
-            const { palette_id = '' } = req
-            if (!mongoose.Types.ObjectId.isValid(palette_id)) {
+            const { _id = '' } = req
+            if (!mongoose.Types.ObjectId.isValid(_id)) {
                 throw new Error('Invalid palette_id');
             }
-
-            const query = { '_id': palette_id };
-            return await ColorPaletteModel.deleteOne(query);
+            const query = { '_id': _id };
+            const queryPalette = { 'variant_id': _id };
+            await ColorVariantModel.deleteOne(query);
+            return await ColorPaletteModel.deleteMany(queryPalette)
 
         } catch (error) {
             console.log(error)
@@ -153,10 +157,10 @@ class AdminService {
     async orderPaletteColors(req: any) {
         try {
             const { fromElement = {}, toElement = {} } = req
-            const { _id = '', order = undefined} = fromElement;
-            const { _id: id_to = '', order: order_to = undefined} = toElement;
+            const { _id = '', order = undefined } = fromElement;
+            const { _id: id_to = '', order: order_to = undefined } = toElement;
             if (_id && order && id_to && order_to) {
-                const queryFrom = {  
+                const queryFrom = {
                     _id,
                     order
                 }
@@ -174,7 +178,7 @@ class AdminService {
                 }, { upsert: true });
             }
             const colorsPalettes = await ColorPaletteModel.aggregate([
-                { $sort : { order : 1 } },
+                { $sort: { order: 1 } },
                 {
                     $group: {
                         _id: {
@@ -191,8 +195,25 @@ class AdminService {
                     }
                 },
             ])
-    
+
             return colorsPalettes;
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async removeColor(req: any) {
+        try {
+            const { _id = '' } = req
+            if (!mongoose.Types.ObjectId.isValid(_id)) {
+                throw new Error('Invalid palette_id');
+            }
+
+            const query = { '_id': _id };
+            const queryPalette = { 'color_id': _id };
+            await ColorModel.deleteOne(query);
+            return await ColorPaletteModel.deleteMany(queryPalette)
 
         } catch (error) {
             console.log(error)
@@ -203,7 +224,7 @@ class AdminService {
 
     async addPrint(req: any) {
         try {
-            const { name, price, tags, printsPalettes = '[]'  } = req.body
+            const { name, price, tags, printsPalettes = '[]' } = req.body
             const parsedPrints = JSON.parse(printsPalettes);
             const { highresurl = '', previewurl = '' } = req.files || {}
             let highImage = '', previewImage = '';
@@ -222,7 +243,7 @@ class AdminService {
                 const filePath = path.join(__dirname, '../../uploads/prints/previews', previewImage);
                 fs.writeFileSync(filePath, previewurl.data);
             }
-            const print = await PrintMotel.create({
+            const print = await PrintModel.create({
                 name,
                 price,
                 tags,
@@ -267,7 +288,7 @@ class AdminService {
                 fs.writeFileSync(filePath, previewurl.data);
             }
             const query = { '_id': _id };
-            return await PrintMotel.findOneAndUpdate(query, {
+            return await PrintModel.findOneAndUpdate(query, {
                 name,
                 price,
                 tags,
@@ -293,7 +314,7 @@ class AdminService {
             console.log(error)
         }
     }
-    
+
     async addPrintPalette(req: PrintPaletteInterface) {
         try {
             const { print_id, variant_id } = req
@@ -314,13 +335,15 @@ class AdminService {
 
     async removePrintPalette(req: any) {
         try {
-            const { palette_id = '' } = req
-            if (!mongoose.Types.ObjectId.isValid(palette_id)) {
+            const { _id = '' } = req
+            if (!mongoose.Types.ObjectId.isValid(_id)) {
                 throw new Error('Invalid palette_id');
             }
 
-            const query = { '_id': palette_id };
-            return await PrintPaletteModel.deleteOne(query);
+            const query = { '_id': _id };
+            const queryPalette = { 'variant_id': _id };
+            await PrintVariantModel.deleteOne(query);
+            return await PrintPaletteModel.deleteMany(queryPalette)
 
         } catch (error) {
             console.log(error)
@@ -330,10 +353,10 @@ class AdminService {
     async orderPalettePrints(req: any) {
         try {
             const { fromElement = {}, toElement = {} } = req
-            const { _id = '', order = undefined} = fromElement;
-            const { _id: id_to = '', order: order_to = undefined} = toElement;
+            const { _id = '', order = undefined } = fromElement;
+            const { _id: id_to = '', order: order_to = undefined } = toElement;
             if (_id && order && id_to && order_to) {
-                const queryFrom = {  
+                const queryFrom = {
                     _id,
                     order
                 }
@@ -351,7 +374,7 @@ class AdminService {
                 }, { upsert: true });
             }
             const printPalettes = await PrintPaletteModel.aggregate([
-                { $sort : { order : 1 } },
+                { $sort: { order: 1 } },
                 {
                     $group: {
                         _id: {
@@ -368,8 +391,25 @@ class AdminService {
                     }
                 },
             ])
-    
+
             return printPalettes;
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async removePrint(req: any) {
+        try {
+            const { _id = '' } = req
+            if (!mongoose.Types.ObjectId.isValid(_id)) {
+                throw new Error('Invalid palette_id');
+            }
+
+            const query = { '_id': _id };
+            const queryPalette = { 'print_id': _id };
+            await PrintModel.deleteOne(query);
+            return await PrintPaletteModel.deleteMany(queryPalette)
 
         } catch (error) {
             console.log(error)
@@ -442,11 +482,26 @@ class AdminService {
         }
     }
 
+    async removeMannequin(req: any) {
+        try {
+            const { _id = '' } = req
+            if (!mongoose.Types.ObjectId.isValid(_id)) {
+                throw new Error('Invalid palette_id');
+            }
+
+            const query = { '_id': _id };
+            return await MannequinModel.deleteOne(query);
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     // Silhouettes
 
     async addSilhouette(req: any) {
         try {
-            const { name, price, tags = '', type, orientation } = req.body
+            const { name, price, tags = '', type, orientation, mannequin_id } = req.body
             const { silhouetteurl } = req.files || {}
             let silhouetteImage = ''
             await createSilhouettesDirsIfNotExists()
@@ -465,6 +520,7 @@ class AdminService {
                 type,
                 orientation,
                 silhouetteurl: silhouetteImage || '',
+                mannequin_id
             })
             return silhouette;
 
@@ -475,7 +531,7 @@ class AdminService {
 
     async editSilhouette(req: Record<string, any>) {
         try {
-            const { name, price, tags = '', type, orientation, silhouetteurl: silhouetteurlB, _id } = req.body
+            const { name, price, tags = '', type, orientation, silhouetteurl: silhouetteurlB, _id, mannequin_id } = req.body
             const { silhouetteurl } = req.files || {}
             let silhouetteImage = ''
             await createSilhouettesDirsIfNotExists()
@@ -500,6 +556,7 @@ class AdminService {
                         tags,
                         type,
                         orientation,
+                        mannequin_id
                     }, { upsert: true });
                 }
                 if (silhouetteurl) {
@@ -515,6 +572,7 @@ class AdminService {
                         tags,
                         type,
                         orientation,
+                        mannequin_id,
                         ...(silhouetteImage && { silhouetteurl: silhouetteImage }),
                     }, { upsert: true });
                 }
@@ -524,9 +582,25 @@ class AdminService {
                     tags,
                     type,
                     orientation,
+                    mannequin_id
                 }, { upsert: true });
             }
             return false
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async removeSilhouette(req: any) {
+        try {
+            const { _id = '' } = req
+            if (!mongoose.Types.ObjectId.isValid(_id)) {
+                throw new Error('Invalid palette_id');
+            }
+
+            const query = { '_id': _id };
+            return await SilhouetteModel.deleteOne(query);
+
         } catch (error) {
             console.log(error)
         }
@@ -555,12 +629,27 @@ class AdminService {
             console.log(error)
         }
     }
-    
+
+    async removeSize(req: any) {
+        try {
+            const { _id = '' } = req
+            if (!mongoose.Types.ObjectId.isValid(_id)) {
+                throw new Error('Invalid palette_id');
+            }
+
+            const query = { '_id': _id };
+            return await SizeModel.deleteOne(query);
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     // Super Admins
 
     async addSuperAdmin(req: any) {
         try {
-            const { email = '' , password = '' } = req;
+            const { email = '', password = '' } = req;
             const hashPassword = await bcrypt.hash(password, 10)
             const admin = await AdminModel.create({
                 email,
@@ -596,6 +685,98 @@ class AdminService {
             const query = { '_id': _id };
             await AdminModel.deleteOne(query);
             return true
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    // Size
+
+    async addGarment(req: any) {
+        try {
+            const { bottoms = [], name = '', mannequin_id = '', sleeves = [], tops = [] } = req || {}
+            if (mannequin_id) {
+                const garment = await GarmentModel.create({
+                    name,
+                    mannequin_id
+                })
+                if (garment?._id) {
+
+                    tops?.map(async (bottom: any) => {
+                        await GarmentSilhouettesModel.create({
+                            silhouette_id: bottom,
+                            garment_id: garment?._id,
+                            silhouetteType: 'tops'
+                        })
+                    })
+
+                    bottoms?.map(async (bottom: any) => {
+                        await GarmentSilhouettesModel.create({
+                            silhouette_id: bottom,
+                            garment_id: garment?._id,
+                            silhouetteType: 'bottoms'
+                        })
+                    })
+
+                    sleeves?.map(async (bottom: any) => {
+                        await GarmentSilhouettesModel.create({
+                            silhouette_id: bottom,
+                            garment_id: garment?._id,
+                            silhouetteType: 'sleeves'
+                        })
+                    })
+                }
+                return garment;
+            }
+            return false;
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async getGarmentsAdmin() {
+        const garments = await getGarmentsQuery(true)
+        return garments
+    }
+
+    async getGarmentAdmin(garment_id: string = '') {
+        const garment = await getGarmentQuery(garment_id, true)
+        return garment?.[0] || {}
+    }
+
+    async editGarment(req: Record<string, any>) {
+        try {
+            const { bottoms = [], name = '', mannequin_id = '', sleeves = [], tops = [], id = '' } = req || {}
+            if (id) {
+                const query = { '_id': id };
+                await GarmentModel.findOneAndUpdate(query, {
+                    name,
+                    mannequin_id
+                }, { upsert: true });
+
+                await updateGarments(id, tops, 'tops')
+                await updateGarments(id, bottoms, 'bottoms')
+                await updateGarments(id, sleeves, 'sleeves')
+
+                return true
+            }
+            return false
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async removeGarment(req: any) {
+        try {
+            const { _id = '' } = req
+            if (!mongoose.Types.ObjectId.isValid(_id)) {
+                throw new Error('Invalid palette_id');
+            }
+
+            const query = { '_id': _id };
+            return await SizeModel.deleteOne(query);
+
         } catch (error) {
             console.log(error)
         }

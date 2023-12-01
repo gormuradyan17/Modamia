@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { getAvSizes } from "services/sizeService";
-import { updateSize } from "shared/api/dataApi";
+import { removeSize, updateSize } from "shared/api/dataApi";
 import { ArrayType, ObjectType } from "shared/helpers/helpers";
 import { ButtonUI } from "shared/ui/ButtonUI/ButtonUI";
 import HeadingUI from "shared/ui/HeadingUI/HeadingUI";
@@ -10,7 +10,8 @@ import { formValidator } from "utils/validators/validator";
 import { sizeFormOptions } from "utils/validators/validatorOptions";
 import EditSize from "./EditSize";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPencil } from "@fortawesome/free-solid-svg-icons";
+import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
+import RemoveSome from "../removeSome/RemoveSome";
 
 interface Props {
     sizes: ArrayType
@@ -27,6 +28,9 @@ const SizesList = ({
     const [sizeInfo, setSizeInfo] = useState<ObjectType>({})
     const [errors, setErrors] = useState<ObjectType>({})
     
+    const [isVisibleRemove, setIsVisibleRemove] = useState<boolean>(false)
+    const [removableItem, setRemovableItem] = useState<ObjectType>({})
+
     const editSize = (size: ObjectType) => {
         if (size) {
             setEditableSize(size)
@@ -54,12 +58,34 @@ const SizesList = ({
         closePopup()
     }
 
+
+    const prepareToRemoveItem = (item: ObjectType) => {
+        setRemovableItem(item)
+        setIsVisibleRemove(true)
+    }
+
+    const removeItem = async () => {
+        if (removableItem?._id) {
+           await removeSize(removableItem)
+           await getAvSizes(dispatch)
+           setIsVisibleRemove(false)
+        }
+    }
+
+    const closePopupRemove = () => {
+        setIsVisibleRemove(false)
+        setRemovableItem({})
+    }
+
     return (
         <div className="sizes-list">
             {sizes?.map((size: ObjectType) => {
                 return <div className="sizes-list-size" key={size._id}>
                     <HeadingUI classN="size-text _ellipsis" text={size.size} size="18px" />
-                    <ButtonUI classN="size-button" onClick={() => editSize(size)}><FontAwesomeIcon icon={faPencil} /></ButtonUI>
+                    <div className="size-buttons">
+                        <ButtonUI classN="size-button" onClick={() => editSize(size)}><FontAwesomeIcon icon={faPencil} /></ButtonUI>
+                        <ButtonUI classN="size-button" onClick={() => prepareToRemoveItem(size)}><FontAwesomeIcon icon={faTrash} /></ButtonUI>
+                    </div>
                 </div>
             })}
             {isVisible && <PopupUI callback={closePopup}>
@@ -70,6 +96,14 @@ const SizesList = ({
                     defaultSize={sizeInfo}
                     errors={errors}
                     setSize={setEditableSize}
+                />
+            </PopupUI>}
+            {isVisibleRemove && <PopupUI callback={closePopupRemove}>
+                <RemoveSome
+                    header="Remove Size"
+                    text={`Do you want to remove the size <span> ${removableItem?.size} ?</span>`}
+                    discardCallback={closePopupRemove}
+                    removeCallback={removeItem}
                 />
             </PopupUI>}
         </div>

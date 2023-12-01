@@ -1,5 +1,5 @@
-import { ChangeEvent, useEffect, useRef, useState, useMemo } from "react";
-import { addModel, addImageProcess, getModelData, canvasModelInit } from "../../shared/helpers/canvasHelpers";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { canvasModelInit } from "../../shared/helpers/canvasHelpers";
 import {
 
   B_N,
@@ -11,7 +11,6 @@ import Container from "layout/Container/Container";
 import CustomizationInfo from "components/Customization/customizationInfo/CustomizationInfo";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  availableMannequins,
   getMannequinActiveCategory,
   getMannequinActiveColor,
   getMannequinActivePrint,
@@ -20,17 +19,17 @@ import {
   getMannequinPrice,
   getMannequinType,
   getMannequinUrl,
-  setMannequinLoading
 } from "redux/reducers/mannequinReducer";
-import { getAvMannequins } from "services/mannequinService";
 import CustomizationLoader from "components/Customization/customizationLoader/CustomizationLoader";
 import SilhouettePositionBtn from "components/Customization/contents/SilhouetteContent/SilhouettePositionBtn";
 import ChangeSize from "components/Customization/contents/ChangeSize";
 import AddToCart from "components/Customization/contents/AddToCart";
 import { getProduct, getProductName, getProductPrice, setProductBack, setProductFront, setProductPrice, setProductSleeve } from "redux/reducers/addToCartReducer";
+import { useParams } from "react-router-dom";
+import { getSelectedGarment } from "services/garmentService";
+import { garmentDetails } from "redux/reducers/garmentReducer";
 
 const Customization = () => {
-  const mannequins = useSelector(availableMannequins)
   const activeColor = useSelector(getMannequinActiveColor)
   const activePrint = useSelector(getMannequinActivePrint)
   const activeCategory = useSelector(getMannequinActiveCategory)
@@ -41,98 +40,99 @@ const Customization = () => {
   const name = useSelector(getProductName)
   const price = useSelector(getMannequinPrice)
   const productInfo = useSelector(getProduct)
-  let   priceCount=0
+  const activeGarment = useSelector(garmentDetails)
   const totalPrice = useSelector(getProductPrice)
+  let priceCount = 0
   const [modelData, setModelData] = useState<any>({
-    front: [
+    fronts: [
       { position: "bottom", src: B_N, color: activeColor, printImageURL: activePrint?.highresurl, activeCategory, price: 200 },
       { position: "top", src: T_N, color: activeColor, printImageURL: activePrint?.highresurl, activeCategory, price: 300 },
     ],
-    back: [
-      { position: "bottom", src: B_N, color: activeColor, printImageURL: activePrint?.highresurl, activeCategory, price:0 },
+    backs: [
+      { position: "bottom", src: B_N, color: activeColor, printImageURL: activePrint?.highresurl, activeCategory, price: 0 },
       { position: "top", src: T_N, color: activeColor, printImageURL: activePrint?.highresurl, activeCategory, price: 0 },
     ],
-    sleeve: [
+    sleeves: [
       { position: "top", src: '', color: activeColor, printImageURL: activePrint?.highresurl, activeCategory, price: 0 }
     ]
   }
   )
 
+  const params = useParams()
+  const { id = '' } = params;
+
   const dispatch = useDispatch()
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [rangeValue, setRangeValue] = useState<number>(0.1);
 
- 
+  useEffect(() => {
+    if (id) getSelectedGarment(dispatch, id)
+  }, [id])
 
   useEffect(() => {
-    getAvMannequins(dispatch)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  useEffect(() => {
-    if (mannequins?.length) {
+    if (activeGarment?.mannequin?._id) {
+      const { mannequin = {} } = activeGarment;
       const drawManequin = async () => {
         for (let i = 0; i < modelData[frontBack].length; i++) {
-          const activeElem=modelData[frontBack][1] ? modelData[frontBack][1] : modelData[frontBack][0]
+          const activeElem = modelData[frontBack][1] ? modelData[frontBack][1] : modelData[frontBack][0]
 
           modelData[frontBack][i].activeCategory = activeCategory;
           // console.log(activeType,"activeType");
-          
+
           switch (activeType) {
             case "tops":
               modelData[frontBack][1].src = activeImgUrl;
               modelData[frontBack][1].price = price;
-              setModelData({...modelData})
+              setModelData({ ...modelData })
               break;
             case "bottoms":
-              modelData.front[0].src = activeImgUrl
-              modelData.back[0].src = activeImgUrl
-              modelData.front[0].price = price
-              setModelData({...modelData})
+              modelData.fronts[0].src = activeImgUrl
+              modelData.backs[0].src = activeImgUrl
+              modelData.fronts[0].price = price
+              setModelData({ ...modelData })
               break;
             case "sleeves":
-              modelData.sleeve[0].src = activeImgUrl;
-              modelData.sleeve[0].price = price;
-              setModelData({...modelData})
+              modelData.sleeves[0].src = activeImgUrl;
+              modelData.sleeves[0].price = price;
+              setModelData({ ...modelData })
               break;
             case "all":
               // console.log(modelData);
-              
-              modelData.front[i].color = activeColor
-              modelData.back[i].color = activeColor
-              modelData.sleeve[0].color = activeColor
-              setModelData({...modelData})
+
+              modelData.fronts[i].color = activeColor
+              modelData.backs[i].color = activeColor
+              modelData.sleeves[0].color = activeColor
+              setModelData({ ...modelData })
               break;
             case "top":
-              activeElem.color= activeColor
+              activeElem.color = activeColor
               if (activePrint) {
                 activeElem.printImageURL = activePrint?.highresurl
               }
-              setModelData({...modelData})
+              setModelData({ ...modelData })
               break;
             case "bottom":
               modelData[frontBack][0].color = activeColor
               if (activePrint) {
                 modelData[frontBack][0].printImageURL = activePrint?.highresurl
               }
-              setModelData({...modelData})
+              setModelData({ ...modelData })
 
               break;
             default:
-              // modelData[frontBack][i].color = activeColor;
-              // modelData[frontBack][i].printImageURL = activePrint?.highresurl
-              // setModelData({...modelData})
+            // modelData[frontBack][i].color = activeColor;
+            // modelData[frontBack][i].printImageURL = activePrint?.highresurl
+            // setModelData({...modelData})
           }
 
         }
-        await canvasModelInit(.3, modelData, frontBack,canvasRef,mannequins);
+        await canvasModelInit(.3, modelData, frontBack, canvasRef, mannequin);
       }
       drawManequin()
-    
     }
-    
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mannequins, activeColor, activePrint, activeCategory, activeImgUrl, activeType, frontBack]);
+  }, [activeGarment, activeColor, activePrint, activeCategory, activeImgUrl, activeType, frontBack]);
 
   function changRange(e: ChangeEvent<HTMLInputElement>) {
     // console.log(e.target.value);
@@ -140,18 +140,18 @@ const Customization = () => {
     // canvasModelInit(Number(e.target.value), getModelData("", activeColor, activePrint, activeCategory));
   }
 
-useEffect(()=>{
-  for (const key in modelData) {
-    for (const item of modelData[key]) {        
-      priceCount+=item.price;          
-     dispatch(setProductPrice(priceCount))
+  useEffect(() => {
+    for (const key in modelData) {
+      for (const item of modelData[key]) {
+        priceCount += item.price;
+        dispatch(setProductPrice(priceCount))
+      }
     }
-  }
-  dispatch(setProductFront([{...modelData.front[1]},{...modelData.front[0]}]));
-  dispatch(setProductBack([{...modelData.back[1]},{...modelData.back[0]}]));
-  dispatch(setProductSleeve([{...modelData.sleeve[0]}]));
-},[modelData])
-  
+    dispatch(setProductFront([{ ...modelData.fronts[1] }, { ...modelData.fronts[0] }]));
+    dispatch(setProductBack([{ ...modelData.backs[1] }, { ...modelData.backs[0] }]));
+    dispatch(setProductSleeve([{ ...modelData.sleeves[0] }]));
+  }, [modelData])
+
   return (
     <Container>
       <div className="customization">
@@ -161,7 +161,7 @@ useEffect(()=>{
           <canvas className="canvas" id="canvas" ref={canvasRef}></canvas>
         </div>
         <div className="customization-body">
-          <CustomizationInfo infoData={{ name, price:totalPrice }} />
+          <CustomizationInfo infoData={{ name, price: totalPrice }} />
           <CustomizationFeatures />
           <ChangeSize />
           <AddToCart />

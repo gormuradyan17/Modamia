@@ -1,5 +1,6 @@
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import RemoveSome from "components/customize/removeSome/RemoveSome";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getActiveSuperAdmin } from "redux/reducers/authReducer";
@@ -61,14 +62,12 @@ const SuperAdminsList = ({
                 </tbody>
             </table>
             {isVisible && <PopupUI callback={closePopup}>
-                <div className="remove-super-admin">
-                    <HeadingUI text="Remove super admin" align="center" color="#aa8a75" />
-                    <p className="remove-super-admin-text">Do you want to remove the super admin <span> {removableAdmin?.email} ?</span></p>
-                    <div className="new-super-admin-actions">
-                        <ButtonUI onClick={() => closePopup()} version="gray">Discard</ButtonUI>
-                        <ButtonUI onClick={() => removeSuperAdmin()} version="red">Remove</ButtonUI>
-                    </div>
-                </div>
+                <RemoveSome
+                    header="Remove Super Admin"
+                    text={`Do you want to remove the super admin <span> ${removableAdmin?.email} ?</span>`}
+                    discardCallback={closePopup}
+                    removeCallback={removeSuperAdmin}
+                />
             </PopupUI>}
         </div>
     );

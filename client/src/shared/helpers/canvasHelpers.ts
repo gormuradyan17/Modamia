@@ -148,8 +148,8 @@ export const getModelData = (url: string = '', activeColor: string = '', activeP
 }
 
 
-export const canvasModelInit = (num: number, modData: any, frontBack: string = "front",canvasRef:any,mannequins:any) => {
-    if (!canvasRef.current || !mannequins?.length) return;
+export const canvasModelInit = (num: number, modData: any, frontBack: string = "front",canvasRef:any,mannequin:any) => {
+    if (!canvasRef.current || !mannequin?._id) return;
 	
     const canvas = canvasRef.current;
     canvas.width = width;
@@ -157,7 +157,7 @@ export const canvasModelInit = (num: number, modData: any, frontBack: string = "
 
     let ctx = canvasRef.current?.getContext("2d");
     const img = new Image();
-    img.src = frontBack === "front" ? `${BASE_UPLOADS_MANNEQUINS_FRONTS_URL}${mannequins?.[0]?.fronturl}` : frontBack === "back" ? `${BASE_UPLOADS_MANNEQUINS_BACKS_URL}${mannequins?.[0]?.backurl}` : `${BASE_UPLOADS_MANNEQUINS_FRONTS_URL}${mannequins?.[0]?.fronturl}`
+    img.src = frontBack === "fronts" ? `${BASE_UPLOADS_MANNEQUINS_FRONTS_URL}${mannequin?.fronturl}` : frontBack === "backs" ? `${BASE_UPLOADS_MANNEQUINS_BACKS_URL}${mannequin?.backurl}` : `${BASE_UPLOADS_MANNEQUINS_FRONTS_URL}${mannequin?.fronturl}`
     img.onload = async () => {		
       await ctx?.drawImage(img, 0, 0, width, height);
       for (let i = 0; i < modData[frontBack].length; i++) {		
@@ -169,8 +169,8 @@ export const canvasModelInit = (num: number, modData: any, frontBack: string = "
           await addModel(modData[frontBack][i].src, modData[frontBack][i].color, ctx, width, height, modData[frontBack][i].position)
         }
         if (frontBack === "sleeve") {
-          await addModel(modData.front[0].src, modData.front[0].color, ctx, width, height, modData.front[0].position);
-          await addModel(modData.front[1].src, modData.front[1].color, ctx, width, 327, modData.front[1].position);
+          await addModel(modData.fronts[0].src, modData.fronts[0].color, ctx, width, height, modData.fronts[0].position);
+          await addModel(modData.fronts[1].src, modData.fronts[1].color, ctx, width, 327, modData.fronts[1].position);
         }
       }
     };

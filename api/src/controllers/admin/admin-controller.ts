@@ -102,6 +102,15 @@ class AdminController {
         }
     }
 
+    async removeColor(req: any, res: any, next: any) {
+        try {
+            const color = await adminService.removeColor(req.body);
+            return res.json(color);
+        } catch (error) {
+            next(error);
+        }
+    }
+
     // Prints
 
     async addPrint(req: any, res: any, next: any) {
@@ -158,6 +167,15 @@ class AdminController {
         }
     }
 
+    async removePrint(req: any, res: any, next: any) {
+        try {
+            const color = await adminService.removePrint(req.body);
+            return res.json(color);
+        } catch (error) {
+            next(error);
+        }
+    }
+
     // Mannequins
 
     async addManequin(req: any, res: any, next: any) {
@@ -178,7 +196,16 @@ class AdminController {
         }
     }
 
-    // Mannequins
+    async removeMannequin(req: any, res: any, next: any) {
+        try {
+            const color = await adminService.removeMannequin(req.body);
+            return res.json(color);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    // Silhouette
 
     async addSilhouette(req: any, res: any, next: any) {
         try {
@@ -193,6 +220,15 @@ class AdminController {
         try {
             const silhouette = await adminService.editSilhouette(req);
             return res.json(silhouette);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async removeSilhouette(req: any, res: any, next: any) {
+        try {
+            const color = await adminService.removeSilhouette(req.body);
+            return res.json(color);
         } catch (error) {
             next(error);
         }
@@ -213,6 +249,15 @@ class AdminController {
         try {
             const size = await adminService.editSize(req.body);
             return res.json(size);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async removeSize(req: any, res: any, next: any) {
+        try {
+            const color = await adminService.removeSize(req.body);
+            return res.json(color);
         } catch (error) {
             next(error);
         }
@@ -255,6 +300,54 @@ class AdminController {
         try {
             const admin = await adminService.removeSuperAdmin(req.body);
             return res.json(admin)
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    // Garment
+
+    async addGarment(req: any, res: any, next: any) {
+        try {
+            const garment = await adminService.addGarment(req.body);
+            return res.json(garment);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getGarmentsAdmin(req: any, res: any, next: any) {
+        try {
+            const garments = await adminService.getGarmentsAdmin();
+            return res.json(garments);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getGarmentAdmin(req: any, res: any, next: any) {
+        try {
+            const { garment_id = '' } = req.body
+            const garment = await adminService.getGarmentAdmin(garment_id);
+            return res.json(garment);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async editGarment(req: any, res: any, next: any) {
+        try {
+            const garment = await adminService.editGarment(req.body);
+            return res.json(garment);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async removeGarment(req: any, res: any, next: any) {
+        try {
+            const garment = await adminService.removeGarment(req.body);
+            return res.json(garment);
         } catch (error) {
             next(error);
         }

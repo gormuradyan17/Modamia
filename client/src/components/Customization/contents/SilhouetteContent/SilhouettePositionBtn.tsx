@@ -5,7 +5,7 @@ import { setMannequinPosition } from 'redux/reducers/mannequinReducer'
 
 
 const SilhouettePositionBtn=()=> {
-  const [position,setPosition]=useState("front");
+  const [position,setPosition]=useState("fronts");
   const dispatch=useDispatch()
   useEffect(()=>{
     dispatch(setMannequinPosition(position))
@@ -14,8 +14,8 @@ const SilhouettePositionBtn=()=> {
   
   return (
     <div className='positionBtns'>
-        <span onClick={()=>setPosition("front")}>Front</span>
-        <span onClick={()=>setPosition("back")}>Back</span>
+        <span onClick={()=>setPosition("fronts")}>Front</span>
+        <span onClick={()=>setPosition("backs")}>Back</span>
     </div>
   )
 }

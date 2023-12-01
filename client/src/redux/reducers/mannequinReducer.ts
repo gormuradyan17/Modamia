@@ -24,6 +24,7 @@ interface stateProps {
 	url:'',
 	type:'',
 	position:string,
+	mannequinWithSilhouettes: ObjectType,
 	price:number,
 }
 
@@ -59,7 +60,8 @@ const initialState: stateProps = {
 	activeCategory: 'silhouette',
 	url:'',
 	type:'',
-	position:'front',
+	position:'fronts',
+	mannequinWithSilhouettes: {},
 	price:0
 }
 
@@ -104,6 +106,9 @@ export const mannequinSlice = createSlice({
 		setMannequinPosition: (state, action) => {
 			state.position = action.payload;
 		},
+		setMannequinWithSilhouettes: (state, action) => {
+			state.mannequinWithSilhouettes = action.payload;
+		},
 	}
 });
 
@@ -119,6 +124,7 @@ export const {
 	setMannequinUrl,
 	setMannequinType,
 	setMannequinPosition,
+	setMannequinWithSilhouettes,
 	setMannequinPrice
 } = mannequinSlice.actions;
 
@@ -132,6 +138,7 @@ export const getMannequinLoading = (state: ObjectType) => state.mannequinReducer
 export const getMannequinUrl= (state: ObjectType) => state.mannequinReducer.url;
 export const getMannequinType= (state: ObjectType) => state.mannequinReducer.type;
 export const getMannequinPosition= (state: ObjectType) => state.mannequinReducer.position;
+export const getMannequinWithSilhouettesData = (state: ObjectType) => state.mannequinReducer.mannequinWithSilhouettes;
 export const getMannequinPrice= (state: ObjectType) => state.mannequinReducer?.price;
 
 export default mannequinSlice.reducer;

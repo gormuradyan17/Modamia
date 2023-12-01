@@ -1,7 +1,7 @@
 import { lazy } from 'react';
 
 const AUTH = {
-	DASHBOARD:lazy(()=>import('pages/Dashboard'))
+	DASHBOARD: lazy(() => import('pages/Dashboard'))
 	// PAGE_404: lazy(() => import('pages/auth/page404/Page404')),
 	// LOGIN: lazy(() => import('pages/auth/login/Login')),
 };
@@ -9,7 +9,8 @@ const AUTH = {
 const LANDING = {
 	// DASHBOARD: lazy(() => import('pages/dashboard/Dashboard')),
 	CUSTOMIZATION: lazy(() => import('pages/Customization/Customization')),
-	SHOPCART:lazy(()=>import('pages/ShopCart'))
+	CUSTOMIZATION_GARMENTS: lazy(() => import('pages/CustomizationGarments/CustomizationGarments')),
+	SHOPCART: lazy(() => import('pages/ShopCart'))
 };
 
 export const privatePages = [
@@ -17,6 +18,14 @@ export const privatePages = [
 		id: 'Customization',
 		text: 'Customization Page',
 		path: 'customization',
+		icon: '',
+		element: LANDING.CUSTOMIZATION_GARMENTS,
+		exact: true,
+	},
+	{
+		id: 'Customization',
+		text: 'Customization Page',
+		path: 'customization/:id',
 		icon: '',
 		element: LANDING.CUSTOMIZATION,
 		exact: true,
@@ -49,12 +58,12 @@ export const publicPages = [
 	// 	exact: true,
 	// },
 	{
-	 id:"Dashboard",
-		text:"Home Page",
-		path:"/",
-		icon:"",
-		element:AUTH.DASHBOARD,
-		exact:true
+		id: "Dashboard",
+		text: "Home Page",
+		path: "/",
+		icon: "",
+		element: AUTH.DASHBOARD,
+		exact: true
 	}
 ];
 

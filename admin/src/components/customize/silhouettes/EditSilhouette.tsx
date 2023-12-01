@@ -6,8 +6,7 @@ import InputUI from "shared/ui/InputUI/InputUI";
 import './style.scss'
 import { ArrayType, ObjectType, appColor, getSilhouetteFullPath, silhouetteOrientationOptions, silhouetteTypeOptions } from "shared/helpers/helpers";
 import DropzoneUI from "shared/ui/DropzoneUI/DropzoneUI";
-import { BASE_UPLOADS_PRINTS_HIGHS_URL, BASE_UPLOADS_PRINTS_PREVIEWS_URL, BASE_UPLOADS_SILHOUETTES_TOPS_URL } from "shared/constants/genericApiRoutes";
-import { printFilesOptions, silhouetteFilesOptions } from "utils/validators/validatorOptions";
+import { silhouetteFilesOptions } from "utils/validators/validatorOptions";
 import { formValidator } from "utils/validators/validator";
 import DropdownUI from "shared/ui/DropdownUI/DropdownUI";
 

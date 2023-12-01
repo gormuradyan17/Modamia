@@ -9,8 +9,11 @@ import PopupUI from 'shared/ui/PopupUI/PopupUI';
 import EditSilhouette from '../EditSilhouette';
 import { formValidator } from 'utils/validators/validator';
 import { silhouetteFormOptions } from 'utils/validators/validatorOptions';
-import { updateSilhouette } from 'shared/api/dataApi';
+import { removeSilhouette, updateSilhouette } from 'shared/api/dataApi';
 import { getAvSilhouettes } from 'services/silhouetteService';
+import RemoveSome from 'components/customize/removeSome/RemoveSome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const TopSilhouettesList = () => {
 
@@ -21,6 +24,9 @@ const TopSilhouettesList = () => {
     const [isVisible, setIsVisible] = useState<boolean>(false)
     const [errors, setErrors] = useState<ObjectType>({})
     const dispatch = useDispatch()
+    
+    const [isVisibleRemove, setIsVisibleRemove] = useState<boolean>(false)
+    const [removableItem, setRemovableItem] = useState<ObjectType>({})
 
     const topSilhouettes = useMemo(() => {
         return silhouettes.filter((silhouette: ObjectType) => silhouette.type === 'Top')
@@ -69,6 +75,24 @@ const TopSilhouettesList = () => {
         closePopup()
     }
 
+    const prepareToRemoveItem = (item: ObjectType) => {
+        setRemovableItem(item)
+        setIsVisibleRemove(true)
+    }
+
+    const removeItem = async () => {
+        if (removableItem?._id) {
+           await removeSilhouette(removableItem)
+           await getAvSilhouettes(dispatch)
+           setIsVisibleRemove(false)
+        }
+    }
+
+    const closePopupRemove = () => {
+        setIsVisibleRemove(false)
+        setRemovableItem({})
+    }
+
     return (
         <div className='silhouettes-items'>
             <HeadingUI text="Top Silhouettes" size="20px" />
@@ -79,7 +103,10 @@ const TopSilhouettesList = () => {
                         <div className="silhouettes-list-image">
                             <img src={`${BASE_UPLOADS_SILHOUETTES_TOPS_URL}${silhouette.silhouetteurl}`} className="silhouettes-list-img" alt={silhouette.name} />
                         </div>
-                        <ButtonUI classN="silhouettes-list-button" onClick={() => editSilhouette(silhouette)}>Edit</ButtonUI>
+                        <div className="silhouettes-list-buttons">
+                            <ButtonUI classN="silhouettes-list-button" onClick={() => editSilhouette(silhouette)}>Edit</ButtonUI>
+                            <ButtonUI classN="silhouettes-list-button" onClick={() => prepareToRemoveItem(silhouette)}><FontAwesomeIcon icon={faTrash} /></ButtonUI>
+                        </div>
                     </div>
                 }) : <HeadingUI text='Nothing found' color={appColor} size='16px' />}
             </div>
@@ -91,6 +118,14 @@ const TopSilhouettesList = () => {
                     errors={errors}
                     setSilhouette={setEditableSilhouette}
                     silhouetteInfo={silhouetteInfo}
+                />
+            </PopupUI>}
+            {isVisibleRemove && <PopupUI callback={closePopupRemove}>
+                <RemoveSome
+                    header="Remove Top Silhouette"
+                    text={`Do you want to remove the top silhouette <span> ${removableItem?.name} ?</span>`}
+                    discardCallback={closePopupRemove}
+                    removeCallback={removeItem}
                 />
             </PopupUI>}
         </div>

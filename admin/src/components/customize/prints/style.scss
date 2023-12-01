@@ -27,8 +27,8 @@
     flex-direction: column;
 }
 .print-list-image {
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     border: 1px solid variables.$appColor;
     margin: 10px 0;
@@ -43,7 +43,7 @@
     }
 }
 .print-list-text {
-    max-width: 100px;
+    max-width: 80px;
 }
 .print-list-button {
     padding: 10px 15px !important;
@@ -128,4 +128,10 @@
     height: 20px;
     margin: 0;
     accent-color: variables.$appColor
+}
+
+.print-list-action-buttons {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
 }

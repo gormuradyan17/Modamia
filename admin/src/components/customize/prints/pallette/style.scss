@@ -18,6 +18,13 @@ $colorFill: va(--colorFill);
     display: flex;
     flex-direction: column;
     margin: 10px;
+    align-items: center;
+}
+.palette-body-top {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
 }
 .palette-variantname {
     text-transform: capitalize;
@@ -61,4 +68,12 @@ $colorFill: va(--colorFill);
 .palette-text {
     position: relative;
     z-index: 1;
+}
+
+.palette-print-button {
+    width: 30px;
+    height: 30px;
+    min-height: inherit;
+    padding: 5px;
+    margin-right: 0;
 }

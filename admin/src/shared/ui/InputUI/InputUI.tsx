@@ -3,7 +3,7 @@ import './style.scss'
 import { useEffect } from "react";
 
 interface Props {
-    value: string,
+    value?: string,
     placeholder?: string,
     type?: string,
     callback: CallbackSkeletonType,
@@ -11,17 +11,23 @@ interface Props {
     name: string,
     error?: string,
     autoComplete?: string,
+    classN?: string,
+    disabled?: boolean,
+    defaultChecked?: boolean,
 }
 
 const InputUI = ({
-    value,
+    value = '',
     placeholder = '',
     type = 'text',
     callback,
     label = '',
     name,
     error,
-    autoComplete = ''
+    autoComplete = '',
+    classN = '',
+    disabled = false,
+    defaultChecked = false
 }: Props) => {
     // const refInput = useRef<HTMLInputElement | null>(null)
     // const refSpan = useRef<HTMLInputElement | null>(null)
@@ -43,7 +49,7 @@ const InputUI = ({
     // },[error])
 
     return (
-        <div className="InputUI">
+        <div className={`InputUI ${classN}`}>
             {label && <label 
                 className="InputUI__label"
                 htmlFor={`InputUI-${name}`}>
@@ -51,12 +57,12 @@ const InputUI = ({
             </label>}
             {error && <span className="error-message">{error}</span>}
             <input 
-                className={`InputUI__input${error ? ' _error' : ''}`}
+                className={`InputUI__input${error ? ' _error' : ''}${disabled ? ' _disabled' : ''}`}
                 id={`InputUI-${name}`}
                 name={name}
                 type={type}
-                defaultValue={value}
-                onChange={callback}
+                onChange={(event) => !disabled && callback(event)}
+                {...(type === 'checkbox' ? {checked: defaultChecked} : {value})}
                 {...(autoComplete) && {autoComplete}}
                 {...(placeholder && {placeholder})}
             />

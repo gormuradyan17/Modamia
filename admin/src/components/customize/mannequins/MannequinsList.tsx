@@ -5,7 +5,7 @@ import HeadingUI from "shared/ui/HeadingUI/HeadingUI";
 import './style.scss'
 import { useEffect, useState } from "react";
 import PopupUI from "shared/ui/PopupUI/PopupUI";
-import { updateMannequin, updatePrint } from "shared/api/dataApi";
+import { removeMannequin, updateMannequin, updatePrint } from "shared/api/dataApi";
 import { getAvPrints } from "services/printService";
 import { useDispatch } from "react-redux";
 import { formValidator } from "utils/validators/validator";
@@ -13,7 +13,8 @@ import { mannequinFormOptions } from "utils/validators/validatorOptions";
 import { getAvMannequins } from "services/mannequinService";
 import EditMannequin from "./EditMannequin";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPencil, faReplyAll } from "@fortawesome/free-solid-svg-icons";
+import { faPencil, faReplyAll, faTrash } from "@fortawesome/free-solid-svg-icons";
+import RemoveSome from "../removeSome/RemoveSome";
 
 interface Props {
     mannequins: ArrayType
@@ -24,16 +25,18 @@ const MannequinsList = ({
 }: Props) => {
 
     const [isVisible, setIsVisible] = useState<boolean>(false)
+    const [isVisibleRemove, setIsVisibleRemove] = useState<boolean>(false)
     const [editableMannequin, setEditableMannequin] = useState<ObjectType>({})
+    const [removableMannequin, setRemovableMannequin] = useState<ObjectType>({})
     const [mannequinInfo, setMannequinInfo] = useState<ObjectType>({})
     const [errors, setErrors] = useState<ObjectType>({})
     const [side, setSide] = useState<string>('front')
     const dispatch = useDispatch()
 
-    const editMannequin = (print: ObjectType) => {
-        if (print) {
-            setEditableMannequin(print)
-            setMannequinInfo(print)
+    const editMannequin = (mannequin: ObjectType) => {
+        if (mannequin) {
+            setEditableMannequin(mannequin)
+            setMannequinInfo(mannequin)
             setIsVisible(true)
         }
     }
@@ -43,6 +46,11 @@ const MannequinsList = ({
         setEditableMannequin({})
         setMannequinInfo({})
         setErrors({})
+    }
+
+    const closePopupRemove = () => {
+        setIsVisibleRemove(false)
+        setRemovableMannequin({})
     }
 
     const saveMannequin = async () => {
@@ -79,6 +87,19 @@ const MannequinsList = ({
         setSide(side === 'front' ? 'back' : 'front')
     }
 
+    const prepareToRemoveMannequin = (mannequin: ObjectType) => {
+        setRemovableMannequin(mannequin)
+        setIsVisibleRemove(true)
+    }
+
+    const remMannequin = async () => {
+        if (removableMannequin?._id) {
+           await removeMannequin(removableMannequin)
+           await getAvMannequins(dispatch)
+           setIsVisibleRemove(false)
+        }
+    }
+
     return (
         <div className="mannequin-list">
             {mannequins?.map((mannequin: ObjectType) => {
@@ -105,6 +126,12 @@ const MannequinsList = ({
                             onClick={() => editMannequin(mannequin)}
                         ><FontAwesomeIcon icon={faPencil} />
                         </button>
+                        <button
+                            type="button"
+                            className="mannequin-list-remove"
+                            onClick={() => prepareToRemoveMannequin(mannequin)}
+                        ><FontAwesomeIcon icon={faTrash} />
+                        </button>
                     </div>
                 </div>
             })}
@@ -116,6 +143,14 @@ const MannequinsList = ({
                     errors={errors}
                     setMannequin={setEditableMannequin}
                     mannequinInfo={mannequinInfo}
+                />
+            </PopupUI>}
+            {isVisibleRemove && <PopupUI callback={closePopupRemove}>
+                <RemoveSome 
+                    header="Remove Mannequin"
+                    text={`Do you want to remove the mannequin <span> ${removableMannequin?.name} ?</span>`}
+                    discardCallback={closePopupRemove}
+                    removeCallback={remMannequin}
                 />
             </PopupUI>}
         </div>

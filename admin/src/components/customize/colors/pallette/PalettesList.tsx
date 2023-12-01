@@ -1,9 +1,15 @@
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import RemoveSome from "components/customize/removeSome/RemoveSome";
 import { CSSProperties, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { availableColors, colorsVariants, setColorsPalettesData } from "redux/reducers/colorReducer";
-import { orderPaletteColors } from "shared/api/dataApi";
+import { getAvColorsPalettes, getAvColorsVariants } from "services/colorService";
+import { orderPaletteColors, removeColorPalette } from "shared/api/dataApi";
 import { ArrayType, ObjectType, appColor } from "shared/helpers/helpers";
+import { ButtonUI } from "shared/ui/ButtonUI/ButtonUI";
 import HeadingUI from "shared/ui/HeadingUI/HeadingUI";
+import PopupUI from "shared/ui/PopupUI/PopupUI";
 
 interface Props {
     palettes: ArrayType
@@ -23,6 +29,9 @@ const PalettesList = ({
         setDraggableRow(row)
     };
 
+    const [isVisibleRemove, setIsVisibleRemove] = useState<boolean>(false)
+    const [removableItem, setRemovableItem] = useState<ObjectType>({})
+
     const onDragOver = (e: any) => {
         e.preventDefault();
     };
@@ -39,6 +48,25 @@ const PalettesList = ({
         }
     };
 
+    const prepareToRemoveItem = (item: ObjectType) => {
+        setRemovableItem(item)
+        setIsVisibleRemove(true)
+    }
+
+    const removeItem = async () => {
+        if (removableItem?._id) {
+           await removeColorPalette(removableItem)
+           await getAvColorsVariants(dispatch)
+           await getAvColorsPalettes(dispatch)
+           setIsVisibleRemove(false)
+        }
+    }
+
+    const closePopupRemove = () => {
+        setIsVisibleRemove(false)
+        setRemovableItem({})
+    }
+
     return (
         <div className="palettes-list">
             {colorVariants?.map((variant: ObjectType, index: number) => {
@@ -47,8 +75,11 @@ const PalettesList = ({
                 const palette = palettes[paletteIdx]
                 const { grouped = [] } = palette || {}
                 return <div key={variant?._id + index} className="palette-body">
-                    <HeadingUI classN="palette-variantname" text={name} color={appColor} size="18px" />
-                    <div className="palette-content customXScrollbar">
+                    <div className="palette-body-top">
+                        <HeadingUI classN="palette-variantname" text={name} color={appColor} size="18px" />
+                        <ButtonUI classN="color-button" onClick={() => prepareToRemoveItem(variant)}><FontAwesomeIcon icon={faTrash} /></ButtonUI>
+                    </div>
+                    {grouped?.length ? <div className="palette-content customXScrollbar">
                         {grouped?.map((group: ObjectType, idx: number) => {
                             const color = colorsList?.find((color: ObjectType) => color._id === group?.color_id)
                             const { hexcode = '', name = '' } = color || {}
@@ -65,9 +96,17 @@ const PalettesList = ({
                             </div>
                         })}
 
-                    </div>
+                    </div> : null}
                 </div>
             })}
+            {isVisibleRemove && <PopupUI callback={closePopupRemove}>
+                <RemoveSome
+                    header="Remove Color Palette"
+                    text={`Do you want to remove the palette <span> ${removableItem?.name} ?</span>`}
+                    discardCallback={closePopupRemove}
+                    removeCallback={removeItem}
+                />
+            </PopupUI>}
         </div>
     );
 };

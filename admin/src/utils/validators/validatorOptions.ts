@@ -55,7 +55,7 @@ export const silhouetteFormOptions = {
     ],
     orientation: [
         {rule: { required : true }, error: {message: 'Orientation is required'} },
-    ]
+    ],
 }
 
 export const silhouetteFilesOptions = {

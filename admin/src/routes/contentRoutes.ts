@@ -10,6 +10,9 @@ const LANDING = {
 	DASHBOARD: lazy(() => import('pages/dashboard/Dashboard')),
 	SUPER_ADMIN: lazy(() => import('pages/super-admin/SuperAdmin')),
 	CUSTOMIZE: lazy(() => import('pages/customize/Customize')),
+	GARMENT: lazy(() => import('components/garment/garmentElement/garmentElement')),
+	GARMENTS: lazy(() => import('pages/garment/Garments')),
+	GARMENT_NEW: lazy(() => import('components/garment/newGarment/NewGarment')),
 	// Colors
 	CUSTOMIZE_COLORS: lazy(() => import('components/customize/colors/CustomizeColors')),
 	CUSTOMIZE_COLORS_PALLETTE: lazy(() => import('components/customize/colors/pallette/ColorsPallette')),
@@ -24,6 +27,27 @@ const LANDING = {
 	CUSTOMIZE_MANNEQUINS: lazy(() => import('components/customize/mannequins/CustomizeMannequins')),
 	CUSTOMIZE_SIZES: lazy(() => import('components/customize/sizes/CustomizeSizes')),
 };
+
+export const garmentPages = [
+	{
+		id: 'new-garment',
+		text: 'New Garment',
+		path: '/garments/new',
+		icon: faPersonDress,
+		element: LANDING.GARMENT_NEW,
+		exact: true,
+		isPrivate: true,
+	},
+	{
+		id: 'garment',
+		text: 'Garment',
+		path: '/garments/:id',
+		icon: faPersonDress,
+		element: LANDING.GARMENT,
+		exact: true,
+		isPrivate: true,
+	},
+]
 
 const CustomizeChildrens = [
 	{
@@ -145,6 +169,16 @@ export const adminPages = [
 		isPrivate: true,
 	},
 	{
+		id: 'garments',
+		text: 'Garments',
+		path: '/garments',
+		icon: faUserGroup,
+		element: LANDING.GARMENTS,
+		exact: true,
+		// children: GarmentsChildrens,
+		isPrivate: true,
+	},
+	{
 		id: 'super-admin',
 		text: 'Super-Admins List',
 		path: '/super-admins',
@@ -175,6 +209,6 @@ export const publicPages = [
 	},
 ];
 
-const contents = { publicPages, adminPages };
+const contents = { publicPages, adminPages, garmentPages };
 
 export default contents;
