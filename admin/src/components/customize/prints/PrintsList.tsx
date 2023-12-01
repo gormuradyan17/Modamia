@@ -11,7 +11,7 @@ import { getAvPrints, getAvPrintsPalettes } from "services/printService";
 import { useDispatch, useSelector } from "react-redux";
 import { formValidator } from "utils/validators/validator";
 import { printFormOptions } from "utils/validators/validatorOptions";
-import { printsVariants } from "redux/reducers/printReducer";
+import { printsPalettes, printsVariants, setPrintData, setPrintsPalettesData } from "redux/reducers/printReducer";
 import { faPalette, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PalettesList from "./PalettesList";
@@ -34,7 +34,7 @@ const PrintsList = ({
     const paletteRef = useRef<HTMLDivElement>(null)
     const printVariants = useSelector(printsVariants)
     const dispatch = useDispatch()
-
+    const printPalettes = useSelector(printsPalettes)
     useClickOutSide([paletteRef], () => setIsVisiblePalettes(false), isVisiblePalettes)
 
     const [isVisibleRemove, setIsVisibleRemove] = useState<boolean>(false)
@@ -80,8 +80,9 @@ const PrintsList = ({
             formData.append(key, newPrint[key]);
         });
 
-        await updatePrint(formData)
-        await getAvPrints(dispatch)
+        await updatePrint(formData).then(res => {
+            dispatch(setPrintData(res))
+        })
         closePopup()
     }
 
@@ -90,7 +91,7 @@ const PrintsList = ({
         setEditablePrint(color)
     }
 
-    const manipulatePrintWithPalette = async (event: ChangeEvent<HTMLInputElement>,foundItem: ObjectType, option: ObjectType) => {
+    const manipulatePrintWithPalette = async (event: ChangeEvent<HTMLInputElement>, foundItem: ObjectType, option: ObjectType) => {
         const { target: { checked } } = event
         const { grouped = [] } = foundItem || {};
         const { _id: newVariantId = '' } = option || {}
@@ -99,6 +100,11 @@ const PrintsList = ({
             await addPrintPalette({
                 print_id: editablePrint?._id,
                 variant_id: newVariantId,
+            }).then(res => {
+                dispatch(setPrintsPalettesData([
+                    ...printPalettes,
+                    res
+                ]))
             })
         }
         else {
@@ -107,10 +113,11 @@ const PrintsList = ({
             if (_id) {
                 await removePrintPalette({
                     palette_id: _id
+                }).then(res => {
+                    dispatch(setPrintsPalettesData(res))
                 })
             }
         }
-        await getAvPrintsPalettes(dispatch)
     }
 
     const prepareToRemoveItem = (item: ObjectType) => {
@@ -120,10 +127,10 @@ const PrintsList = ({
 
     const removeItem = async () => {
         if (removableItem?._id) {
-           await removePrint(removableItem)
-           await getAvPrints(dispatch)
-           await getAvPrintsPalettes(dispatch)
-           setIsVisibleRemove(false)
+            await removePrint(removableItem).then(res => {
+                dispatch(setPrintData(res))
+            })
+            setIsVisibleRemove(false)
         }
     }
 

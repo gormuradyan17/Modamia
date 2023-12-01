@@ -2,7 +2,7 @@ import MainBody from "layout/MainBody/MainBody";
 import MainHead from "layout/MainHead/MainHead";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { availableSizes, resetSizeState, sizeDetails } from "redux/reducers/sizeReducer";
+import { availableSizes, resetSizeState, setSizeData, sizeDetails } from "redux/reducers/sizeReducer";
 import { getAvSizes } from "services/sizeService";
 import { addSize } from "shared/api/dataApi";
 import { ObjectType } from "shared/helpers/helpers";
@@ -34,8 +34,12 @@ const CustomizeSizes = () => {
         const errors = formValidator(sDetails, sizeFormOptions);
         if (errors) { return setErrors(errors) };
         if (Object.keys(errors).length) { setErrors({}) };
-        await addSize(sDetails)
-        await getAvSizes(dispatch)
+        await addSize(sDetails).then(res => {
+            dispatch(setSizeData([
+                ...sizes,
+                res
+            ]))
+        })
         closePopup()
     }
 

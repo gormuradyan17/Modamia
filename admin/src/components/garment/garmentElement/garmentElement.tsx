@@ -59,9 +59,7 @@ const GarmentElement = () => {
     const saveGarment = async () => {
         if (isApproved) {
             const data = { ...copyDetails, id }
-            // console.log(data)
             await editGarment(data)
-            // dispatch(resetGarmentState())
         }
     }
 

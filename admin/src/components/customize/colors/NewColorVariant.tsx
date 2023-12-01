@@ -1,7 +1,8 @@
 import { faSave } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ChangeEvent, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { colorsVariants, setColorsVariantsData } from "redux/reducers/colorReducer";
 import { getAvColorsVariants } from "services/colorService";
 import { addColorVariant } from "shared/api/dataApi";
 import InputUI from "shared/ui/InputUI/InputUI";
@@ -10,6 +11,8 @@ const NewColorVariant = () => {
 
     const [isVisible, setIsVisible] = useState<boolean>(false)
     const [newVariant, setNewVariant] = useState<string>('')
+    const colorVarians = useSelector(colorsVariants)
+
     const dispatch = useDispatch()
     
     const toggleNewVariant = () => {
@@ -20,15 +23,18 @@ const NewColorVariant = () => {
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { target: { value } } = event;
         setNewVariant(value)
-
     }
 
     const saveVariant = async () => {
         if (newVariant) {
             await addColorVariant({
                 name: newVariant
+            }).then(res => {
+                dispatch(setColorsVariantsData([
+                    ...colorVarians,
+                    res
+                ]))
             })
-            await getAvColorsVariants(dispatch)
         }
         setIsVisible(!isVisible)
         setNewVariant('')

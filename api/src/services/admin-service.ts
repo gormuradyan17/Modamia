@@ -101,7 +101,9 @@ class AdminService {
     async editColor(req: Record<string, any>) {
         try {
             const query = { '_id': req._id };
-            return await ColorModel.findOneAndUpdate(query, req, { upsert: true });
+            await ColorModel.findOneAndUpdate(query, req, { upsert: true });
+            const colors = await ColorModel.find({})
+            return colors
         } catch (error) {
             console.log(error)
         }
@@ -213,8 +215,9 @@ class AdminService {
             const query = { '_id': _id };
             const queryPalette = { 'color_id': _id };
             await ColorModel.deleteOne(query);
-            return await ColorPaletteModel.deleteMany(queryPalette)
-
+            await ColorPaletteModel.deleteMany(queryPalette)
+            const colors = ColorModel.find({})
+            return colors;
         } catch (error) {
             console.log(error)
         }
@@ -288,7 +291,7 @@ class AdminService {
                 fs.writeFileSync(filePath, previewurl.data);
             }
             const query = { '_id': _id };
-            return await PrintModel.findOneAndUpdate(query, {
+            await PrintModel.findOneAndUpdate(query, {
                 name,
                 price,
                 tags,
@@ -296,6 +299,8 @@ class AdminService {
                 ...(highImage && { highresurl: highImage }),
                 ...(previewImage && { previewurl: previewImage })
             }, { upsert: true });
+            const prints = await PrintModel.find({})
+            return prints;
 
         } catch (error) {
             console.log(error)
@@ -309,7 +314,6 @@ class AdminService {
                 name,
             })
             return printVariant;
-
         } catch (error) {
             console.log(error)
         }
@@ -343,7 +347,9 @@ class AdminService {
             const query = { '_id': _id };
             const queryPalette = { 'variant_id': _id };
             await PrintVariantModel.deleteOne(query);
-            return await PrintPaletteModel.deleteMany(queryPalette)
+            await PrintPaletteModel.deleteMany(queryPalette)
+            const palettes = await PrintPaletteModel.find({})
+            return palettes
 
         } catch (error) {
             console.log(error)
@@ -409,7 +415,9 @@ class AdminService {
             const query = { '_id': _id };
             const queryPalette = { 'print_id': _id };
             await PrintModel.deleteOne(query);
-            return await PrintPaletteModel.deleteMany(queryPalette)
+            await PrintPaletteModel.deleteMany(queryPalette)
+            const prints = await PrintModel.find({})
+            return prints;
 
         } catch (error) {
             console.log(error)
@@ -471,11 +479,13 @@ class AdminService {
                 fs.writeFileSync(filePath, backurl.data);
             }
             const query = { '_id': _id };
-            return await MannequinModel.findOneAndUpdate(query, {
+            await MannequinModel.findOneAndUpdate(query, {
                 name,
                 ...(frontImage && { fronturl: frontImage }),
                 ...(backImage && { backurl: backImage })
             }, { upsert: true });
+            const mannequins = await MannequinModel.find({})
+            return mannequins
 
         } catch (error) {
             console.log(error)
@@ -490,7 +500,9 @@ class AdminService {
             }
 
             const query = { '_id': _id };
-            return await MannequinModel.deleteOne(query);
+            await MannequinModel.deleteOne(query);
+            const mannequins = await MannequinModel.find({})
+            return mannequins
 
         } catch (error) {
             console.log(error)
@@ -550,7 +562,7 @@ class AdminService {
                     fs.rename(oldFilePath, newFilePath, (err) => {
                         if (err) throw err
                     })
-                    return await SilhouetteModel.findOneAndUpdate(query, {
+                    await SilhouetteModel.findOneAndUpdate(query, {
                         name,
                         price,
                         tags,
@@ -558,6 +570,7 @@ class AdminService {
                         orientation,
                         mannequin_id
                     }, { upsert: true });
+                    return await SilhouetteModel.find({})
                 }
                 if (silhouetteurl) {
                     const newName = uuidv4()
@@ -566,7 +579,7 @@ class AdminService {
                     const pathName = type.toLowerCase() + 's'
                     const filePath = path.join(__dirname, `../../uploads/silhouettes/${pathName}`, silhouetteImage);
                     fs.writeFileSync(filePath, silhouetteurl.data);
-                    return await SilhouetteModel.findOneAndUpdate(query, {
+                    await SilhouetteModel.findOneAndUpdate(query, {
                         name,
                         price,
                         tags,
@@ -575,8 +588,9 @@ class AdminService {
                         mannequin_id,
                         ...(silhouetteImage && { silhouetteurl: silhouetteImage }),
                     }, { upsert: true });
+                    return await SilhouetteModel.find({})
                 }
-                return await SilhouetteModel.findOneAndUpdate(query, {
+                await SilhouetteModel.findOneAndUpdate(query, {
                     name,
                     price,
                     tags,
@@ -584,6 +598,7 @@ class AdminService {
                     orientation,
                     mannequin_id
                 }, { upsert: true });
+                return await SilhouetteModel.find({})
             }
             return false
         } catch (error) {
@@ -599,7 +614,8 @@ class AdminService {
             }
 
             const query = { '_id': _id };
-            return await SilhouetteModel.deleteOne(query);
+            await SilhouetteModel.deleteOne(query);
+            return await SilhouetteModel.find({})
 
         } catch (error) {
             console.log(error)
@@ -624,7 +640,9 @@ class AdminService {
     async editSize(req: Record<string, any>) {
         try {
             const query = { '_id': req._id };
-            return await SizeModel.findOneAndUpdate(query, req, { upsert: true });
+            await SizeModel.findOneAndUpdate(query, req, { upsert: true });
+            const sizes = await SizeModel.find({})
+            return sizes;
         } catch (error) {
             console.log(error)
         }
@@ -638,7 +656,9 @@ class AdminService {
             }
 
             const query = { '_id': _id };
-            return await SizeModel.deleteOne(query);
+            await SizeModel.deleteOne(query);
+            const sizes = await SizeModel.find({})
+            return sizes;
 
         } catch (error) {
             console.log(error)
@@ -758,8 +778,8 @@ class AdminService {
                 await updateGarments(id, tops, 'tops')
                 await updateGarments(id, bottoms, 'bottoms')
                 await updateGarments(id, sleeves, 'sleeves')
-
-                return true
+                const garments = await GarmentModel.find({})
+                return garments
             }
             return false
         } catch (error) {
@@ -771,11 +791,13 @@ class AdminService {
         try {
             const { _id = '' } = req
             if (!mongoose.Types.ObjectId.isValid(_id)) {
-                throw new Error('Invalid palette_id');
+                throw new Error('Invalid garment_id');
             }
 
             const query = { '_id': _id };
-            return await SizeModel.deleteOne(query);
+            await GarmentModel.deleteOne(query);
+            const garments = await GarmentModel.find({})
+            return garments
 
         } catch (error) {
             console.log(error)

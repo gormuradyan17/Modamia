@@ -14,11 +14,13 @@ import GarmentsSilhouettesListWrapper from "./GarmentsSilhouettesListWrapper";
 import { BASE_UPLOADS_SILHOUETTES_BOTTOMS_URL, BASE_UPLOADS_SILHOUETTES_SLEEVES_URL, BASE_UPLOADS_SILHOUETTES_TOPS_URL } from "shared/constants/genericApiRoutes";
 import { availableSilhouettes } from "redux/reducers/silhouetteReducer";
 import { ObjectType, getIsNewGarmentApproved } from "shared/helpers/helpers";
+import { useNavigate } from "react-router-dom";
 
 const NewGarment = () => {
 
     const dispatch = useDispatch()
     const details = useSelector(garmentDetails)
+    const navigate = useNavigate()
 
     useEffect(() => {
         getAvSilhouettes(dispatch)
@@ -43,6 +45,7 @@ const NewGarment = () => {
         if (details?.mannequin_id && details?.name) {
             await addGarment(details)
             dispatch(resetGarmentState())
+            navigate('/garments')
         }
     }
     

@@ -12,7 +12,7 @@ import { colorFormOptions } from "utils/validators/validatorOptions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPalette, faTrash } from "@fortawesome/free-solid-svg-icons";
 import PalettesList from "./PalettesList";
-import { colorsVariants } from "redux/reducers/colorReducer";
+import { colorsPalettes, colorsVariants, setColorData, setColorsPalettesData } from "redux/reducers/colorReducer";
 import useClickOutSide from "utils/hooks/useClickOutside";
 import RemoveSome from "../removeSome/RemoveSome";
 
@@ -30,6 +30,7 @@ const ColorsList = ({
 
     const dispatch = useDispatch()
     const colorVariants = useSelector(colorsVariants)
+    const colorPalettes = useSelector(colorsPalettes)
     const [isVisible, setIsVisible] = useState<boolean>(false)
     const [isVisiblePalettes, setIsVisiblePalettes] = useState<boolean>(false)
     const [editableColor, setEditableColor] = useState<ObjectType>({})
@@ -61,8 +62,9 @@ const ColorsList = ({
         if (errors) { return setErrors(errors) };
         if (Object.keys(errors).length) { setErrors({}) };
         if (activeColor && JSON.stringify(editableColor) !== JSON.stringify(activeColor)) {
-            await updateColor(editableColor)
-            await getAvColors(dispatch)
+            await updateColor(editableColor).then(res => {
+                dispatch(setColorData(res))
+            })
         }
         closePopup()
     }
@@ -74,7 +76,7 @@ const ColorsList = ({
 
     useClickOutSide([paletteRef], () => setIsVisiblePalettes(false), isVisiblePalettes)
 
-    const manipulateColorWithPalette = async (event: ChangeEvent<HTMLInputElement>,foundItem: ObjectType, option: ObjectType) => {
+    const manipulateColorWithPalette = async (event: ChangeEvent<HTMLInputElement>, foundItem: ObjectType, option: ObjectType) => {
         const { target: { checked } } = event
         const { grouped = [] } = foundItem || {};
         const { _id: newVariantId = '' } = option || {}
@@ -83,6 +85,11 @@ const ColorsList = ({
             await addColorPalette({
                 color_id: editableColor?._id,
                 variant_id: newVariantId,
+            }).then(res => {
+                dispatch(setColorsPalettesData([
+                    ...colorPalettes,
+                    res
+                ]))
             })
         }
         else {
@@ -91,10 +98,11 @@ const ColorsList = ({
             if (_id) {
                 await removeColorPalette({
                     palette_id: _id
+                }).then(res => {
+                    dispatch(setColorsPalettesData(res))
                 })
             }
         }
-        await getAvColorsPalettes(dispatch)
     }
 
     const prepareToRemoveItem = (item: ObjectType) => {
@@ -104,10 +112,10 @@ const ColorsList = ({
 
     const removeItem = async () => {
         if (removableItem?._id) {
-           await removeColor(removableItem)
-           await getAvColors(dispatch)
-           await getAvColorsPalettes(dispatch)
-           setIsVisibleRemove(false)
+            await removeColor(removableItem).then(res => {
+                dispatch(setColorData(res))
+            })
+            setIsVisibleRemove(false)
         }
     }
 

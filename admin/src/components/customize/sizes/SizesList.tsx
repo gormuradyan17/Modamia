@@ -12,6 +12,7 @@ import EditSize from "./EditSize";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 import RemoveSome from "../removeSome/RemoveSome";
+import { setSizeData } from "redux/reducers/sizeReducer";
 
 interface Props {
     sizes: ArrayType
@@ -27,7 +28,7 @@ const SizesList = ({
     const [editableSize, setEditableSize] = useState<ObjectType>({})
     const [sizeInfo, setSizeInfo] = useState<ObjectType>({})
     const [errors, setErrors] = useState<ObjectType>({})
-    
+
     const [isVisibleRemove, setIsVisibleRemove] = useState<boolean>(false)
     const [removableItem, setRemovableItem] = useState<ObjectType>({})
 
@@ -35,7 +36,7 @@ const SizesList = ({
         if (size) {
             setEditableSize(size)
             setSizeInfo(size)
-            setIsVisible(true)   
+            setIsVisible(true)
         }
     }
 
@@ -49,12 +50,13 @@ const SizesList = ({
     const saveSize = async () => {
         const activeSize = sizes?.find(size => size._id === editableSize._id) || undefined
         const errors = formValidator(editableSize, sizeFormOptions);
-        if (errors) {return setErrors(errors)};
-        if (Object.keys(errors).length) {setErrors({})};
-        if (activeSize && JSON.stringify(editableSize) !== JSON.stringify(activeSize) ) {
-            await updateSize(editableSize)
-            await getAvSizes(dispatch)
-        } 
+        if (errors) { return setErrors(errors) };
+        if (Object.keys(errors).length) { setErrors({}) };
+        if (activeSize && JSON.stringify(editableSize) !== JSON.stringify(activeSize)) {
+            await updateSize(editableSize).then(res => {
+                dispatch(setSizeData(res))
+            })
+        }
         closePopup()
     }
 
@@ -66,9 +68,10 @@ const SizesList = ({
 
     const removeItem = async () => {
         if (removableItem?._id) {
-           await removeSize(removableItem)
-           await getAvSizes(dispatch)
-           setIsVisibleRemove(false)
+            await removeSize(removableItem).then(res => {
+                dispatch(setSizeData(res))
+            })
+            setIsVisibleRemove(false)
         }
     }
 

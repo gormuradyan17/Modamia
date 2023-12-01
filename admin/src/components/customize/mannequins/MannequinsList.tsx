@@ -15,6 +15,8 @@ import EditMannequin from "./EditMannequin";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faReplyAll, faTrash } from "@fortawesome/free-solid-svg-icons";
 import RemoveSome from "../removeSome/RemoveSome";
+import { setMannequinData } from "redux/reducers/mannequinReducer";
+import MannequinElem from "./MannequinElem";
 
 interface Props {
     mannequins: ArrayType
@@ -30,7 +32,6 @@ const MannequinsList = ({
     const [removableMannequin, setRemovableMannequin] = useState<ObjectType>({})
     const [mannequinInfo, setMannequinInfo] = useState<ObjectType>({})
     const [errors, setErrors] = useState<ObjectType>({})
-    const [side, setSide] = useState<string>('front')
     const dispatch = useDispatch()
 
     const editMannequin = (mannequin: ObjectType) => {
@@ -78,15 +79,13 @@ const MannequinsList = ({
             formData.append(key, newMannequin[key]);
         });
 
-        await updateMannequin(formData)
-        await getAvMannequins(dispatch)
+        await updateMannequin(formData).then(res => {
+            dispatch(setMannequinData(res))
+        })
         closePopup()
     }
 
-    const rotateImage = () => {
-        setSide(side === 'front' ? 'back' : 'front')
-    }
-
+    
     const prepareToRemoveMannequin = (mannequin: ObjectType) => {
         setRemovableMannequin(mannequin)
         setIsVisibleRemove(true)
@@ -94,46 +93,22 @@ const MannequinsList = ({
 
     const remMannequin = async () => {
         if (removableMannequin?._id) {
-           await removeMannequin(removableMannequin)
-           await getAvMannequins(dispatch)
-           setIsVisibleRemove(false)
+            await removeMannequin(removableMannequin).then(res => {
+                dispatch(setMannequinData(res))
+            })
         }
+        setIsVisibleRemove(false)
     }
 
     return (
         <div className="mannequin-list">
             {mannequins?.map((mannequin: ObjectType) => {
-                return <div className="mannequins-list-mannequin" key={mannequin._id}>
-                    <HeadingUI classN="mannequin-list-text _ellipsis" text={mannequin.name} size="16px" />
-                    <div className="mannequin-list-image">
-                        <img
-                            src={side === 'front'
-                                ? `${BASE_UPLOADS_MANNEQUINS_FRONTS_URL}${mannequin.fronturl}`
-                                : `${BASE_UPLOADS_MANNEQUINS_BACKS_URL}${mannequin.backurl}`
-                            }
-                            className="mannequin-list-img"
-                            alt={mannequin.name}
-                        />
-                        <button
-                            type="button"
-                            className="mannequin-list-rotate"
-                            onClick={rotateImage}
-                        ><FontAwesomeIcon icon={faReplyAll} />
-                        </button>
-                        <button
-                            type="button"
-                            className="mannequin-list-edit"
-                            onClick={() => editMannequin(mannequin)}
-                        ><FontAwesomeIcon icon={faPencil} />
-                        </button>
-                        <button
-                            type="button"
-                            className="mannequin-list-remove"
-                            onClick={() => prepareToRemoveMannequin(mannequin)}
-                        ><FontAwesomeIcon icon={faTrash} />
-                        </button>
-                    </div>
-                </div>
+                return <MannequinElem 
+                    key={mannequin?._id}
+                    mannequin={mannequin}
+                    editMannequin={editMannequin}
+                    prepareToRemoveMannequin={prepareToRemoveMannequin}
+                />
             })}
             {isVisible && <PopupUI callback={closePopup}>
                 <EditMannequin
@@ -146,7 +121,7 @@ const MannequinsList = ({
                 />
             </PopupUI>}
             {isVisibleRemove && <PopupUI callback={closePopupRemove}>
-                <RemoveSome 
+                <RemoveSome
                     header="Remove Mannequin"
                     text={`Do you want to remove the mannequin <span> ${removableMannequin?.name} ?</span>`}
                     discardCallback={closePopupRemove}

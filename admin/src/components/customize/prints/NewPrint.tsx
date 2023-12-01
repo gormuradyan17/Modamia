@@ -11,7 +11,7 @@ import InputUI from 'shared/ui/InputUI/InputUI';
 import { formValidator } from 'utils/validators/validator';
 import { printFilesOptions, printFormOptions } from 'utils/validators/validatorOptions';
 import NewPrintVariant from './NewPrintVariant';
-import { printDetails, printsVariants, setPrintState } from 'redux/reducers/printReducer';
+import { availablePrints, printDetails, printsVariants, setPrintData, setPrintState } from 'redux/reducers/printReducer';
 import DropdownCheckboxUI from 'shared/ui/DropdownCheckboxUI/DropdownCheckboxUI';
 
 interface Props {
@@ -25,7 +25,7 @@ const NewPrint = ({
 
     const printVariants = getDropdownOptionsFromItemsVariants(useSelector(printsVariants)) || [{}]
     const pDetails = useSelector(printDetails)
-
+    const prints = useSelector(availablePrints)
     const [data, setData] = useState<ObjectType>({
         name: '',
         price: '',
@@ -52,8 +52,12 @@ const NewPrint = ({
             if (key === 'printsPalettes') formData.append(key, JSON.stringify(data[key])); 
             else formData.append(key, data[key]); // Add other data properties as needed
         });
-        await addPrint(formData)
-        await getAvPrints(dispatch)
+        await addPrint(formData).then(res => {
+            dispatch(setPrintData([
+                ...prints,
+                res
+            ]))
+        })
         closePopup()
 
     }

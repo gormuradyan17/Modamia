@@ -1,5 +1,6 @@
 import { ChangeEvent, FormEvent, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { printsVariants, setPrintsVariantsData } from "redux/reducers/printReducer";
 import { getAvPrintsVariants } from "services/printService";
 import { addPrintVariant } from "shared/api/dataApi";
 import { ObjectType } from "shared/helpers/helpers";
@@ -21,6 +22,9 @@ const NewPalette = ({
     const [data, setData] = useState<ObjectType>({
         name: ''
     })
+
+    const printVariants = useSelector(printsVariants)
+
     const [errors, setErrors] = useState<ObjectType>({})
     const dispatch = useDispatch()
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -33,8 +37,12 @@ const NewPalette = ({
         const errors = formValidator(data, variantFormOptions);
         if (errors) {return setErrors(errors)};
         if (Object.keys(errors).length) {setErrors({})};
-        await addPrintVariant(data)
-        await getAvPrintsVariants(dispatch)
+        await addPrintVariant(data).then(res => {
+            dispatch(setPrintsVariantsData([
+                ...printVariants,
+                res
+            ]))
+        })
         closePopup()
     }
 

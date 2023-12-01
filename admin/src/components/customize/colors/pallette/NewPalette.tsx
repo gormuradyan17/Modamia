@@ -1,5 +1,6 @@
 import { ChangeEvent, FormEvent, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { colorsVariants, setColorsVariantsData } from "redux/reducers/colorReducer";
 import { getAvColorsVariants } from "services/colorService";
 import { addColorVariant } from "shared/api/dataApi";
 import { ObjectType } from "shared/helpers/helpers";
@@ -23,6 +24,8 @@ const NewPalette = ({
     })
     const [errors, setErrors] = useState<ObjectType>({})
     const dispatch = useDispatch()
+    const colorVariants = useSelector(colorsVariants)
+
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { target: { name, value } } = event
         setData({ ...data, [name]: value })
@@ -33,8 +36,12 @@ const NewPalette = ({
         const errors = formValidator(data, variantFormOptions);
         if (errors) {return setErrors(errors)};
         if (Object.keys(errors).length) {setErrors({})};
-        await addColorVariant(data)
-        await getAvColorsVariants(dispatch)
+        await addColorVariant(data).then(res => {
+            dispatch(setColorsVariantsData([
+                ...colorVariants,
+                res
+            ]))
+        })
         closePopup()
     }
 

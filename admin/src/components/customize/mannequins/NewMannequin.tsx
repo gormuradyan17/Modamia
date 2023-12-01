@@ -1,5 +1,6 @@
 import { ChangeEvent, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { availableMannequins, setMannequinData } from 'redux/reducers/mannequinReducer';
 import { getAvMannequins } from 'services/mannequinService';
 import { getAvPrints } from 'services/printService';
 import { addMannequin, addPrint } from 'shared/api/dataApi';
@@ -27,7 +28,7 @@ const NewMannequin = ({
     })
     const [errors, setErrors] = useState<ObjectType>({})
     const [fileErrors, setFileErrors] = useState<ObjectType>({})
-
+    const mannequins = useSelector(availableMannequins)
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { target: { name, value } } = event
         setData({ ...data, [name]: value })
@@ -42,8 +43,12 @@ const NewMannequin = ({
         Object.keys(data).forEach((key: string) => {
             formData.append(key, data[key]); // Add other data properties as needed
         });
-        await addMannequin(formData)
-        await getAvMannequins(dispatch)
+        await addMannequin(formData).then(res => {
+            dispatch(setMannequinData([
+                ...mannequins,
+                res
+            ]))
+        })
         closePopup()
 
     }
