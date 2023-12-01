@@ -60,7 +60,6 @@ const TopSilhouettesList = () => {
             return file
         }
         const newPrint = JSON.parse(JSON.stringify(editableSilhouette));
-        // console.log('editableSilhouette = > ', editableSilhouette)
         if (editableSilhouette?.silhouetteurl?.includes('blob')) {
             const file = await getNewFile(editableSilhouette.silhouetteurl);
             newPrint.silhouetteurl = file;

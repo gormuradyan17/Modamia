@@ -2,6 +2,7 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { canvasModelInit } from "../../shared/helpers/canvasHelpers";
 import {
 
+  BASE_UPLOADS_SILHOUETTES_URL,
   B_N,
   T_N,
 } from "../../shared/constants/genericApiRoutes";
@@ -28,6 +29,7 @@ import { getProduct, getProductName, getProductPrice, setProductBack, setProduct
 import { useParams } from "react-router-dom";
 import { getSelectedGarment } from "services/garmentService";
 import { garmentDetails } from "redux/reducers/garmentReducer";
+import { getCanvasDefaultImages } from "shared/helpers/helpers";
 
 const Customization = () => {
   const activeColor = useSelector(getMannequinActiveColor)
@@ -43,17 +45,20 @@ const Customization = () => {
   const activeGarment = useSelector(garmentDetails)
   const totalPrice = useSelector(getProductPrice)
   let priceCount = 0
+  
+  const { silhouettes = {} } = activeGarment;
+
   const [modelData, setModelData] = useState<any>({
     fronts: [
-      { position: "bottom", src: B_N, color: activeColor, printImageURL: activePrint?.highresurl, activeCategory, price: 200 },
-      { position: "top", src: T_N, color: activeColor, printImageURL: activePrint?.highresurl, activeCategory, price: 300 },
+      { position: "bottom", src: getCanvasDefaultImages(silhouettes)?.frontTop, color: activeColor, printImageURL: activePrint?.highresurl, activeCategory, price: 200 },
+      { position: "top", src: getCanvasDefaultImages(silhouettes)?.frontBottom, color: activeColor, printImageURL: activePrint?.highresurl, activeCategory, price: 300 },
     ],
     backs: [
-      { position: "bottom", src: B_N, color: activeColor, printImageURL: activePrint?.highresurl, activeCategory, price: 0 },
-      { position: "top", src: T_N, color: activeColor, printImageURL: activePrint?.highresurl, activeCategory, price: 0 },
+      { position: "bottom", src: getCanvasDefaultImages(silhouettes)?.backBottom, color: activeColor, printImageURL: activePrint?.highresurl, activeCategory, price: 0 },
+      { position: "top", src: getCanvasDefaultImages(silhouettes)?.backTop, color: activeColor, printImageURL: activePrint?.highresurl, activeCategory, price: 0 },
     ],
     sleeves: [
-      { position: "top", src: '', color: activeColor, printImageURL: activePrint?.highresurl, activeCategory, price: 0 }
+      { position: "top", src: getCanvasDefaultImages(silhouettes)?.sleeveTop, color: activeColor, printImageURL: activePrint?.highresurl, activeCategory, price: 0 }
     ]
   }
   )
@@ -72,67 +77,62 @@ const Customization = () => {
   useEffect(() => {
     if (activeGarment?.mannequin?._id) {
       const { mannequin = {} } = activeGarment;
-      const drawManequin = async () => {
-        for (let i = 0; i < modelData[frontBack].length; i++) {
-          const activeElem = modelData[frontBack][1] ? modelData[frontBack][1] : modelData[frontBack][0]
-
-          modelData[frontBack][i].activeCategory = activeCategory;
-          // console.log(activeType,"activeType");
-
-          switch (activeType) {
-            case "tops":
-              modelData[frontBack][1].src = activeImgUrl;
-              modelData[frontBack][1].price = price;
-              setModelData({ ...modelData })
-              break;
-            case "bottoms":
-              modelData.fronts[0].src = activeImgUrl
-              modelData.backs[0].src = activeImgUrl
-              modelData.fronts[0].price = price
-              setModelData({ ...modelData })
-              break;
-            case "sleeves":
-              modelData.sleeves[0].src = activeImgUrl;
-              modelData.sleeves[0].price = price;
-              setModelData({ ...modelData })
-              break;
-            case "all":
-              // console.log(modelData);
-
-              modelData.fronts[i].color = activeColor
-              modelData.backs[i].color = activeColor
-              modelData.sleeves[0].color = activeColor
-              setModelData({ ...modelData })
-              break;
-            case "top":
-              activeElem.color = activeColor
-              if (activePrint) {
-                activeElem.printImageURL = activePrint?.highresurl
-              }
-              setModelData({ ...modelData })
-              break;
-            case "bottom":
-              modelData[frontBack][0].color = activeColor
-              if (activePrint) {
-                modelData[frontBack][0].printImageURL = activePrint?.highresurl
-              }
-              setModelData({ ...modelData })
-
-              break;
-            default:
-            // modelData[frontBack][i].color = activeColor;
-            // modelData[frontBack][i].printImageURL = activePrint?.highresurl
-            // setModelData({...modelData})
+      const drawManequin = async () => {        
+          for (let i = 0; i < modelData[frontBack].length; i++) {
+            const activeElem = modelData[frontBack][1] ? modelData[frontBack][1] : modelData[frontBack][0]
+            modelData[frontBack][i].activeCategory = activeCategory;
+            switch (activeType) {
+              case "tops":
+                modelData[frontBack][1].src = activeImgUrl;
+                modelData[frontBack][1].price = price;
+                setModelData({ ...modelData })
+                break;
+              case "bottoms":
+                modelData.fronts[0].src = activeImgUrl
+                modelData.backs[0].src = activeImgUrl
+                modelData.fronts[0].price = price
+                setModelData({ ...modelData })
+                break;
+              case "sleeves":
+                modelData.sleeves[0].src = activeImgUrl;
+                modelData.sleeves[0].price = price;
+                setModelData({ ...modelData })
+                break;
+              case "all":
+                modelData.fronts[i].color = activeColor
+                modelData.backs[i].color = activeColor
+                modelData.sleeves[0].color = activeColor
+                setModelData({ ...modelData })
+                break;
+              case "top":
+                activeElem.color = activeColor
+                if (activePrint) {
+                  activeElem.printImageURL = activePrint?.highresurl
+                }
+                setModelData({ ...modelData })
+                break;
+              case "bottom":
+                modelData[frontBack][0].color = activeColor
+                if (activePrint) {
+                  modelData[frontBack][0].printImageURL = activePrint?.highresurl
+                }
+                setModelData({ ...modelData })
+  
+                break;
+              default:
+              // modelData[frontBack][i].color = activeColor;
+              // modelData[frontBack][i].printImageURL = activePrint?.highresurl
+              // setModelData({...modelData})
+            }
+  
           }
-
-        }
-        await canvasModelInit(.3, modelData, frontBack, canvasRef, mannequin);
+          await canvasModelInit(10, modelData, frontBack, canvasRef, mannequin);        
       }
       drawManequin()
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeGarment, activeColor, activePrint, activeCategory, activeImgUrl, activeType, frontBack]);
+  }, [activeGarment, activeColor, activePrint, activeCategory, activeImgUrl, activeType, frontBack,silhouettes,Object.keys(silhouettes).length]);
 
   function changRange(e: ChangeEvent<HTMLInputElement>) {
     // console.log(e.target.value);
