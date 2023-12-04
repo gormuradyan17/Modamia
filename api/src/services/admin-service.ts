@@ -734,26 +734,29 @@ class AdminService {
                 })
                 if (garment?._id) {
 
-                    tops?.map(async (bottom: any) => {
+                    tops?.map(async (top: Record<string, any>) => {
                         await GarmentSilhouettesModel.create({
-                            silhouette_id: bottom,
+                            silhouette_id: top?.id,
                             garment_id: garment?._id,
+                            order: top?.order || 1,
                             silhouetteType: 'tops'
                         })
                     })
 
-                    bottoms?.map(async (bottom: any) => {
+                    bottoms?.map(async (bottom: Record<string, any>) => {
                         await GarmentSilhouettesModel.create({
-                            silhouette_id: bottom,
+                            silhouette_id: bottom?.id,
                             garment_id: garment?._id,
+                            order: bottom?.order || 1,
                             silhouetteType: 'bottoms'
                         })
                     })
 
-                    sleeves?.map(async (bottom: any) => {
+                    sleeves?.map(async (sleeve: Record<string, any>) => {
                         await GarmentSilhouettesModel.create({
-                            silhouette_id: bottom,
+                            silhouette_id: sleeve?.id,
                             garment_id: garment?._id,
+                            order: sleeve?.order || 1,
                             silhouetteType: 'sleeves'
                         })
                     })

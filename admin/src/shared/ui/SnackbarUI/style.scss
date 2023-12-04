@@ -1,0 +1,33 @@
+@use 'variables';
+
+.SnackbarStyles {
+    position: relative;
+    width: 100%;
+    width: 100%;
+    border-radius: 16px;
+    box-shadow: 0 10px 15px rgba(0,0,0,.15);
+    &.error {
+        background-color: #c72c41;
+        .headingUI {
+            color: #fff !important;
+        }
+    }
+    &.success {
+        background-color: variables.$appColor;
+        .headingUI {
+            color: #fff !important;
+        }
+    }
+    &.info {
+        background-color: #4d4d4d;
+        .headingUI {
+            color: #fff !important;
+        }
+    }
+    &.warning {
+        background-color: #fca652;
+        .headingUI {
+            color: #fff !important;
+        }
+    }
+}

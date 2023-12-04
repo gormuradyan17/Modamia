@@ -4,7 +4,7 @@ import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAvSilhouettes } from "services/silhouetteService";
 import { getAvMannequins } from "services/mannequinService";
-import { garmentDetails, resetGarmentState } from "redux/reducers/garmentReducer";
+import { garmentDetails, resetGarmentState, setGarmentFullState, setGarmentState } from "redux/reducers/garmentReducer";
 import { ButtonUI } from "shared/ui/ButtonUI/ButtonUI";
 import { editGarment } from "shared/api/dataApi";
 import InputUI from "shared/ui/InputUI/InputUI";
@@ -16,6 +16,8 @@ import GarmentsMannequinsList from "../newGarment/GarmentsMannequinsList";
 import { getAvGarments, getSelectedGarment } from "services/garmentService";
 import { useParams } from "react-router-dom";
 import './style.scss'
+import useSnackbar from "shared/ui/SnackbarUI/hook/useSnackbar";
+import { Variant } from "shared/ui/SnackbarUI/container/SnackbarContainer";
 
 const GarmentElement = () => {
 
@@ -32,6 +34,8 @@ const GarmentElement = () => {
             dispatch(resetGarmentState())
         }
     }, [])
+
+    const { appendSnackbar } = useSnackbar()
 
     useEffect(() => {
         if (id) getSelectedGarment(dispatch, id)
@@ -60,6 +64,11 @@ const GarmentElement = () => {
         if (isApproved) {
             const data = { ...copyDetails, id }
             await editGarment(data)
+            await appendSnackbar(Variant.success, {
+                autoHideDuration: 3000,
+                message: 'Garment successfully updated!'
+            })
+            await dispatch(setGarmentFullState(copyDetails))
         }
     }
 
@@ -75,13 +84,32 @@ const GarmentElement = () => {
         if (id) {
             const copyDetailsData: ObjectType = structuredClone(copyDetails)
             const data = copyDetailsData[name];
-            const idx = data?.findIndex((itemId: string) => id === itemId)
+            const idx = data?.findIndex((item: ObjectType) => item.id === id)
             if (idx !== -1) data.splice(idx, 1)
-            else data.push(id)
+            else data.push({
+                id,
+                order: 1
+            })
             setCopyDetails({
                 ...copyDetails,
                 [name]: data
             })
+        }
+    }
+
+    const setGarmentOrderlist = (data: ObjectType, id: string, name: string) => {
+        if (id) {
+            const { value } = data;
+            const copyData = structuredClone(copyDetails)
+            const dataCopy = copyData[name];
+            const idx = dataCopy?.findIndex((item: ObjectType) => item.id === id)
+            if (idx !== -1) {
+                dataCopy[idx].order = value
+                setCopyDetails({
+                    ...copyDetails,
+                    [name]: dataCopy
+                })
+            }
         }
     }
 
@@ -125,6 +153,7 @@ const GarmentElement = () => {
                         content={topSilhouettes}
                         srcBase={BASE_UPLOADS_SILHOUETTES_TOPS_URL}
                         callback={(id: string) => setGarmentlist(id, 'tops')}
+                        callbackDropdown={setGarmentOrderlist}
                         type='tops'
                         details={copyDetails}
                     />
@@ -133,6 +162,7 @@ const GarmentElement = () => {
                         content={bottomSilhouettes}
                         srcBase={BASE_UPLOADS_SILHOUETTES_BOTTOMS_URL}
                         callback={(id: string) => setGarmentlist(id, 'bottoms')}
+                        callbackDropdown={setGarmentOrderlist}
                         type='bottoms'
                         details={copyDetails}
                     />
@@ -141,6 +171,7 @@ const GarmentElement = () => {
                         content={sleeveSilhouettes}
                         srcBase={BASE_UPLOADS_SILHOUETTES_SLEEVES_URL}
                         callback={(id: string) => setGarmentlist(id, 'sleeves')}
+                        callbackDropdown={setGarmentOrderlist}
                         type='sleeves'
                         details={copyDetails}
                     />

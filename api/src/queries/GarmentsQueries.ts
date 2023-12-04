@@ -52,7 +52,12 @@ export const getGarmentsQuery = async (isAdmin: boolean = false) => {
                                 if: {
                                     $eq: ['$silhouette.type', 'Top']
                                 },
-                                then: '$silhouette',
+                                then: {
+                                    $mergeObjects: [
+                                        '$silhouette',
+                                        { order: '$order' }
+                                    ]
+                                },
                                 else: null
                             }
                         }
@@ -63,7 +68,12 @@ export const getGarmentsQuery = async (isAdmin: boolean = false) => {
                                 if: {
                                     $eq: ['$silhouette.type', 'Bottom']
                                 },
-                                then: '$silhouette',
+                                then: {
+                                    $mergeObjects: [
+                                        '$silhouette',
+                                        { order: '$order' }
+                                    ]
+                                },
                                 else: null
                             }
                         }
@@ -74,7 +84,12 @@ export const getGarmentsQuery = async (isAdmin: boolean = false) => {
                                 if: {
                                     $eq: ['$silhouette.type', 'Sleeve']
                                 },
-                                then: '$silhouette',
+                                then: {
+                                    $mergeObjects: [
+                                        '$silhouette',
+                                        { order: '$order' }
+                                    ]
+                                },
                                 else: null
                             }
                         }
@@ -150,7 +165,12 @@ export const getGarmentsQuery = async (isAdmin: boolean = false) => {
                                     { $ne: ['$silhouette.type', 'Sleeve'] }
                                 ]
                             },
-                            then: '$silhouette',
+                            then: {
+                                $mergeObjects: [
+                                    '$silhouette',
+                                    { order: '$order' }
+                                ]
+                            },
                             else: null
                         }
                     }
@@ -164,7 +184,12 @@ export const getGarmentsQuery = async (isAdmin: boolean = false) => {
                                     { $ne: ['$silhouette.type', 'Sleeve'] }
                                 ]
                             },
-                            then: '$silhouette',
+                            then: {
+                                $mergeObjects: [
+                                    '$silhouette',
+                                    { order: '$order' }
+                                ]
+                            },
                             else: null
                         }
                     }
@@ -173,7 +198,12 @@ export const getGarmentsQuery = async (isAdmin: boolean = false) => {
                     $push: {
                         $cond: {
                             if: { $eq: ['$silhouette.type', 'Sleeve'] },
-                            then: '$silhouette',
+                            then: {
+                                $mergeObjects: [
+                                    '$silhouette',
+                                    { order: '$order' }
+                                ]
+                            },
                             else: null
                         }
                     }
@@ -307,10 +337,15 @@ export const getGarmentQuery = async (garment_id: string = '', isAdmin: boolean 
                                 if: {
                                     $eq: ['$silhouette.type', 'Top']
                                 },
-                                then: '$silhouette',
+                                then: {
+                                    $mergeObjects: [
+                                        '$silhouette',
+                                        { order: '$order' }
+                                    ]
+                                },
                                 else: null
-                            }
-                        }
+                            },
+                        },
                     },
                     bottoms: {
                         $push: {
@@ -318,7 +353,12 @@ export const getGarmentQuery = async (garment_id: string = '', isAdmin: boolean 
                                 if: {
                                     $eq: ['$silhouette.type', 'Bottom']
                                 },
-                                then: '$silhouette',
+                                then: {
+                                    $mergeObjects: [
+                                        '$silhouette',
+                                        { order: '$order' }
+                                    ]
+                                },
                                 else: null
                             }
                         }
@@ -329,7 +369,12 @@ export const getGarmentQuery = async (garment_id: string = '', isAdmin: boolean 
                                 if: {
                                     $eq: ['$silhouette.type', 'Sleeve']
                                 },
-                                then: '$silhouette',
+                                then: {
+                                    $mergeObjects: [
+                                        '$silhouette',
+                                        { order: '$order' }
+                                    ]
+                                },
                                 else: null
                             }
                         }
@@ -349,7 +394,7 @@ export const getGarmentQuery = async (garment_id: string = '', isAdmin: boolean 
                                 cond: {
                                     $ne: ['$$top', null]
                                 }
-                            }
+                            },
                         },
                         bottoms: {
                             $filter: {
@@ -390,7 +435,12 @@ export const getGarmentQuery = async (garment_id: string = '', isAdmin: boolean 
                                     { $ne: ['$silhouette.type', 'Sleeve'] }
                                 ]
                             },
-                            then: '$silhouette',
+                            then: {
+                                $mergeObjects: [
+                                    '$silhouette',
+                                    { order: '$order' }
+                                ]
+                            },
                             else: null
                         }
                     }
@@ -404,7 +454,12 @@ export const getGarmentQuery = async (garment_id: string = '', isAdmin: boolean 
                                     { $ne: ['$silhouette.type', 'Sleeve'] }
                                 ]
                             },
-                            then: '$silhouette',
+                            then: {
+                                $mergeObjects: [
+                                    '$silhouette',
+                                    { order: '$order' }
+                                ]
+                            },
                             else: null
                         }
                     }
@@ -413,7 +468,12 @@ export const getGarmentQuery = async (garment_id: string = '', isAdmin: boolean 
                     $push: {
                         $cond: {
                             if: { $eq: ['$silhouette.type', 'Sleeve'] },
-                            then: '$silhouette',
+                            then: {
+                                $mergeObjects: [
+                                    '$silhouette',
+                                    { order: '$order' }
+                                ]
+                            },
                             else: null
                         }
                     }
@@ -494,27 +554,34 @@ export const getGarmentQuery = async (garment_id: string = '', isAdmin: boolean 
     ]);
 }
 
-export const updateGarments = async (garment_id: string, list: Array<string>, type: string) => {
+export const updateGarments = async (garment_id: string, list: Array<Record<string, any>>, type: string) => {
 
     if (!list?.length) {
         // Case 1: If array is empty, remove all fields where garment_id is garment_id
         return await GarmentSilhouettesModel.deleteMany({ garment_id, silhouetteType: type });
     } else {
         // Case 2: If array is not empty, add new items and update existing ones
-        for (const silhouetteId of list) {
+        for (const silhouette of list) {
 
-            const existingItem = await GarmentSilhouettesModel.findOne({
+            const query = {
                 garment_id,
-                silhouette_id: silhouetteId
-            });
+                silhouette_id: silhouette?.id,
+            }
 
+            const existingItem = await GarmentSilhouettesModel.findOne(query);
             if (!existingItem) {
                 // Item does not exist in the database, add it
                 await GarmentSilhouettesModel.create({
                     garment_id,
-                    silhouette_id: silhouetteId,
-                    silhouetteType: type
+                    silhouette_id: silhouette?.id,
+                    order: silhouette?.order,
+                    silhouetteType: type,
                 });
+            } else {
+                const queryUpdate = { '_id': existingItem?._id };
+                await GarmentSilhouettesModel.findOneAndUpdate(queryUpdate, {
+                    order: silhouette?.order,
+                }, { upsert: true });
             }
         }
 
@@ -522,7 +589,7 @@ export const updateGarments = async (garment_id: string, list: Array<string>, ty
         return await GarmentSilhouettesModel.deleteMany({
             garment_id,
             silhouetteType: type,
-            silhouette_id: { $nin: list },
+            $nor: list.map(item => ({ silhouette_id: item.id, order: item.order }))
         });
     }
 }

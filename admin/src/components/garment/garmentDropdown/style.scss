@@ -1,0 +1,87 @@
+@use 'variables';
+
+.GarmentDropdown {
+    z-index: 10;
+    width: 100%;
+    margin: 0 auto;
+
+    &__button {
+        font-weight: 700;
+        font-size: 14px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #777;
+        border-radius: 2px;
+        height: 30px;
+        width: 30px;
+        padding: 10px;
+        box-sizing: border-box;
+        min-height: initial;
+        margin: 0 0 0 5px;
+        border: 1px solid variables.$appColor;
+        background-color: #fff;
+
+        &._active {
+            box-shadow: 0 2px 3px 0 rgba(34, 36, 38, .15);
+            border-bottom-color: #fff;
+        }
+        &._error {
+            border: 1px solid red;
+            animation: shake 0.2s ease-in-out 0s 2;
+        }
+    
+        &._errorShake {
+            animation: shake 0.2s ease-in-out 0s 2;
+        }
+    }
+
+    &__option {
+        cursor: pointer;
+        padding: 10px 15px;
+        color: variables.$appColor;
+        background-color: #f9f1f1;
+        font-size: 16px;
+        user-select: none;
+        transition: .3s all ease 0s;
+
+        &._selected, &:hover {
+            background-color: #fff;
+        }
+    }
+
+    &__icon {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    &._disabled {
+        .GarmentDropdown__button {
+            border-color: lightgray;
+            opacity: .5;
+        }
+    }
+}
+
+.GarmentDropdown__content {
+    box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    outline: 1px solid #aa8a75;
+    height: auto;
+    max-height: 300px;
+    width: max-content;
+    display: none;
+    overflow-y: auto;
+    border-radius: 5px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    &._active {
+        box-shadow: 0 2px 3px 0 rgba(34, 36, 38, .15);
+        display: block;
+    }
+}
