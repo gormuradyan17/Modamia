@@ -121,6 +121,24 @@ const NewSilhouette = ({
                     callback={handleInputChange}
                 />
                 <InputUI
+                    placeholder="Width"
+                    value={sDetails?.width}
+                    label="Width*"
+                    name="width"
+                    type='number'
+                    error={errors?.width?.message || ''}
+                    callback={handleInputChange}
+                />
+                <InputUI
+                    placeholder="Height"
+                    value={sDetails?.height}
+                    label="Height*"
+                    name="height"
+                    type='number'
+                    error={errors?.height?.message || ''}
+                    callback={handleInputChange}
+                />
+                <InputUI
                     placeholder="Tags"
                     value={sDetails?.tags}
                     label="Tags"

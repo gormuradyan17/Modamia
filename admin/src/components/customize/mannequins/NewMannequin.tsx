@@ -24,7 +24,9 @@ const NewMannequin = ({
     const [data, setData] = useState<ObjectType>({
         name: '',
         fronturl: '',
-        backurl: ''
+        backurl: '',
+        width: null,
+        height: null,
     })
     const [errors, setErrors] = useState<ObjectType>({})
     const [fileErrors, setFileErrors] = useState<ObjectType>({})
@@ -86,6 +88,24 @@ const NewMannequin = ({
                     label="Name*"
                     name="name"
                     error={errors?.name?.message || ''}
+                    callback={handleInputChange}
+                />
+                <InputUI
+                    placeholder="Width"
+                    value={data?.width}
+                    label="Width*"
+                    name="width"
+                    type='number'
+                    error={errors?.width?.message || ''}
+                    callback={handleInputChange}
+                />
+                <InputUI
+                    placeholder="Height"
+                    value={data?.height}
+                    label="Height*"
+                    name="height"
+                    type='number'
+                    error={errors?.height?.message || ''}
                     callback={handleInputChange}
                 />
                 <div className="new-mannequin-zone">

@@ -428,7 +428,7 @@ class AdminService {
 
     async addMannequin(req: any) {
         try {
-            const { name } = req.body
+            const { name, width, height } = req.body
             const { fronturl = '', backurl = '' } = req.files || {}
             let frontImage = '', backImage = '';
             await createMannequinsDirsIfNotExists()
@@ -449,7 +449,9 @@ class AdminService {
             const mannequin = await MannequinModel.create({
                 name,
                 fronturl: frontImage,
-                backurl: backImage
+                backurl: backImage,
+                width,
+                height
             })
             return mannequin;
 
@@ -460,7 +462,7 @@ class AdminService {
 
     async editMannequin(req: Record<string, any>) {
         try {
-            const { name, _id } = req.body
+            const { name, _id, width, height } = req.body
             const { fronturl = '', backurl = '' } = req.files || {}
             let frontImage = '', backImage = '';
             await createMannequinsDirsIfNotExists()
@@ -482,7 +484,9 @@ class AdminService {
             await MannequinModel.findOneAndUpdate(query, {
                 name,
                 ...(frontImage && { fronturl: frontImage }),
-                ...(backImage && { backurl: backImage })
+                ...(backImage && { backurl: backImage }),
+                width,
+                height,
             }, { upsert: true });
             const mannequins = await MannequinModel.find({})
             return mannequins
@@ -513,7 +517,7 @@ class AdminService {
 
     async addSilhouette(req: any) {
         try {
-            const { name, price, tags = '', type, orientation, mannequin_id } = req.body
+            const { name, price, tags = '', type, orientation, mannequin_id, width, height } = req.body
             const { silhouetteurl } = req.files || {}
             let silhouetteImage = ''
             await createSilhouettesDirsIfNotExists()
@@ -532,7 +536,9 @@ class AdminService {
                 type,
                 orientation,
                 silhouetteurl: silhouetteImage || '',
-                mannequin_id
+                mannequin_id,
+                width,
+                height
             })
             return silhouette;
 
@@ -543,7 +549,7 @@ class AdminService {
 
     async editSilhouette(req: Record<string, any>) {
         try {
-            const { name, price, tags = '', type, orientation, silhouetteurl: silhouetteurlB, _id, mannequin_id } = req.body
+            const { name, price, tags = '', type, orientation, _id, mannequin_id, width, height } = req.body
             const { silhouetteurl } = req.files || {}
             let silhouetteImage = ''
             await createSilhouettesDirsIfNotExists()
@@ -568,7 +574,9 @@ class AdminService {
                         tags,
                         type,
                         orientation,
-                        mannequin_id
+                        mannequin_id,
+                        width,
+                        height
                     }, { upsert: true });
                     return await SilhouetteModel.find({})
                 }
@@ -586,6 +594,8 @@ class AdminService {
                         type,
                         orientation,
                         mannequin_id,
+                        width,
+                        height,
                         ...(silhouetteImage && { silhouetteurl: silhouetteImage }),
                     }, { upsert: true });
                     return await SilhouetteModel.find({})
@@ -596,7 +606,9 @@ class AdminService {
                     tags,
                     type,
                     orientation,
-                    mannequin_id
+                    mannequin_id,
+                    width,
+                    height
                 }, { upsert: true });
                 return await SilhouetteModel.find({})
             }

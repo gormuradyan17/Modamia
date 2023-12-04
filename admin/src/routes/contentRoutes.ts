@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-import { faChildReaching, faDiceD20, faDroplet, faHome, faLayerGroup, faMaximize, faPalette, faPaw, faPersonDress, faRibbon, faShirt, faUserGroup } from '@fortawesome/free-solid-svg-icons';
+import { faChildReaching, faDiceD20, faDroplet, faHome, faLayerGroup, faMaximize, faPalette, faPaw, faPersonDress, faPersonHalfDress, faRibbon, faShirt, faUserGroup } from '@fortawesome/free-solid-svg-icons';
 
 const AUTH = {
 	PAGE_404: lazy(() => import('pages/auth/page404/Page404')),
@@ -172,7 +172,7 @@ export const adminPages = [
 		id: 'garments',
 		text: 'Garments',
 		path: '/garments',
-		icon: faUserGroup,
+		icon: faPersonHalfDress,
 		element: LANDING.GARMENTS,
 		exact: true,
 		// children: GarmentsChildrens,

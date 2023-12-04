@@ -34,6 +34,14 @@ const SilhouetteSchema: SilhouetteInterface = new mongoose.Schema(
       type: String,
       required: false,
     },
+    width: {
+      type: String,
+      required: true,
+    },
+    height: {
+      type: String,
+      required: true,
+    }
   },
   { timestamps: true }
 );

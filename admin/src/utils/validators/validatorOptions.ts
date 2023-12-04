@@ -30,6 +30,12 @@ export const printFilesOptions = {
 export const mannequinFormOptions = {
     name: [
         {rule: { required : true }, error: {message: 'Name is required'} },
+    ],
+    width: [
+        {rule: { required : true }, error: {message: 'Width is required'} },
+    ],
+    height: [
+        {rule: { required : true }, error: {message: 'Height is required'} },
     ]
 }
 
@@ -56,6 +62,12 @@ export const silhouetteFormOptions = {
     orientation: [
         {rule: { required : true }, error: {message: 'Orientation is required'} },
     ],
+    width: [
+        {rule: { required : true }, error: {message: 'Width is required'} },
+    ],
+    height: [
+        {rule: { required : true }, error: {message: 'Height is required'} },
+    ]
 }
 
 export const silhouetteFilesOptions = {
