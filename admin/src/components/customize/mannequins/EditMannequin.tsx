@@ -69,6 +69,24 @@ const EditMannequin = ({
                     error={errors?.name?.message || ''}
                     callback={handleInputChange}
                 />
+                <InputUI
+                    placeholder="Width"
+                    value={mannequin?.width}
+                    label="Width*"
+                    name="width"
+                    type='number'
+                    error={errors?.width?.message || ''}
+                    callback={handleInputChange}
+                />
+                <InputUI
+                    placeholder="Height"
+                    value={mannequin?.height}
+                    label="Height*"
+                    name="height"
+                    type='number'
+                    error={errors?.height?.message || ''}
+                    callback={handleInputChange}
+                />
             </div>
             <div className="new-mannequin-zone">
                 <HeadingUI text='Front image' size='18px' color={appColor} />

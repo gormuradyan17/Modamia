@@ -4,11 +4,8 @@ import { ButtonUI } from "shared/ui/ButtonUI/ButtonUI";
 import HeadingUI from "shared/ui/HeadingUI/HeadingUI";
 import InputUI from "shared/ui/InputUI/InputUI";
 import './style.scss'
-import { ObjectType, getActiveItemTypeById, getDropdownOptionsFromItemsVariants } from "shared/helpers/helpers";
+import { ObjectType} from "shared/helpers/helpers";
 import ColorPickerUI from "shared/ui/ColorPickerUI/ColorPickerUI";
-import DropdownUI from "shared/ui/DropdownUI/DropdownUI";
-import { useSelector } from "react-redux";
-import { colorsVariants } from "redux/reducers/colorReducer";
 
 interface Props {
     callback: CallbackSkeletonType,
@@ -28,8 +25,6 @@ const EditColor = ({
     defaultColor
 }: Props) => {
 
-    // const colorVariants = getDropdownOptionsFromItemsVariants(useSelector(colorsVariants)) || [{}]
-
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { target: { name, value } } = event
         setColor({ ...color, [name]: value })
@@ -41,11 +36,6 @@ const EditColor = ({
             ...obj
         })
     }
-
-    // const handleDropdownChange = (data: ObjectType) => {
-    //     const value = data.id
-    //     setColor({ ...color, colorVariant: value })
-    // }
 
     return (
         <div className="new-color">

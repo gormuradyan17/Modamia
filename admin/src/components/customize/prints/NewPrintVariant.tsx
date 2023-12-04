@@ -1,7 +1,8 @@
 import { faSave } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ChangeEvent, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { printsVariants, setPrintsVariantsData } from "redux/reducers/printReducer";
 import { getAvPrintsVariants } from "services/printService";
 import { addPrintVariant } from "shared/api/dataApi";
 import InputUI from "shared/ui/InputUI/InputUI";
@@ -11,7 +12,7 @@ const NewPrintVariant = () => {
     const [isVisible, setIsVisible] = useState<boolean>(false)
     const [newVariant, setNewVariant] = useState<string>('')
     const dispatch = useDispatch()
-    
+    const variants = useSelector(printsVariants)
     const toggleNewVariant = () => {
         setIsVisible(!isVisible)
         setNewVariant('')
@@ -27,8 +28,12 @@ const NewPrintVariant = () => {
         if (newVariant) {
             await addPrintVariant({
                 name: newVariant
+            }).then(res => {
+                dispatch(setPrintsVariantsData([
+                    ...variants,
+                    res
+                ]))
             })
-            await getAvPrintsVariants(dispatch)
         }
         setIsVisible(!isVisible)
         setNewVariant('')

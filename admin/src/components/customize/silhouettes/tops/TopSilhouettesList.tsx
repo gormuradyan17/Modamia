@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { availableSilhouettes } from 'redux/reducers/silhouetteReducer';
+import { availableSilhouettes, setSilhouetteData } from 'redux/reducers/silhouetteReducer';
 import { BASE_UPLOADS_SILHOUETTES_TOPS_URL } from 'shared/constants/genericApiRoutes';
 import { ObjectType, appColor } from 'shared/helpers/helpers';
 import { ButtonUI } from 'shared/ui/ButtonUI/ButtonUI';
@@ -24,7 +24,7 @@ const TopSilhouettesList = () => {
     const [isVisible, setIsVisible] = useState<boolean>(false)
     const [errors, setErrors] = useState<ObjectType>({})
     const dispatch = useDispatch()
-    
+
     const [isVisibleRemove, setIsVisibleRemove] = useState<boolean>(false)
     const [removableItem, setRemovableItem] = useState<ObjectType>({})
 
@@ -69,8 +69,9 @@ const TopSilhouettesList = () => {
             formData.append(key, newPrint[key]);
         });
 
-        await updateSilhouette(formData)
-        await getAvSilhouettes(dispatch)
+        await updateSilhouette(formData).then(res => {
+            dispatch(setSilhouetteData(res))
+        })
         closePopup()
     }
 
@@ -81,9 +82,10 @@ const TopSilhouettesList = () => {
 
     const removeItem = async () => {
         if (removableItem?._id) {
-           await removeSilhouette(removableItem)
-           await getAvSilhouettes(dispatch)
-           setIsVisibleRemove(false)
+            await removeSilhouette(removableItem).then(res => {
+                dispatch(setSilhouetteData(res))
+            })
+            setIsVisibleRemove(false)
         }
     }
 

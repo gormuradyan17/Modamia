@@ -87,6 +87,24 @@ const EditSilhouette = ({
                     callback={handleInputChange}
                 />
                 <InputUI
+                    placeholder="Width"
+                    value={silhouette?.width}
+                    label="Width*"
+                    name="width"
+                    type='number'
+                    error={errors?.width?.message || ''}
+                    callback={handleInputChange}
+                />
+                <InputUI
+                    placeholder="Height"
+                    value={silhouette?.height}
+                    label="Height*"
+                    name="height"
+                    type='number'
+                    error={errors?.height?.message || ''}
+                    callback={handleInputChange}
+                />
+                <InputUI
                     placeholder="Tags"
                     value={silhouette?.tags}
                     label="Tags"

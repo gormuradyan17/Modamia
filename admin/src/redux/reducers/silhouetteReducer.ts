@@ -15,6 +15,8 @@ export const defaultSilhouetteState: SilhouetteInterface = {
 	tags: '',
 	type: '',
 	orientation: '',
+	width: null,
+	height: null,
 }
 
 const initialState: stateProps = {

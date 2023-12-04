@@ -3,7 +3,7 @@ import MainHead from "layout/MainHead/MainHead";
 import { useEffect, useState } from "react";
 import HeadingUI from "shared/ui/HeadingUI/HeadingUI";
 import { useDispatch, useSelector } from "react-redux";
-import { availableColors, colorDetails, resetColorState } from "redux/reducers/colorReducer";
+import { availableColors, colorDetails, resetColorState, setColorData } from "redux/reducers/colorReducer";
 import { addColor } from "shared/api/dataApi";
 import PopupUI from "shared/ui/PopupUI/PopupUI";
 import NewColor from "./NewColor";
@@ -33,8 +33,12 @@ const ColorsPallette = () => {
         const errors = formValidator(cDetails, colorFormOptions);
         if (errors) {return setErrors(errors)};
         if (Object.keys(errors).length) {setErrors({})};
-        await addColor(cDetails)
-        await getAvColors(dispatch)
+        await addColor(cDetails).then(res => {
+            dispatch(setColorData([
+                ...colors,
+                res
+            ]))
+        })
         closePopup()
     }
 

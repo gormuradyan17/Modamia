@@ -1,6 +1,6 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setSilhouetteState, silhouetteDetails } from "redux/reducers/silhouetteReducer";
+import { availableSilhouettes, setSilhouetteData, setSilhouetteState, silhouetteDetails } from "redux/reducers/silhouetteReducer";
 import { ArrayType, ObjectType, appColor, silhouetteOrientationOptions, silhouetteTypeOptions } from "shared/helpers/helpers";
 import { CallbackSkeletonType } from "shared/objectModels/GenericModel";
 import { ButtonUI } from "shared/ui/ButtonUI/ButtonUI";
@@ -25,6 +25,7 @@ const NewSilhouette = ({
 }: Props) => {
 
     const dispatch = useDispatch()
+    const silhouettes = useSelector(availableSilhouettes)
     const sDetails = useSelector(silhouetteDetails)
     const [errors, setErrors] = useState<ObjectType>({})
     const [fileErrors, setFileErrors] = useState<ObjectType>({})
@@ -45,8 +46,12 @@ const NewSilhouette = ({
         });
         if (file?.[0]) {
             formData.append('silhouetteurl', file[0]);
-            await addSilhouette(formData)
-            await getAvSilhouettes(dispatch)
+            await addSilhouette(formData).then(res => {
+                dispatch(setSilhouetteData([
+                    ...silhouettes,
+                    res
+                ]))
+            })
             closePopup()
         } else {
             setFileErrors({
@@ -113,6 +118,24 @@ const NewSilhouette = ({
                     label="Price*"
                     name="price"
                     error={errors?.price?.message || ''}
+                    callback={handleInputChange}
+                />
+                <InputUI
+                    placeholder="Width"
+                    value={sDetails?.width}
+                    label="Width*"
+                    name="width"
+                    type='number'
+                    error={errors?.width?.message || ''}
+                    callback={handleInputChange}
+                />
+                <InputUI
+                    placeholder="Height"
+                    value={sDetails?.height}
+                    label="Height*"
+                    name="height"
+                    type='number'
+                    error={errors?.height?.message || ''}
                     callback={handleInputChange}
                 />
                 <InputUI
