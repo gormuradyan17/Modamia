@@ -11,6 +11,12 @@
     flex-direction: column;
 }
 
+.silhouettes-list-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+} 
+
 .silhouettes-list-silhouette {
     display: flex;
     justify-content: center;
@@ -18,6 +24,7 @@
     margin: 10px 20px 10px 0;
     flex-direction: column;
     flex: 0 0 120px;
+    position: relative;
 }
 
 .silhouettes-list-text {

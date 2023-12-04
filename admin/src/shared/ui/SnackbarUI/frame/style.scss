@@ -1,0 +1,27 @@
+.SnackbarFrameStyles {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    z-index: 1;
+    position: relative;
+    margin-right: 20px;
+}
+
+.SnackbarIconFrameStyles {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.SnackbarIconStyles {
+    display: flex;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+}

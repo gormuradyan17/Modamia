@@ -58,10 +58,26 @@ const NewGarment = () => {
         if (id) {
             const copyDetails = structuredClone(details)
             const data = copyDetails[name];
-            const idx = data?.findIndex((itemId: string) => id === itemId)
+            const idx = data?.findIndex((item: ObjectType) => item.id === id)
             if (idx !== -1) data.splice(idx, 1)
-            else data.push(id)
+            else data.push({
+                id,
+                order: 1
+            })
             dispatch(setGarmentState({ name, value: data }))
+        }
+    }
+
+    const setGarmentOrderlist = (data: ObjectType, id: string, name: string) => {
+        if (id) {
+            const { value } = data;
+            const copyDetails = structuredClone(details)
+            const dataCopy = copyDetails[name];
+            const idx = dataCopy?.findIndex((item: ObjectType) => item.id === id)
+            if (idx !== -1) {
+                dataCopy[idx].order = value
+            }
+            dispatch(setGarmentState({ name, value: dataCopy }))
         }
     }
 
@@ -102,6 +118,7 @@ const NewGarment = () => {
                         content={topSilhouettes}
                         srcBase={BASE_UPLOADS_SILHOUETTES_TOPS_URL}
                         callback={(id: string) => setGarmentlist(id, 'tops')}
+                        callbackDropdown={setGarmentOrderlist}
                         type='tops'
                         details={details}
                     />
@@ -110,6 +127,7 @@ const NewGarment = () => {
                         content={bottomSilhouettes}
                         srcBase={BASE_UPLOADS_SILHOUETTES_BOTTOMS_URL}
                         callback={(id: string) => setGarmentlist(id, 'bottoms')}
+                        callbackDropdown={setGarmentOrderlist}
                         type='bottoms'
                         details={details}
                     />
@@ -118,6 +136,7 @@ const NewGarment = () => {
                         content={sleeveSilhouettes}
                         srcBase={BASE_UPLOADS_SILHOUETTES_SLEEVES_URL}
                         callback={(id: string) => setGarmentlist(id, 'sleeves')}
+                        callbackDropdown={setGarmentOrderlist}
                         type='sleeves'
                         details={details}
                     />

@@ -18,7 +18,14 @@
     margin: 10px 20px 10px 0;
     flex-direction: column;
     flex: 0 0 120px;
+    position: relative;
 }
+
+.silhouettes-list-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+} 
 
 .silhouettes-list-text {
     margin-bottom: 5px;
@@ -118,6 +125,7 @@
     max-width: 200px;
 }
 .garment-input {
+    min-width: 30px;
     width: 30px;
     height: 30px;
     margin: 0 auto;

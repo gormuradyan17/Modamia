@@ -26,20 +26,28 @@ export const getSelectedGarment = (dispatch: any, id: string) => {
         }
 
         toDispatch.tops = tops.reduce((acc: any, item: ObjectType) => {
-            acc.push(item?._id)
+            acc.push({
+                id: item?._id,
+                order: item?.order || 1
+            })
             return acc
         },[])
 
         toDispatch.bottoms = bottoms.reduce((acc: any, item: ObjectType) => {
-            acc.push(item?._id)
+            acc.push({
+                id: item?._id,
+                order: item?.order || 1
+            })
             return acc
         },[])
 
         toDispatch.sleeves = sleeves.reduce((acc: any, item: ObjectType) => {
-            acc.push(item?._id)
+            acc.push({
+                id: item?._id,
+                order: item?.order || 1
+            })
             return acc
         },[])
-
         dispatch(setGarmentFullState(toDispatch))
 
     }).catch(err => console.log(err))

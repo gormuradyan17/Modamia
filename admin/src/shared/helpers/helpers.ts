@@ -125,3 +125,23 @@ export const getIsEditGarmentApproved = (details: ObjectType, copyDetails: Objec
     && copyDetails?.mannequin_id
     && (copyDetails?.tops?.length || copyDetails?.bottoms?.length || copyDetails?.sleeves?.length)
 }
+
+export const getSilhouetteOrderOptions = () => {
+  return [
+    {
+      id: 1,
+      text: 'Order 1',
+      value: 1,
+    },
+    {
+      id: 2,
+      text: 'Order 2',
+      value: 2,
+    },
+    {
+      id: 3,
+      text: 'Order 3',
+      value: 3,
+    }
+  ]
+}

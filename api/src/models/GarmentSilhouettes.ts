@@ -21,6 +21,10 @@ const GarmentSilhouetteSchema: GarmentSilhouetteInterface = new mongoose.Schema(
         silhouetteType: {
             type: String,
             required: true,
+        },
+        order: {
+            type: Number,
+            required: true
         }
     },
     { timestamps: true }
