@@ -1,15 +1,14 @@
 import { setGarmentData, setGarmentFullState } from "redux/reducers/garmentReducer"
 import { getGarment, getGarments, searchGarment } from "shared/api/dataApi"
-import { ObjectType } from "shared/helpers/helpers"
 
 export const getAvGarments = (dispatch: any) => {
-    getGarments().then(res => {
-        dispatch(setGarmentData(res))
+    getGarments().then(res => {        
+        dispatch(setGarmentData(res))        
     }).catch(err => console.log(err))
 }
 
 export const getSelectedGarment = (dispatch: any, id: string) => {
-    getGarment({ garment_id: id }).then(res => {
+    getGarment({ garment_id: id }).then(res => {                
         dispatch(setGarmentFullState(res))
     }).catch(err => console.log(err))
 }
