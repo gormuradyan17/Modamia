@@ -84,3 +84,4 @@ export const EDIT_SIZE_URL = API_URL_ADMIN + 'edit-size'
 
 export const GARMENTS_URL = API_URL + 'garments'
 export const GARMENT_URL = API_URL + 'garment'
+export const SEARCH_GARMENT_URL = API_URL + 'search-garment'

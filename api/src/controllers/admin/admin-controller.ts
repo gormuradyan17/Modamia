@@ -353,6 +353,16 @@ class AdminController {
         }
     }
 
+    async searchGarmentsAdmin(req: any, res: any, next: any) {
+        try {
+            const { criteria = '' } = req.body
+            const garments = await adminService.searchGarmentsAdmin(criteria);
+            return res.json(garments);
+        } catch (error) {
+            next(error);
+        }
+    }
+
 }
 
 export default new AdminController()

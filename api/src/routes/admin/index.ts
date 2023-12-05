@@ -66,5 +66,6 @@ router.post('/edit-garment', adminController.editGarment)
 router.post('/remove-garment', adminController.removeGarment)
 router.post('/garments-admin', adminController.getGarmentsAdmin)
 router.post('/garment-admin', adminController.getGarmentAdmin)
+router.post('/search-garment-admin', adminController.searchGarmentsAdmin)
 
 export default router

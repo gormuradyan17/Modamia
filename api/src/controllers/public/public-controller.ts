@@ -96,6 +96,16 @@ class PublicController {
         }
     }
 
+    async searchGarments(req: any, res: any, next: any) {
+        try {
+            const { criteria = '' } = req.body
+            const garments = await publicService.searchGarments(criteria);
+            return res.json(garments);
+        } catch (error) {
+            next(error);
+        }
+    }
+
     async getSilhouettes(req: any, res: any, next: any) {
         try {
             const silhouettes = await publicService.getSilhouettes();
