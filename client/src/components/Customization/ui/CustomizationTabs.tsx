@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import './style.scss'
 import { ArrayType } from 'shared/helpers/helpers';
-import {setActiveCategory} from "../../../redux/reducers/mannequinReducer";
+import {setActiveCategory, setMannequinType} from "../../../redux/reducers/mannequinReducer";
 import {useDispatch} from "react-redux";
 import ColorPalette from 'components/Customization/contents/ColorContent/ColorPalette';
 import HeadingUI from 'shared/ui/HeadingUI/HeadingUI';
@@ -51,6 +51,7 @@ const CustomizationTabs = ({
                                     onClick={() => {
                                         setActiveTab(tab.heading);
                                         const category = tab.heading === 'Color' ? 'color' : tab.heading === 'Print' ? 'print' : tab.heading === 'Silhouette' ? "silhouette" : "" ;
+                                        tab.heading==="Color" ||  tab.heading === 'Print' ?  dispatch(setMannequinType("all")) :dispatch(setMannequinType("fronts"))
                                         updateActiveCategory(category);
                                     }}
                                 >

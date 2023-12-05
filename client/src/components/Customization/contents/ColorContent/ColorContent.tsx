@@ -57,7 +57,7 @@ const ColorContent = () => {
     dispatch(setMannequinType(type));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[type]);
-  
+
   return (
     <div className="color-content-body">
       <div className="btnContent">
