@@ -1,3 +1,4 @@
+import { width } from './../constants/genericApiRoutes';
 import { AnimationObject } from "shared/objectModels/AnimationModel";
 import NoSleeve from 'assets/images/no-sleeve.png'
 import { BASE_UPLOADS_SILHOUETTES_URL } from "shared/constants/genericApiRoutes";
@@ -77,41 +78,42 @@ export const NoSleeveObject = {
   "silhouetteurl": NoSleeve,
 }
 
-export const getCanvasDefaultImages = (silhouettes: ObjectType) => {
+export const getCanvasDefaultImages = (
+  silhouettes: ObjectType,
+  positionSilhouette: string,
+  positionClothes: string
+) => {
+  const baseUploadsSilhouettesUrl = BASE_UPLOADS_SILHOUETTES_URL;
 
-  const frontBottom = silhouettes?.fronts?.bottoms[0]?.silhouetteurl ? `${BASE_UPLOADS_SILHOUETTES_URL}fronts/${silhouettes?.fronts?.bottoms[0]?.silhouetteurl}` : ''
-  const frontTop = silhouettes?.fronts?.tops[0]?.silhouetteurl ? `${BASE_UPLOADS_SILHOUETTES_URL}fronts/${silhouettes?.fronts?.tops[0]?.silhouetteurl}` : ''
-  const backBottom = silhouettes?.backs?.bottoms[0]?.silhouetteurl ? `${BASE_UPLOADS_SILHOUETTES_URL}backs/${silhouettes?.backs?.bottoms[0]?.silhouetteurl}` : ''
-  const backTop = silhouettes?.backs?.tops[0]?.silhouetteurl ? `${BASE_UPLOADS_SILHOUETTES_URL}backs/${silhouettes?.backs?.tops[0]?.silhouetteurl}` : ''
-  const sleeveTop = silhouettes?.sleeves?.tops[0]?.silhouetteurl ? `${BASE_UPLOADS_SILHOUETTES_URL}sleeves/${silhouettes?.sleeves?.tops[0]?.silhouetteurl}` : ''
 
-  return {
-    frontBottom,
-    frontTop,
-    backBottom,
-    backTop,
-    sleeveTop
+  const getPositionInfo = (position: string, clothingType: string) => {
+    
+    const category = silhouettes?.[position]?.[clothingType][0];
+    
+    const url= positionSilhouette==="sleeves" ? clothingType="sleeves" : clothingType
+    return {
+      src: category?.silhouetteurl
+        ? `${baseUploadsSilhouettesUrl}${url}/${category.silhouetteurl}`
+        : '',
+      position:positionClothes,
+      color:"",
+      printImageURL:"",
+      activeCategory:"",
+      price:category?.price,
+      width:category?.width,
+      height:category?.height,
+      order:category?.order,
+      id:category?._id,
+    };
+  };
+  
+  if (positionSilhouette === 'fronts') {  
+    return positionClothes === 'top' ? getPositionInfo('fronts', 'tops') : getPositionInfo('fronts', 'bottoms');
+  } else if (positionSilhouette === 'backs') {    
+    return positionClothes === 'top' ? getPositionInfo('backs', 'tops') : getPositionInfo('backs', 'bottoms');
+  }else if(positionSilhouette==="sleeves"){
+    return positionClothes === 'top' ? getPositionInfo('fronts', 'tops') : getPositionInfo('fronts', 'bottoms');
+
   }
-}
+};
 
-// export const getPosition=(position:string,img:any,newImage:any,context:any,width:number,height:number)=>{
-//   if (position === "top") {
-// 		img.width = 483
-// 		img.height = 327
-// 		if (newImage.naturalHeight === img.height) {
-// 			context.drawImage(img, 0, 0, width, img.height);
-// 		} else {
-// 			context.drawImage(img, 0, 0, width, height);
-// 		}
-// 	} else if (position === 'bottom') {
-// 		img.width = 483
-// 		img.height = 821
-// 		if (newImage.naturalHeight === img.height) {
-// 			context.drawImage(img, 0, height - img.height, width, height);
-
-// 		} else {
-// 			context.drawImage(img, 0, 0, width, height);
-
-// 		}
-// 	}
-// }

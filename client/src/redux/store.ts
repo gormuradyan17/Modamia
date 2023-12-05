@@ -7,7 +7,7 @@ import silhouetteReducer from './reducers/silhouetteReducer';
 import sizeReducer from "./reducers/sizeReducer"
 import addToCartReducer from "./reducers/addToCartReducer"
 import garmentReducer from "./reducers/garmentReducer"
-
+import modelDataReducer from "./reducers/modelData"
 export const store = configureStore({
   reducer: {
     asideReducer,
@@ -17,6 +17,7 @@ export const store = configureStore({
     silhouetteReducer,
     sizeReducer,
     addToCartReducer,
-    garmentReducer
+    garmentReducer,
+    modelDataReducer
   },
 })
