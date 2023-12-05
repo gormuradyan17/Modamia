@@ -7,7 +7,7 @@ import PrintPaletteModel from '../models/PrintPalette'
 import MannequinModel from '../models/Mannequin'
 import SilhouetteModel from '../models/Silhouette'
 import SizeModel from '../models/Size'
-import { getGarmentQuery, getGarmentsQuery } from '../queries/GarmentsQueries'
+import { getGarmentQuery, getGarmentsQuery, searchGarmentsQuery } from '../queries/GarmentsQueries'
 
 class PublicService {
 
@@ -143,8 +143,13 @@ class PublicService {
     }
     
     async getGarment(garment_id: string = '') {
-        const garment = await getGarmentQuery(garment_id, false)
+        const garment = await getGarmentQuery(garment_id)
         return garment?.[0] || {}
+    }
+    
+    async searchGarments(criteria: string) {
+        const garments = await searchGarmentsQuery(criteria)
+        return garments
     }
 
     async getSilhouettes() {

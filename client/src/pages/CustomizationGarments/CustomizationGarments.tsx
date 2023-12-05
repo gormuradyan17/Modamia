@@ -2,12 +2,14 @@ import Container from 'layout/Container/Container';
 import './style.scss'
 import HeadingUI from 'shared/ui/HeadingUI/HeadingUI';
 import { ObjectType, appColor } from 'shared/helpers/helpers';
-import { useEffect } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { BASE_UPLOADS_MANNEQUINS_FRONTS_URL } from 'shared/constants/genericApiRoutes';
 import { useNavigate } from 'react-router-dom';
 import { availableGarments, setGarmentFullState } from 'redux/reducers/garmentReducer';
-import { getAvGarments } from 'services/garmentService';
+import { getAvGarments, getAvSearchedGarments } from 'services/garmentService';
+import InputUI from 'shared/ui/InputUI/InputUI';
+import useDebounce from 'utils/hooks/useDebounce';
 
 const CustomizationMannequins = () => {
 
@@ -19,7 +21,7 @@ const CustomizationMannequins = () => {
 
     useEffect(() => {
         getAvGarments(dispatch)
-    },[])
+    }, [])
 
     const handleGarmentClick = (garment: ObjectType) => {
         if (garment?._id) {
@@ -28,18 +30,47 @@ const CustomizationMannequins = () => {
         }
     }
 
+    const [criteria, setCriteria] = useState<string>('');
+    const debouncedCriteria = useDebounce(criteria, 500);
+  
+    const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+      const { target: { value } } = event
+      if (!criteria?.length) return setCriteria(value.trim())
+      setCriteria(value)
+    }
+  
+    const getGarmentsByCriteria = async () => {
+      return await getAvSearchedGarments(dispatch,criteria)
+    }
+  
+    useEffect(() => {
+      getGarmentsByCriteria()
+    }, [debouncedCriteria]);
+
     return (
         <div className="customization-mannequins">
             <Container>
-                <HeadingUI size='22px' align='center' color={appColor} text='Select garment to continue customization' />
-                {!!garments?.length && <div className='customization-mannequins-list'>
-                    {garments.map((garment: ObjectType) => {
-                        const { mannequin = {}, garment: activeGarment } = garment;
-                        return <div key={mannequin?._id} className='customization-mannequin' onClick={() => handleGarmentClick(activeGarment)}>
-                            <img src={`${BASE_UPLOADS_MANNEQUINS_FRONTS_URL}${mannequin?.fronturl}`} alt={mannequin?.name} />
-                        </div>
-                    })}
-                </div>}
+                <div className="customization-body">
+                    <HeadingUI size='22px' align='center' color={appColor} text='Select garment to continue customization' />
+                    <InputUI
+                        classN='customization-search'
+                        name="search"
+                        callback={handleInputChange}
+                        value={criteria}
+                        placeholder='Search Garment'
+                    />
+                    {!!garments?.length && <div className='customization-mannequins-list'>
+                        {garments.map((garment: ObjectType) => {
+                            const { mannequin = {}, garment: activeGarment } = garment;
+                            return <div key={mannequin?._id} className='customization-elem' onClick={() => handleGarmentClick(activeGarment)}>
+                                <HeadingUI text={activeGarment?.name} size='16px' color={appColor} align='center' />
+                                <div className="customization-mannequin">
+                                    <img src={`${BASE_UPLOADS_MANNEQUINS_FRONTS_URL}${mannequin?.fronturl}`} alt={mannequin?.name} />
+                                </div>
+                            </div>
+                        })}
+                    </div>}
+                </div>
             </Container>
         </div>
     );

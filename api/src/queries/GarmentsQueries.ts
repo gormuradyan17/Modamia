@@ -1,4 +1,5 @@
 import GarmentSilhouettesModel from '../models/GarmentSilhouettes'
+import GarmentModel from '../models/Garment'
 import mongoose from 'mongoose';
 
 export const getGarmentsQuery = async (isAdmin: boolean = false) => {
@@ -37,7 +38,8 @@ export const getGarmentsQuery = async (isAdmin: boolean = false) => {
         },
         {
             $unwind: '$mannequin'
-        }
+        },
+        { $sort: { 'garment.createdAt': 1 } },
     ]
     if (isAdmin) {
         return await GarmentSilhouettesModel.aggregate([
@@ -156,132 +158,19 @@ export const getGarmentsQuery = async (isAdmin: boolean = false) => {
             $group: {
                 _id: '$garment_id',
                 garment: { $first: '$garment' },
-                fronts: {
-                    $push: {
-                        $cond: {
-                            if: {
-                                $and: [
-                                    { $eq: ['$silhouette.orientation', 'Front'] },
-                                    { $ne: ['$silhouette.type', 'Sleeve'] }
-                                ]
-                            },
-                            then: {
-                                $mergeObjects: [
-                                    '$silhouette',
-                                    { order: '$order' }
-                                ]
-                            },
-                            else: null
-                        }
-                    }
-                },
-                backs: {
-                    $push: {
-                        $cond: {
-                            if: {
-                                $and: [
-                                    { $eq: ['$silhouette.orientation', 'Back'] },
-                                    { $ne: ['$silhouette.type', 'Sleeve'] }
-                                ]
-                            },
-                            then: {
-                                $mergeObjects: [
-                                    '$silhouette',
-                                    { order: '$order' }
-                                ]
-                            },
-                            else: null
-                        }
-                    }
-                },
-                sleeves: {
-                    $push: {
-                        $cond: {
-                            if: { $eq: ['$silhouette.type', 'Sleeve'] },
-                            then: {
-                                $mergeObjects: [
-                                    '$silhouette',
-                                    { order: '$order' }
-                                ]
-                            },
-                            else: null
-                        }
-                    }
-                }
             }
         },
         {
             $project: {
                 _id: 0,
                 garment: '$garment',
-                silhouettes: {
-                    fronts: {
-                        tops: {
-                            $filter: {
-                                input: '$fronts',
-                                as: 'front',
-                                cond: {
-                                    $and: [
-                                        { $ne: ['$$front', null] },
-                                        { $eq: ['$$front.type', 'Top'] }
-                                    ]
-                                }
-                            }
-                        },
-                        bottoms: {
-                            $filter: {
-                                input: '$fronts',
-                                as: 'front',
-                                cond: {
-                                    $and: [
-                                        { $ne: ['$$front', null] },
-                                        { $eq: ['$$front.type', 'Bottom'] }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    backs: {
-                        tops: {
-                            $filter: {
-                                input: '$backs',
-                                as: 'back',
-                                cond: {
-                                    $and: [
-                                        { $ne: ['$$back', null] },
-                                        { $eq: ['$$back.type', 'Top'] }
-                                    ]
-                                }
-                            }
-                        },
-                        bottoms: {
-                            $filter: {
-                                input: '$backs',
-                                as: 'back',
-                                cond: {
-                                    $and: [
-                                        { $ne: ['$$back', null] },
-                                        { $eq: ['$$back.type', 'Bottom'] }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    sleeves: {
-                        $filter: {
-                            input: '$sleeves',
-                            as: 'sleeve',
-                            cond: { $ne: ['$$sleeve', null] }
-                        }
-                    }
-                }
             }
         },
         ...bottomQuery
     ]);
 }
 
-export const getGarmentQuery = async (garment_id: string = '', isAdmin: boolean = false) => {
+export const getGarmentQuery = async (garment_id: string = '', isAdmin: boolean = false, isSearchable: boolean = false) => {
     const topQuery = [
         {
             $match: {
@@ -426,135 +315,139 @@ export const getGarmentQuery = async (garment_id: string = '', isAdmin: boolean 
             $group: {
                 _id: '$garment_id',
                 garment: { $first: '$garment' },
-                fronts: {
-                    $push: {
-                        $cond: {
-                            if: {
-                                $and: [
-                                    { $eq: ['$silhouette.orientation', 'Front'] },
-                                    { $ne: ['$silhouette.type', 'Sleeve'] }
-                                ]
-                            },
-                            then: {
-                                $mergeObjects: [
-                                    '$silhouette',
-                                    { order: '$order' }
-                                ]
-                            },
-                            else: null
+                ...(!isSearchable && {
+                    fronts: {
+                        $push: {
+                            $cond: {
+                                if: {
+                                    $and: [
+                                        { $eq: ['$silhouette.orientation', 'Front'] },
+                                        { $ne: ['$silhouette.type', 'Sleeve'] }
+                                    ]
+                                },
+                                then: {
+                                    $mergeObjects: [
+                                        '$silhouette',
+                                        { order: '$order' }
+                                    ]
+                                },
+                                else: null
+                            }
+                        }
+                    },
+                    backs: {
+                        $push: {
+                            $cond: {
+                                if: {
+                                    $and: [
+                                        { $eq: ['$silhouette.orientation', 'Back'] },
+                                        { $ne: ['$silhouette.type', 'Sleeve'] }
+                                    ]
+                                },
+                                then: {
+                                    $mergeObjects: [
+                                        '$silhouette',
+                                        { order: '$order' }
+                                    ]
+                                },
+                                else: null
+                            }
+                        }
+                    },
+                    sleeves: {
+                        $push: {
+                            $cond: {
+                                if: { $eq: ['$silhouette.type', 'Sleeve'] },
+                                then: {
+                                    $mergeObjects: [
+                                        '$silhouette',
+                                        { order: '$order' }
+                                    ]
+                                },
+                                else: null
+                            }
                         }
                     }
-                },
-                backs: {
-                    $push: {
-                        $cond: {
-                            if: {
-                                $and: [
-                                    { $eq: ['$silhouette.orientation', 'Back'] },
-                                    { $ne: ['$silhouette.type', 'Sleeve'] }
-                                ]
-                            },
-                            then: {
-                                $mergeObjects: [
-                                    '$silhouette',
-                                    { order: '$order' }
-                                ]
-                            },
-                            else: null
-                        }
-                    }
-                },
-                sleeves: {
-                    $push: {
-                        $cond: {
-                            if: { $eq: ['$silhouette.type', 'Sleeve'] },
-                            then: {
-                                $mergeObjects: [
-                                    '$silhouette',
-                                    { order: '$order' }
-                                ]
-                            },
-                            else: null
-                        }
-                    }
-                }
+                }),
             }
         },
         {
             $project: {
                 _id: 0,
                 garment: '$garment',
-                silhouettes: {
-                    fronts: {
-                        tops: {
-                            $filter: {
-                                input: '$fronts',
-                                as: 'front',
-                                cond: {
-                                    $and: [
-                                        { $ne: ['$$front', null] },
-                                        { $eq: ['$$front.type', 'Top'] }
-                                    ]
+                ...(!isSearchable && {
+                    silhouettes: {
+                        fronts: {
+                            tops: {
+                                $filter: {
+                                    input: '$fronts',
+                                    as: 'front',
+                                    cond: {
+                                        $and: [
+                                            { $ne: ['$$front', null] },
+                                            { $eq: ['$$front.type', 'Top'] }
+                                        ]
+                                    }
+                                }
+                            },
+                            bottoms: {
+                                $filter: {
+                                    input: '$fronts',
+                                    as: 'front',
+                                    cond: {
+                                        $and: [
+                                            { $ne: ['$$front', null] },
+                                            { $eq: ['$$front.type', 'Bottom'] }
+                                        ]
+                                    }
                                 }
                             }
                         },
-                        bottoms: {
-                            $filter: {
-                                input: '$fronts',
-                                as: 'front',
-                                cond: {
-                                    $and: [
-                                        { $ne: ['$$front', null] },
-                                        { $eq: ['$$front.type', 'Bottom'] }
-                                    ]
+                        backs: {
+                            tops: {
+                                $filter: {
+                                    input: '$backs',
+                                    as: 'back',
+                                    cond: {
+                                        $and: [
+                                            { $ne: ['$$back', null] },
+                                            { $eq: ['$$back.type', 'Top'] }
+                                        ]
+                                    }
+                                }
+                            },
+                            bottoms: {
+                                $filter: {
+                                    input: '$backs',
+                                    as: 'back',
+                                    cond: {
+                                        $and: [
+                                            { $ne: ['$$back', null] },
+                                            { $eq: ['$$back.type', 'Bottom'] }
+                                        ]
+                                    }
                                 }
                             }
+                        },
+                        sleeves: {
+                            tops: {
+                                $filter: {
+                                    input: '$sleeves',
+                                    as: 'sleeve',
+                                    cond: { $ne: ['$$sleeve', null] }
+                                }
+                            },
+                            bottoms: []
                         }
-                    },
-                    backs: {
-                        tops: {
-                            $filter: {
-                                input: '$backs',
-                                as: 'back',
-                                cond: {
-                                    $and: [
-                                        { $ne: ['$$back', null] },
-                                        { $eq: ['$$back.type', 'Top'] }
-                                    ]
-                                }
-                            }
-                        },
-                        bottoms: {
-                            $filter: {
-                                input: '$backs',
-                                as: 'back',
-                                cond: {
-                                    $and: [
-                                        { $ne: ['$$back', null] },
-                                        { $eq: ['$$back.type', 'Bottom'] }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    sleeves: {
-                        tops: {
-                            $filter: {
-                                input: '$sleeves',
-                                as: 'sleeve',
-                                cond: { $ne: ['$$sleeve', null] }
-                            }
-                        },
-                        bottoms: []
                     }
-                }
+                })
             }
         },
         ...bottomQuery
     ]);
 }
 
-export const updateGarments = async (garment_id: string, list: Array<Record<string, any>>, type: string) => {
+export const updateGarmentsQuery = async (garment_id: string, list: Array<Record<string, any>>, type: string) => {
 
     if (!list?.length) {
         // Case 1: If array is empty, remove all fields where garment_id is garment_id
@@ -592,4 +485,44 @@ export const updateGarments = async (garment_id: string, list: Array<Record<stri
             $nor: list.map(item => ({ silhouette_id: item.id, order: item.order }))
         });
     }
+}
+
+export const searchGarmentsQuery = async (criteria: string = '', isAdmin: boolean = false) => {
+    const topQuery = [
+        {
+            $lookup: {
+                from: 'mannequins',
+                localField: 'mannequin_id',
+                foreignField: '_id',
+                as: 'mannequin'
+            }
+        },
+        {
+            $unwind: '$mannequin',
+        },
+    ]
+    const data = await GarmentModel.aggregate([
+        ...topQuery,
+        {
+            $match: {
+                $or: [
+                    { 'name': { $regex: criteria, $options: 'i' } },
+                    { 'mannequin.name': { $regex: criteria, $options: 'i' } },
+                ],
+            },
+        },
+        {
+            $project: { _id: '$_id', }
+        }
+    ]);
+
+    const res = await Promise.all(data.map(async (item: Record<string, any>) => {
+        const garment = await getGarmentQuery(item?._id, isAdmin, true);
+        return garment?.[0];
+    }));
+
+    // Filter out undefined values
+    const filteredRes = res.filter((garment) => garment !== undefined);
+
+    return filteredRes;
 }

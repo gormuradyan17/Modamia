@@ -45,6 +45,7 @@ import {
 	GARMENTS_ADMIN_URL,
 	GARMENT_URL,
 	GARMENT_ADMIN_URL,
+	SEARCH_GARMENT_ADMIN_URL,
 } from "shared/constants/genericApiRoutes";
 import { BaseApi } from "./baseApi";
 
@@ -295,4 +296,9 @@ export const editGarment = (body: Record<string, any> = {}) => {
 export const removeGarment = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');
 	return http.post(REMOVE_GARMENT_URL, body)
+}
+
+export const searchGarment = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(SEARCH_GARMENT_ADMIN_URL, body)
 }

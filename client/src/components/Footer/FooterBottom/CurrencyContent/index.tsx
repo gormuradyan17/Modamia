@@ -2,7 +2,7 @@ import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 import data from "./currency.json";
 import { useState, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import useClickOutSide from "utils/useClickOutside";
+import useClickOutSide from "utils/hooks/useClickOutside";
 
 const CurrencyContent = () => {
   const [isActive, setIsActive] = useState(false);
