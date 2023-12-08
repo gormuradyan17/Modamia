@@ -4,13 +4,13 @@ import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAvSilhouettes } from "services/silhouetteService";
 import { getAvMannequins } from "services/mannequinService";
-import { garmentDetails, resetGarmentState, setGarmentFullState, setGarmentState } from "redux/reducers/garmentReducer";
+import { garmentDetails, resetGarmentState, setGarmentFullState } from "redux/reducers/garmentReducer";
 import { ButtonUI } from "shared/ui/ButtonUI/ButtonUI";
 import { editGarment } from "shared/api/dataApi";
 import InputUI from "shared/ui/InputUI/InputUI";
 import { BASE_UPLOADS_SILHOUETTES_BOTTOMS_URL, BASE_UPLOADS_SILHOUETTES_SLEEVES_URL, BASE_UPLOADS_SILHOUETTES_TOPS_URL } from "shared/constants/genericApiRoutes";
 import { availableSilhouettes } from "redux/reducers/silhouetteReducer";
-import { ObjectType, getIsEditGarmentApproved } from "shared/helpers/helpers";
+import { ObjectType, getDropdownOptionsFromItemsPalettes, getIsEditGarmentApproved } from "shared/helpers/helpers";
 import GarmentsSilhouettesListWrapper from "../newGarment/GarmentsSilhouettesListWrapper";
 import GarmentsMannequinsList from "../newGarment/GarmentsMannequinsList";
 import { getAvGarments, getSelectedGarment } from "services/garmentService";
@@ -18,6 +18,11 @@ import { useParams } from "react-router-dom";
 import './style.scss'
 import useSnackbar from "shared/ui/SnackbarUI/hook/useSnackbar";
 import { Variant } from "shared/ui/SnackbarUI/container/SnackbarContainer";
+import { colorsPalettes } from "redux/reducers/colorReducer";
+import { getAvColorsPalettes } from "services/colorService";
+import GarmentDropdownCheckbox from "../garmentDropdownCheckbox/GarmentDropdownCheckbox";
+import { printsPalettes } from "redux/reducers/printReducer";
+import { getAvPrintsPalettes } from "services/printService";
 
 const GarmentElement = () => {
 
@@ -30,6 +35,8 @@ const GarmentElement = () => {
         getAvGarments(dispatch)
         getAvSilhouettes(dispatch)
         getAvMannequins(dispatch)
+        getAvColorsPalettes(dispatch)
+        getAvPrintsPalettes(dispatch)
         return () => {
             dispatch(resetGarmentState())
         }
@@ -59,7 +66,12 @@ const GarmentElement = () => {
         return silhouettes.filter((silhouette: ObjectType) => silhouette?.type === 'Sleeve')
     }, [silhouettes])
 
+    const colorPalettes = useSelector(colorsPalettes)
+    const colorVariants = getDropdownOptionsFromItemsPalettes(colorPalettes) || [{}]
 
+    const printPalettes = useSelector(printsPalettes)
+    const printVariants = getDropdownOptionsFromItemsPalettes(printPalettes) || [{}]
+    
     const saveGarment = async () => {
         if (isApproved) {
             const data = { ...copyDetails, id }
@@ -126,9 +138,27 @@ const GarmentElement = () => {
 
     const isApproved = getIsEditGarmentApproved(details, copyDetails)
 
+    const handleDropdownChange = (event: ChangeEvent<HTMLInputElement>, option: ObjectType, type: string) => {
+        const { target: { checked } } = event
+        const { id } = option;
+        if (id) {
+            const copyDetailsData: ObjectType = structuredClone(copyDetails)
+            const palettes = copyDetailsData?.palettes;
+            if (checked) palettes?.[type].push(id)
+            else {
+                const idx = palettes?.[type].findIndex((item: string) => item === id)
+                if (idx !== -1) palettes?.[type].splice(idx, 1)
+            }
+            setCopyDetails({
+                ...copyDetails,
+                palettes
+            })
+        }
+    }
+
     return (
         <div>
-            <MainHead text="New Garment" />
+            <MainHead text="Edit Garment" />
             <MainBody>
                 <div className="garments-list-content">
                     <ButtonUI
@@ -144,10 +174,28 @@ const GarmentElement = () => {
                         name='name'
                         label="Name*"
                     />
-                    <GarmentsMannequinsList
-                        details={copyDetails}
-                        callback={(event: ChangeEvent<HTMLInputElement>, id: string) => setGarmentMannequin(event, id)}
-                    />
+                    <div className="garments-list-top">
+                        <GarmentsMannequinsList
+                            details={copyDetails}
+                            callback={(event: ChangeEvent<HTMLInputElement>, id: string) => setGarmentMannequin(event, id)}
+                        />
+                        <div className="garments-list-dropdowns">
+                            <GarmentDropdownCheckbox
+                                options={colorVariants}
+                                onChange={(e: any, option: ObjectType) => handleDropdownChange(e, option, 'colors')}
+                                label="Color palettes"
+                                details={copyDetails}
+                                type='colors'
+                            />
+                            <GarmentDropdownCheckbox
+                                options={printVariants}
+                                onChange={(e: any, option: ObjectType) => handleDropdownChange(e, option, 'prints')}
+                                label="Print palettes"
+                                details={copyDetails}
+                                type='prints'
+                            />
+                        </div>
+                    </div>
                     <GarmentsSilhouettesListWrapper
                         header='Top Silhouettes'
                         content={topSilhouettes}

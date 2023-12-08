@@ -14,7 +14,11 @@ export const defaultGarmentState = {
     mannequin_id: '',
     tops: [],
     bottoms: [],
-    sleeves: []
+    sleeves: [],
+	palettes: {
+		colors: [],
+		prints: []
+	}
 }
 
 const initialState: stateProps = {

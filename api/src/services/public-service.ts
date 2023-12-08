@@ -144,7 +144,7 @@ class PublicService {
     
     async getGarment(garment_id: string = '') {
         const garment = await getGarmentQuery(garment_id)
-        return garment?.[0] || {}
+        return garment
     }
     
     async searchGarments(criteria: string) {

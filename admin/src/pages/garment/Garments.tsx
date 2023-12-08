@@ -17,12 +17,14 @@ const Garments = () => {
     const dispatch = useDispatch()
 
     const [criteria, setCriteria] = useState<string>('');
+    const [searched, setSearched] = useState<boolean>(false);
     const debouncedCriteria = useDebounce(criteria, 500);
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { target: { value } } = event
         if (!criteria?.length) return setCriteria(value.trim())
         setCriteria(value)
+        // setSearched(true)
     }
 
     const getGarmentsByCriteria = async () => {
@@ -30,7 +32,11 @@ const Garments = () => {
     }
 
     useEffect(() => {
-        getGarmentsByCriteria()
+        // console.log(searched, criteria)
+        // if (searched) {
+            getGarmentsByCriteria()
+            // setSearched(false)
+        // }
     }, [debouncedCriteria]);
 
     return (

@@ -12,6 +12,7 @@ import SizeModel from '../models/Size'
 import AdminModel from '../models/Admin'
 import GarmentModel from '../models/Garment'
 import GarmentSilhouettesModel from '../models/GarmentSilhouettes'
+import GarmentPalettesModel from '../models/GarmentPalettes'
 import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs'
 import mongoose from 'mongoose';
@@ -22,7 +23,7 @@ import AdminDto from '../dtos/admin-dto';
 import tokenService from './token-service';
 import ApiError from '../exceptions/api-error';
 import bcrypt from 'bcryptjs'
-import { getGarmentQuery, getGarmentsQuery, searchGarmentsQuery, updateGarmentsQuery } from '../queries/GarmentsQueries';
+import { getGarmentQuery, getGarmentsQuery, searchGarmentsQuery, updateGarmentPalettesQuery, updateGarmentsQuery } from '../queries/GarmentsQueries';
 
 class AdminService {
 
@@ -722,18 +723,19 @@ class AdminService {
         }
     }
 
-    // Size
+    // Garment
 
     async addGarment(req: any) {
         try {
-            const { bottoms = [], name = '', mannequin_id = '', sleeves = [], tops = [] } = req || {}
+            const { bottoms = [], name = '', mannequin_id = '', sleeves = [], tops = [], palettes = {} } = req || {}
             if (mannequin_id) {
                 const garment = await GarmentModel.create({
                     name,
                     mannequin_id
                 })
                 if (garment?._id) {
-
+                    const queryMannequin = { _id: mannequin_id}
+                    const mannequin = await MannequinModel.find(queryMannequin)
                     tops?.map(async (top: Record<string, any>) => {
                         await GarmentSilhouettesModel.create({
                             silhouette_id: top?.id,
@@ -741,6 +743,11 @@ class AdminService {
                             order: top?.order || 1,
                             silhouetteType: 'tops'
                         })
+                        const query = { _id: top?.id}
+                        await SilhouetteModel.findOneAndUpdate(query, {
+                            width: mannequin?.[0]?.width || '',
+                            height: mannequin?.[0]?.height || '',
+                        }, { upsert: true });
                     })
 
                     bottoms?.map(async (bottom: Record<string, any>) => {
@@ -750,6 +757,11 @@ class AdminService {
                             order: bottom?.order || 1,
                             silhouetteType: 'bottoms'
                         })
+                        const query = { _id: bottom?.id}
+                        await SilhouetteModel.findOneAndUpdate(query, {
+                            width: mannequin?.[0]?.width || '',
+                            height: mannequin?.[0]?.height || '',
+                        }, { upsert: true });
                     })
 
                     sleeves?.map(async (sleeve: Record<string, any>) => {
@@ -759,7 +771,32 @@ class AdminService {
                             order: sleeve?.order || 1,
                             silhouetteType: 'sleeves'
                         })
+                        const query = { _id: sleeve?.id}
+                        await SilhouetteModel.findOneAndUpdate(query, {
+                            width: mannequin?.[0]?.width || '',
+                            height: mannequin?.[0]?.height || '',
+                        }, { upsert: true });
                     })
+
+                    if(Object.keys(palettes)?.length) {
+                        const { colors = [], prints = []} = palettes;
+                        
+                        colors?.map(async (palette_id: string) => {
+                            await GarmentPalettesModel.create({
+                                palette_id,
+                                garment_id: garment?._id,
+                                palette_type: 'colors'
+                            })
+                        })
+
+                        prints?.map(async (palette_id: string) => {
+                            await GarmentPalettesModel.create({
+                                palette_id,
+                                garment_id: garment?._id,
+                                palette_type: 'prints'
+                            })
+                        })
+                    }
                 }
                 return garment;
             }
@@ -777,12 +814,12 @@ class AdminService {
 
     async getGarmentAdmin(garment_id: string = '') {
         const garment = await getGarmentQuery(garment_id, true)
-        return garment?.[0] || {}
+        return garment
     }
 
     async editGarment(req: Record<string, any>) {
         try {
-            const { bottoms = [], name = '', mannequin_id = '', sleeves = [], tops = [], id = '' } = req || {}
+            const { bottoms = [], name = '', mannequin_id = '', sleeves = [], tops = [], id = '', palettes = {} } = req || {}
             if (id) {
                 const query = { '_id': id };
                 await GarmentModel.findOneAndUpdate(query, {
@@ -790,9 +827,13 @@ class AdminService {
                     mannequin_id
                 }, { upsert: true });
 
-                await updateGarmentsQuery(id, tops, 'tops')
-                await updateGarmentsQuery(id, bottoms, 'bottoms')
-                await updateGarmentsQuery(id, sleeves, 'sleeves')
+                await updateGarmentsQuery(id, tops, 'tops', mannequin_id)
+                await updateGarmentsQuery(id, bottoms, 'bottoms', mannequin_id)
+                await updateGarmentsQuery(id, sleeves, 'sleeves', mannequin_id)
+                if (Object.keys(palettes)?.length) {
+                    await updateGarmentPalettesQuery(id, palettes?.colors, 'colors')
+                    await updateGarmentPalettesQuery(id, palettes?.prints, 'prints')
+                }
                 const garments = await GarmentModel.find({})
                 return garments
             }

@@ -34,7 +34,7 @@ const PalettesList = ({
         setDraggableRow(row)
     };
 
-    const onDragOver = (e: any) => {
+    const onDragOver = (e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault();
     };
 

@@ -3,6 +3,7 @@ import { CallbackSkeletonType } from 'shared/objectModels/GenericModel';
 import HeadingUI from 'shared/ui/HeadingUI/HeadingUI';
 import InputUI from 'shared/ui/InputUI/InputUI';
 import GarmentDropdown from '../garmentDropdown/GarmentDropdown';
+import { useMemo, useState } from 'react';
 
 interface Props {
     header: string,
@@ -26,13 +27,47 @@ const GarmentsSilhouettesListWrapper = ({
 
     const options = getSilhouetteOrderOptions();
 
+    const [draggableVariant, setDraggableVariant] = useState<number>(0)
+    const [silhouettesList, setSilhouettesList] = useState<ArrayType>([])
+
+    useMemo(() => {
+        setSilhouettesList(content)
+    }, [content])
+
+    const onDragStart = (e: any, idx: number) => {
+        setDraggableVariant(idx)
+    };
+
+    const onDragOver = (e: any) => {
+        e.preventDefault();
+    };
+
+    const onDrop = async (e: any, idx: number) => {
+        e.preventDefault();
+        const fromElement = silhouettesList[draggableVariant]
+        const toElement = silhouettesList[idx]
+        if (fromElement && toElement && idx !== draggableVariant) {
+            const copySilhouettes = structuredClone(silhouettesList)
+            copySilhouettes[idx] = fromElement;
+            copySilhouettes[draggableVariant] = toElement;
+            setSilhouettesList(copySilhouettes)
+        }
+    };
+
     return (
         <div className='silhouettes-items'>
             <HeadingUI text={header} size="20px" />
             <div className="silhouettes-items-body customXScrollbar">
-                {content?.length ? content.map((silhouette: ObjectType) => {
+                {silhouettesList?.length ? silhouettesList.map((silhouette: ObjectType, idx: number) => {
                     const checked = details?.[type]?.find((top: ObjectType) => top.id === silhouette?._id)
-                    return <div className="silhouettes-list-silhouette" key={silhouette._id}>
+                    return <div
+                        className="silhouettes-list-silhouette"
+                        key={silhouette._id}
+                        draggable
+                        onDragStart={(e) => onDragStart(e, idx)}
+                        onDragOver={onDragOver}
+                        onDrop={(e) => onDrop(e, idx)}
+                    >
                         <HeadingUI classN="silhouettes-list-text _ellipsis" text={silhouette.name} color={appColor} size="16px" />
                         <div className="silhouettes-list-image">
                             <img src={`${srcBase}${silhouette.silhouetteurl}`} className="silhouettes-list-img" alt={silhouette.name} />
