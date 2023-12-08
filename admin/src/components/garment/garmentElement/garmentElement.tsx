@@ -4,7 +4,7 @@ import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAvSilhouettes } from "services/silhouetteService";
 import { getAvMannequins } from "services/mannequinService";
-import { garmentDetails, resetGarmentState, setGarmentFullState } from "redux/reducers/garmentReducer";
+import { defaultGarmentState, garmentDetails, resetGarmentState, setGarmentFullState } from "redux/reducers/garmentReducer";
 import { ButtonUI } from "shared/ui/ButtonUI/ButtonUI";
 import { editGarment } from "shared/api/dataApi";
 import InputUI from "shared/ui/InputUI/InputUI";

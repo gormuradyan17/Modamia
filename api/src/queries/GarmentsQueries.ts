@@ -382,10 +382,13 @@ export const getGarmentQuery = async (garment_id: string = '', isAdmin: boolean 
                 }
             }
         ])
-        result[0].palettes = palettes?.[0]?.palettes || []
+        result[0].palettes = palettes?.[0]?.palettes || {
+            colors: [],
+            prints: []
+        }
         return result?.[0] || {};
     }
-    return await GarmentSilhouettesModel.aggregate([
+    const result = await GarmentSilhouettesModel.aggregate([
         ...topQuery,
         {
             $group: {
@@ -521,6 +524,63 @@ export const getGarmentQuery = async (garment_id: string = '', isAdmin: boolean 
         },
         ...bottomQuery
     ]);
+
+    const palettes = await GarmentPalettesModel.aggregate([
+        {
+            $match: {
+                ...(garment_id && { garment_id: new mongoose.Types.ObjectId(garment_id) }),
+            }
+        },
+        {
+            $group: {
+                _id: "$garment_id",
+                colors: {
+                    $push: {
+                        $cond: {
+                            if: { $eq: ["$palette_type", "colors"] },
+                            then: "$palette_id",
+                            else: null
+                        }
+                    }
+                },
+                prints: {
+                    $push: {
+                        $cond: {
+                            if: { $eq: ["$palette_type", "prints"] },
+                            then: "$palette_id",
+                            else: null
+                        }
+                    }
+                }
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                palettes: {
+                    colors: {
+                        $filter: {
+                            input: "$colors",
+                            as: "color",
+                            cond: { $ne: ["$$color", null] }
+                        }
+                    },
+                    prints: {
+                        $filter: {
+                            input: "$prints",
+                            as: "print",
+                            cond: { $ne: ["$$print", null] }
+                        }
+                    }
+                }
+            }
+        }
+    ])
+    result[0].palettes = palettes?.[0]?.palettes || {
+        colors: [],
+        prints: []
+    }
+    return result?.[0] || {};
 }
 
 export const updateGarmentsQuery = async (garment_id: string, list: Array<Record<string, any>>, type: string, mannequin_id: string) => {
@@ -575,7 +635,7 @@ export const updateGarmentsQuery = async (garment_id: string, list: Array<Record
 export const updateGarmentPalettesQuery = async (garment_id: string, list: Array<Record<string, any>>, type: string) => {
 
     if (!list?.length) {
-        return await GarmentPalettesModel.deleteMany({ garment_id, garment_type: type });
+        return await GarmentPalettesModel.deleteMany({ garment_id: new mongoose.Types.ObjectId(garment_id), palette_type: type });
     } else {
         for (const paletteId of list) {
 

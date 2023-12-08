@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 
 import './style.scss'
 import { ArrayType } from 'shared/helpers/helpers';
-import {setActiveCategory, setMannequinType} from "../../../redux/reducers/mannequinReducer";
-import {useDispatch} from "react-redux";
+import { setActiveCategory, setMannequinType } from "../../../redux/reducers/mannequinReducer";
+import { useDispatch } from "react-redux";
 import ColorPalette from 'components/Customization/contents/ColorContent/ColorPalette';
 import HeadingUI from 'shared/ui/HeadingUI/HeadingUI';
 import PrintPalette from '../contents/PrintContent/PrintPalette';
@@ -12,12 +12,12 @@ interface Props {
     tabs: ArrayType
 }
 
-const CustomizationTabs = ({ 
-    tabs 
+const CustomizationTabs = ({
+    tabs
 }: Props) => {
-    
+
     const dispatch = useDispatch()
-    const [activeTab,setActiveTab] = useState<any>('')
+    const [activeTab, setActiveTab] = useState<any>('')
     const updateActiveCategory = (category: string) => {
         dispatch(setActiveCategory(category));
     }
@@ -26,37 +26,37 @@ const CustomizationTabs = ({
         if (tabs) {
             setActiveTab(tabs[0].heading)
         }
-    },[tabs])
+    }, [tabs])
 
-    const showContent = (tab:any) => {
+    const showContent = (tab: any) => {
         if (tab.heading === activeTab && activeTab === "Color") {
-          return <ColorPalette />;
+            return <ColorPalette />;
         }
-      
+
         if (tab.heading === activeTab && activeTab === "Print") {
-          return <PrintPalette/>;
+            return <PrintPalette />;
         }
         return <HeadingUI color='#000' text={tab.heading} size='18px' align='left' />;
-      };
-   
+    };
+
     return (
         <div className='CustomizationTabs'>
             <div className="CustomizationTabs-body">
                 <div className="CustomizationTabs-heads">
                     {
                         tabs && tabs.map((tab, index) => {
-                            return <div 
-                                    key={tab.id || index} 
-                                    className={`CustomizationTabs-head ${tab.heading === activeTab ? '_active' : ''}`}
-                                    onClick={() => {
-                                        setActiveTab(tab.heading);
-                                        const category = tab.heading === 'Color' ? 'color' : tab.heading === 'Print' ? 'print' : tab.heading === 'Silhouette' ? "silhouette" : "" ;
-                                       ( tab.heading==="Color" ||  tab.heading === 'Print') ?  dispatch(setMannequinType("all")) :dispatch(setMannequinType("fronts"))
-                                        updateActiveCategory(category);
-                                    }}
-                                >
-                                       {showContent(tab)}                          
-                    </div>
+                            return <div
+                                key={tab.id || index}
+                                className={`CustomizationTabs-head ${tab.heading === activeTab ? '_active' : ''}`}
+                                onClick={() => {
+                                    setActiveTab(tab.heading);
+                                    const category = tab.heading === 'Color' ? 'color' : tab.heading === 'Print' ? 'print' : tab.heading === 'Silhouette' ? "silhouette" : "";
+                                    (tab.heading === "Color" || tab.heading === 'Print') ? dispatch(setMannequinType("all")) : dispatch(setMannequinType("fronts"))
+                                    updateActiveCategory(category);
+                                }}
+                            >
+                                {showContent(tab)}
+                            </div>
                         })
                     }
                 </div>

@@ -34,7 +34,7 @@ const GarmentDropdownCheckbox = ({
                 {Boolean(options?.length) &&
                     options?.map((option: any, index: number) => {
                         const { id = '', name = '', colors = null } = option || {};
-                        const selected = details?.palettes?.[type]?.some((item: string) => item === id);
+                        const selected = details?.palettes?.[type]?.some((item: string) => item === id) || false;
                         return <label
                             key={id}
                             htmlFor={id}
@@ -46,7 +46,7 @@ const GarmentDropdownCheckbox = ({
                                 type='checkbox'
                                 name={id}
                                 id={id}
-                                defaultChecked={selected}
+                                checked={selected}
                                 onChange={(e) => onChange(e, option)}
                             />
                         </label>

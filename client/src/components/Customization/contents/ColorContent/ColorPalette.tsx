@@ -2,8 +2,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { activePaletteItem, colorsPalettes, colorsVariants, setActivePaletteItem } from "redux/reducers/colorReducer";
 import DropdownUI from "shared/ui/DropdownUI";
 import './style.scss'
-import { ObjectType, getConvertedDropdownOptionsFromVariants, getManipulatedDataFromPalettes } from "shared/helpers/helpers";
-import { useEffect } from "react";
+import { ObjectType, getConvertedDropdownOptionsFromVariantsMatched, getManipulatedDataFromPalettes } from "shared/helpers/helpers";
+import { useEffect, useMemo } from "react";
+import { garmentDetails } from "redux/reducers/garmentReducer";
 
 const ColorPalette = () => {
 
@@ -11,7 +12,12 @@ const ColorPalette = () => {
   const dispatch = useDispatch();
   const activePalette = useSelector(activePaletteItem)
   const variants = useSelector(colorsVariants)
-  const options = getConvertedDropdownOptionsFromVariants(variants)
+  const activeGarment = useSelector(garmentDetails)
+  
+  const matchedColorPalettes = useMemo(() => {
+    const { palettes: { colors = [] } = {} } = activeGarment || {}
+    return getConvertedDropdownOptionsFromVariantsMatched(variants, colors)
+  },[activeGarment])
 
   const handlePaletteDispatchChange = (name: string) => {
     const group = getManipulatedDataFromPalettes(palettes, name, 'colors')
@@ -30,12 +36,14 @@ const ColorPalette = () => {
   }
 
   useEffect(() => {
-    handlePaletteDispatchChange(activePalette?.name)
-  }, [])
+    if (matchedColorPalettes.length) {
+      handlePaletteDispatchChange(matchedColorPalettes?.[0]?.text || '')
+    }
+  }, [matchedColorPalettes])
 
   return (
     <DropdownUI
-      options={options}
+      options={matchedColorPalettes}
       onChange={(option) => handlePaletteChange(option)}
       defaultValue={activePalette?.name}
       classN="color-dropdown-styles"
