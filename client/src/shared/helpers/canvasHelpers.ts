@@ -10,7 +10,7 @@ export async function addModel(elem:any, width: number, height: number,frontBack
 	const order =elem.order ||  updateElem.order ;
 	const widthImg = fromBasket ? elem.width/10 : elem.width || updateElem.width;
 	const heightImg = fromBasket ? elem.height/10 : elem.height ||  updateElem.height;
-	const id = elem.id || updateElem.id 
+	const id = elem.id || updateElem.id 	
 	if (!src) return;
 	const img: HTMLImageElement = new Image();
   
@@ -19,7 +19,7 @@ export async function addModel(elem:any, width: number, height: number,frontBack
 	  img.onload = res;
 	});
 	
-	return { img, position, widthImg, heightImg, order,frontBack,id };
+	return { img, position,color, widthImg, heightImg, order,frontBack,id };
   }
   
  
@@ -168,12 +168,21 @@ export const canvasModelInit = (num: number, modData: any, frontBack: string = "
 
 		ctx?.clearRect(0, 0, canvasWidth, canvasHeight);
 		ctx?.drawImage(img, x, y, drawWidth, drawHeight);
-
+		const frontSleeves = arr.findIndex((el) =>el?.frontBack==="sleeves");
+		
+		if(!modData.sleeves[0].src && arr.length>2){		
+			arr.splice(frontSleeves,1)
+		}
 		for (let i = 0; i < modData[frontBack].length; i++) {
 		
 			if (modData[frontBack][i].activeCategory === 'color') { 
+
 				elem=await addModel(modData[frontBack][i] , canvasWidth, canvasHeight,frontBack,updatedModelData[frontBack][i],fromBasket);			
 				updateArrWithElem(elem,arr,frontBack)
+				if(frontBack==="sleeves"){
+					elem=await addModel(modData.fronts[i] , canvasWidth, canvasHeight,"fronts",updatedModelData.fronts[i],fromBasket);			
+					updateArrWithElem(elem,arr,frontBack)
+				 }
 			} 
 			else if (modData[frontBack][i].activeCategory === 'print') {	
 				 addImageProcess(modData[frontBack][i].printImageURL, modData[frontBack]?.[i]?.src ? modData[frontBack]?.[i]?.src : updatedModelData[frontBack]?.[i]?.src , ctx, canvasWidth, canvasHeight, num, modData[frontBack][i].position ? modData[frontBack][i].position : updatedModelData[frontBack][i].position,modData[frontBack]?.[i]?.width ? modData[frontBack]?.[i]?.width : updatedModelData[frontBack]?.[i]?.width ,modData[frontBack]?.[i]?.height ? modData[frontBack]?.[i]?.height : updatedModelData[frontBack]?.[i]?.height );
@@ -183,12 +192,11 @@ export const canvasModelInit = (num: number, modData: any, frontBack: string = "
 
 				 }
 			}
-			 else {		
+			 else {						
 				elem=await addModel(modData[frontBack]?.[i] , canvasWidth, canvasHeight,frontBack,updatedModelData[frontBack][i],fromBasket);			
 				updateArrWithElem(elem,arr,frontBack)
 			}			
-		}
-			
+		}			
 		await drawImagesInOrder(arr, ctx);
 	};
 

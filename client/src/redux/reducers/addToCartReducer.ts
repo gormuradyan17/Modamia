@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { ArrayType, ObjectType } from "shared/helpers/helpers";
+import { ObjectType } from "shared/helpers/helpers";
 
 interface stateProps {
   dataInfo: {

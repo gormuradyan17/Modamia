@@ -15,6 +15,8 @@ import {
   getMannequinType,
   getMannequinUrl,
   getSize,
+  setActiveCategory,
+  setActiveColor,
 } from "redux/reducers/mannequinReducer";
 import CustomizationLoader from "components/Customization/customizationLoader/CustomizationLoader";
 import SilhouettePositionBtn from "components/Customization/contents/SilhouetteContent/SilhouettePositionBtn";
@@ -42,25 +44,25 @@ const Customization = () => {
   const activeGarment = useSelector(garmentDetails)
   const totalPrice = useSelector(getProductPrice)
   const sizes=useSelector(getSize)
+  
   let priceCount = 0;
 
   
   const { silhouettes = {} } = activeGarment;
   const [modelData, setModelData] = useState<any>({
     fronts: [
-      { position: "bottom", src: "", color: activeColor, printImageURL: activePrint?.highresurl, activeCategory, price: 200, width:"",height:"",order:""},
-      { position: "top", src:"", color: activeColor, printImageURL: activePrint?.highresurl, activeCategory, price: 300, width:"",height:"",order:"" },
+      { position: "bottom", src: "", color: "", printImageURL: "", activeCategory, price: 200, width:"",height:"",order:""},
+      { position: "top", src:"", color: "", printImageURL:"", activeCategory, price: 300, width:"",height:"",order:"" },
     ],
     backs: [
-      { position: "bottom", src:"", color: activeColor, printImageURL: activePrint?.highresurl, activeCategory, price: 0,width:"",height:"",order:""  },
-      { position: "top", src: "", color: activeColor, printImageURL: activePrint?.highresurl, activeCategory, price: 0,width:"",height:"",order:""  },
+      { position: "bottom", src:"", color: "", printImageURL: "", activeCategory, price: 0,width:"",height:"",order:""  },
+      { position: "top", src: "", color: "", printImageURL: "", activeCategory, price: 0,width:"",height:"",order:""  },
     ],
     sleeves: [
-      { position: "top", src: "", color: activeColor, printImageURL: activePrint?.highresurl, activeCategory, price: 0,width:"",height:"",order:""  },
-      { position: "bottom", src: "", color: activeColor, printImageURL: activePrint?.highresurl, activeCategory, price: 0,width:"",height:"",order:"" }
+      { position: "top", src: "", color: "", printImageURL: "", activeCategory, price: 0,width:"",height:"",order:""  },
+      { position: "bottom", src: "", color: "", printImageURL: "", activeCategory, price: 0,width:"",height:"",order:"" }
     ]
-  }
-  )
+  })
 
   const params = useParams()
   const { id = '' } = params;
@@ -70,17 +72,15 @@ const Customization = () => {
   const [rangeValue, setRangeValue] = useState<number>(0.1);
   useEffect(() => {
     if (id) getSelectedGarment(dispatch, id)
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id])
-
-  useEffect(() => {
+    dispatch(setActiveColor(""));
+    dispatch(setActiveCategory("silhouette"));
     if (id) getModelData(dispatch, id)
       // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
 
-  const updatedModelData:any = {};
 
   useEffect(() => {     
+    const updatedModelData:any = {};
 
     for (let key in modelData) {
       const position1 = modelData[key][0].position;
@@ -98,7 +98,6 @@ const Customization = () => {
   
       const drawManequin = async () => {        
         modelData[frontBack].forEach((elem:any, i:any) => {
-          const activeElem = modelData[frontBack][1] ? modelData[frontBack][1] : modelData[frontBack][0];
           modelData[frontBack][1].activeCategory = activeCategory;  
           modelData[frontBack][0].activeCategory = activeCategory;  
           switch (activeType) {
@@ -119,8 +118,7 @@ const Customization = () => {
               if(activeColor){
                 modelData.fronts[i].color = activeColor;
                 modelData.backs[i].color = activeColor;
-                modelData.sleeves[0].color = activeColor;
-  
+                modelData.sleeves[0].color = activeColor;  
               } 
                 if (activePrint) {      
                   modelData.fronts[i].activeCategory=activeCategory                
@@ -128,8 +126,7 @@ const Customization = () => {
                   modelData.sleeves[i].activeCategory=activeCategory              
                   modelData.fronts[i].printImageURL = activePrint?.highresurl;
                   modelData.backs[i].printImageURL= activePrint?.highresurl
-                  modelData.sleeves[i].printImageURL= activePrint?.highresurl
-              
+                  modelData.sleeves[i].printImageURL= activePrint?.highresurl             
                 }
                 break;
             case "sleeves":
@@ -139,40 +136,45 @@ const Customization = () => {
               modelData.sleeves[0].height=sizes.height
               break;
 
-            case "top":              
+            case "top":   
+            modelData[frontBack][1].color=activeColor         
               if(frontBack==="sleeves"){
-                modelData.fronts[0].color=activeColor
+                modelData.fronts[1].color=activeColor
+                modelData.sleeves[0].color=activeColor
                 modelData.fronts[1].printImageURL=activePrint?.highresurl
               }
-              // activeElem.color = activeColor;
               if (activePrint) {                  
                 modelData.sleeves[0].printImageURL= activePrint?.highresurl
-                modelData[frontBack][1].printImageURL = activePrint?.highresurl;    
-                
-                      }
+                modelData[frontBack][1].printImageURL = activePrint?.highresurl;      
+                 }
               break;
             case "bottom":
-              modelData[frontBack][0].color = activeColor;
               if (activePrint) {
                 modelData[frontBack][0].printImageURL = activePrint?.highresurl;
+              }
+              if(frontBack==="sleeves"){                
+                modelData.fronts[0].color=activeColor
+              }else{
+                modelData[frontBack][0].color = activeColor;
               }
               break;
             default:
             // modelData[frontBack][i].color = activeColor;
             // modelData[frontBack][i].printImageURL = activePrint?.highresurl;
           }
-        });
 
+        });
+               
         setModelData({ ...modelData });                
         await canvasModelInit(rangeValue, modelData, frontBack, canvasRef, mannequin,updatedModelData,false);
-  
+       
       };
   
       drawManequin();
     }
-  
+      
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeGarment, activeColor, activePrint, activeCategory, activeImgUrl, activeType, frontBack, silhouettes,rangeValue]);
+  }, [activeGarment, id, activeColor, activePrint, activeCategory, activeImgUrl, activeType, frontBack, silhouettes,rangeValue]);
   function changRange(e: ChangeEvent<HTMLInputElement>) {
     setRangeValue(Number(e.target.value));
     
@@ -189,9 +191,11 @@ if(Object.keys(mannequin).length){
   dispatch(setActiveMannequinProduct(mannequin))
 
 }    
-    dispatch(setProductFront([{ ...modelData.fronts[1] }, { ...modelData.fronts[0] }]));
-    dispatch(setProductBack([{ ...modelData.backs[1] }, { ...modelData.backs[0] }]));
-    dispatch(setProductSleeve([{ ...modelData.sleeves[0] }]));
+if(Object.keys(modelData).length){
+  dispatch(setProductFront([{ ...modelData.fronts[1] }, { ...modelData.fronts[0] }]));
+  dispatch(setProductBack([{ ...modelData.backs[1] }, { ...modelData.backs[0] }]));
+  dispatch(setProductSleeve([{ ...modelData.sleeves[0] }]));
+}  
   }, [modelData])
 
   return (

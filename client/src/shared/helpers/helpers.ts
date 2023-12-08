@@ -86,15 +86,14 @@ export const getCanvasDefaultImages = (
   const baseUploadsSilhouettesUrl = BASE_UPLOADS_SILHOUETTES_URL;
   const getPositionInfo = (position: string, clothingType: string) => {
     
-    const category = silhouettes?.[position]?.[clothingType][0];
-    
+    const category = silhouettes?.[position]?.[clothingType][0];    
     const url= positionSilhouette==="sleeves" ? clothingType="sleeves" : clothingType
     return {
       src: category?.silhouetteurl
         ? `${baseUploadsSilhouettesUrl}${url}/${category.silhouetteurl}`
         : '',
       position:positionClothes,
-      color:"",
+      color:category?.color || "",
       printImageURL:"",
       activeCategory:"",
       price:category?.price,

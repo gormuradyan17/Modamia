@@ -1,9 +1,10 @@
 import { getCanvasDefaultImages } from 'shared/helpers/helpers';
 import { getGarment } from "shared/api/dataApi"
 import { setInitialState } from 'redux/reducers/modelData';
-const updatedModelData: any = {};
 
 export const getModelData = async (dispatch: any, id: string) => {
+  const updatedModelData: any = {};
+
     try {
       const res = await getGarment({ garment_id: id });
       for (let key in res.silhouettes) {
