@@ -10,6 +10,7 @@ interface Props {
     label?: string,
     name: string,
     error?: string,
+    classN?: string,
 }
 
 const InputUI = ({
@@ -20,6 +21,7 @@ const InputUI = ({
     label = '',
     name,
     error,
+    classN = ''
 }: Props) => {
     // const refInput = useRef<HTMLInputElement | null>(null)
     // const refSpan = useRef<HTMLInputElement | null>(null)
@@ -41,7 +43,7 @@ const InputUI = ({
     // },[error])
 
     return (
-        <div className="InputUI">
+        <div className={`InputUI ${classN}`}>
             {label && <label 
                 className="InputUI__label"
                 htmlFor={`InputUI-${name}`}>
@@ -53,7 +55,7 @@ const InputUI = ({
                 id={`InputUI-${name}`}
                 name={name}
                 type={type}
-                defaultValue={value}
+                value={value}
                 onChange={callback}
                 {...(placeholder && {placeholder})}
             />

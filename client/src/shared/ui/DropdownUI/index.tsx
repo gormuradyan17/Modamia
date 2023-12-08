@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRef, useState } from 'react';
 import './style.scss'
 import HeadingUI from '../HeadingUI/HeadingUI';
-import useClickOutSide from 'utils/useClickOutside';
+import useClickOutSide from 'utils/hooks/useClickOutside';
 
 interface DropdownPropsi {
     text?: string | number;

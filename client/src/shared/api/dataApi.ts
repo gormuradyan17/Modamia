@@ -1,4 +1,4 @@
-import { COLORS_URL, PRINTS_URL, MANNEQUINS_URL, SILHOUETTES_URL, ADD_SILHOUETTE_URL, EDIT_SILHOUETTE_URL, COLORS_VARIANTS_URL, PRINTS_VARIANTS_URL, ADD_PRINT_URL, ADD_PRINT_VARIANT_URL, EDIT_PRINT_URL, SILHOUETTES_TYPES_URL, COLORS_PALETTES_URL, PRINTS_PALETTES_URL, SIZE_URL, ADD_SIZE_URL, EDIT_SIZE_URL, MANNEQUIN_WITH_SILHOUETTES_URL, GARMENTS_URL, GARMENT_URL } from "shared/constants/genericApiRoutes";
+import { COLORS_URL, PRINTS_URL, MANNEQUINS_URL, SILHOUETTES_URL, ADD_SILHOUETTE_URL, EDIT_SILHOUETTE_URL, COLORS_VARIANTS_URL, PRINTS_VARIANTS_URL, ADD_PRINT_URL, ADD_PRINT_VARIANT_URL, EDIT_PRINT_URL, SILHOUETTES_TYPES_URL, COLORS_PALETTES_URL, PRINTS_PALETTES_URL, SIZE_URL, ADD_SIZE_URL, EDIT_SIZE_URL, MANNEQUIN_WITH_SILHOUETTES_URL, GARMENTS_URL, GARMENT_URL, SEARCH_GARMENT_URL } from "shared/constants/genericApiRoutes";
 import { BaseApi } from "./baseApi";
 
 export const getColors = (body: Record<string, any> = {}) => {
@@ -110,4 +110,9 @@ export const getGarments = (body: Record<string, any> = {}) => {
 export const getGarment = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');
 	return http.post(GARMENT_URL, body)
+}
+
+export const searchGarment = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(SEARCH_GARMENT_URL, body)
 }

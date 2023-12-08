@@ -22,7 +22,7 @@ import AdminDto from '../dtos/admin-dto';
 import tokenService from './token-service';
 import ApiError from '../exceptions/api-error';
 import bcrypt from 'bcryptjs'
-import { getGarmentQuery, getGarmentsQuery, updateGarments } from '../queries/GarmentsQueries';
+import { getGarmentQuery, getGarmentsQuery, searchGarmentsQuery, updateGarmentsQuery } from '../queries/GarmentsQueries';
 
 class AdminService {
 
@@ -790,9 +790,9 @@ class AdminService {
                     mannequin_id
                 }, { upsert: true });
 
-                await updateGarments(id, tops, 'tops')
-                await updateGarments(id, bottoms, 'bottoms')
-                await updateGarments(id, sleeves, 'sleeves')
+                await updateGarmentsQuery(id, tops, 'tops')
+                await updateGarmentsQuery(id, bottoms, 'bottoms')
+                await updateGarmentsQuery(id, sleeves, 'sleeves')
                 const garments = await GarmentModel.find({})
                 return garments
             }
@@ -817,6 +817,11 @@ class AdminService {
         } catch (error) {
             console.log(error)
         }
+    }
+
+    async searchGarmentsAdmin(criteria: string) {
+        const garments = await searchGarmentsQuery(criteria, true)
+        return garments
     }
 
 }
