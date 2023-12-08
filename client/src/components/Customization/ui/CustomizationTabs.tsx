@@ -51,7 +51,7 @@ const CustomizationTabs = ({
                                     onClick={() => {
                                         setActiveTab(tab.heading);
                                         const category = tab.heading === 'Color' ? 'color' : tab.heading === 'Print' ? 'print' : tab.heading === 'Silhouette' ? "silhouette" : "" ;
-                                        tab.heading==="Color" ||  tab.heading === 'Print' ?  dispatch(setMannequinType("all")) :dispatch(setMannequinType("fronts"))
+                                       ( tab.heading==="Color" ||  tab.heading === 'Print') ?  dispatch(setMannequinType("all")) :dispatch(setMannequinType("fronts"))
                                         updateActiveCategory(category);
                                     }}
                                 >

@@ -4,6 +4,7 @@ interface Props{
 }
 
 const ShopCartContent:React.FC<Props>=({modelData})=>{
+    
     const {name,color,price,size}=modelData
     
     return(

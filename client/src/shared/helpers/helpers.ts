@@ -84,19 +84,16 @@ export const getCanvasDefaultImages = (
   positionClothes: string
 ) => {
   const baseUploadsSilhouettesUrl = BASE_UPLOADS_SILHOUETTES_URL;
-
-
   const getPositionInfo = (position: string, clothingType: string) => {
     
-    const category = silhouettes?.[position]?.[clothingType][0];
-    
+    const category = silhouettes?.[position]?.[clothingType][0];    
     const url= positionSilhouette==="sleeves" ? clothingType="sleeves" : clothingType
     return {
       src: category?.silhouetteurl
         ? `${baseUploadsSilhouettesUrl}${url}/${category.silhouetteurl}`
         : '',
       position:positionClothes,
-      color:"",
+      color:category?.color || "",
       printImageURL:"",
       activeCategory:"",
       price:category?.price,
@@ -111,9 +108,33 @@ export const getCanvasDefaultImages = (
     return positionClothes === 'top' ? getPositionInfo('fronts', 'tops') : getPositionInfo('fronts', 'bottoms');
   } else if (positionSilhouette === 'backs') {    
     return positionClothes === 'top' ? getPositionInfo('backs', 'tops') : getPositionInfo('backs', 'bottoms');
-  }else if(positionSilhouette==="sleeves"){
-    return positionClothes === 'top' ? getPositionInfo('fronts', 'tops') : getPositionInfo('fronts', 'bottoms');
-
   }
+
 };
+
+export async function updateArrWithElem(elem: any, arr: any[], frontBack: string) {
+  if (elem) {    
+    if (arr.length < 2 || (frontBack === "sleeves" && arr.length <= 2)) {
+      arr.push(elem);
+    } else {
+      const frontSleeves = arr.findIndex((el) => el?.frontBack === "sleeves");
+      const frontTop = arr.findIndex(
+        (el) => (el?.frontBack === "fronts" || el?.frontBack === "backs") && el?.position === "top"
+      );
+      const frontBottom = arr.findIndex(
+        (el) => (el?.frontBack === "fronts" || el?.frontBack === "backs") && el?.position === "bottom"
+      );
+
+      if (elem?.position === "top" && (elem.frontBack === "fronts" || elem.frontBack === "backs")) {
+        arr.splice(frontTop, 1, elem);
+      } else if (elem?.position === "bottom" && (elem.frontBack === "fronts" || elem.frontBack === "backs")) {
+        arr.splice(frontBottom, 1, elem);
+      } else if (elem?.frontBack === "sleeves") {
+        arr.splice(frontSleeves, 1, elem);
+      }
+    }
+  }
+
+
+}
 
