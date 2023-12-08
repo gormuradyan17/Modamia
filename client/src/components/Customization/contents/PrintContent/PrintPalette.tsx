@@ -1,9 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
 import DropdownUI from "shared/ui/DropdownUI";
 import './style.scss'
-import { ObjectType, getConvertedDropdownOptionsFromVariants, getManipulatedDataFromPalettes } from "shared/helpers/helpers";
-import { useEffect } from "react";
+import { ObjectType, getConvertedDropdownOptionsFromVariants, getConvertedDropdownOptionsFromVariantsMatched, getManipulatedDataFromPalettes } from "shared/helpers/helpers";
+import { useEffect, useMemo } from "react";
 import { activePaletteItem, printsPalettes, printsVariants, setActivePaletteItem } from "redux/reducers/printReducer";
+import { garmentDetails } from "redux/reducers/garmentReducer";
 
 const PrintPalette = () => {
 
@@ -11,15 +12,25 @@ const PrintPalette = () => {
   const dispatch = useDispatch();
   const activePalette = useSelector(activePaletteItem)
   const variants = useSelector(printsVariants)
-  const options = getConvertedDropdownOptionsFromVariants(variants)
+  const activeGarment = useSelector(garmentDetails)
+  
+  const matchedPrintPalettes = useMemo(() => {
+    const { palettes: { prints = [] } = {} } = activeGarment || {}
+    return getConvertedDropdownOptionsFromVariantsMatched(variants, prints)
+  },[activeGarment])
 
   const handlePaletteDispatchChange = (name: string) => {
     if (name === 'All') {
       const allPrints = palettes?.reduce((acc: any = [], palette: ObjectType) => {
-        const { grouped = [] } = palette || {};
-        grouped?.map((group: ObjectType) => acc.push(group))
+        const { grouped = [], _id: { variant_id = ''} = {} } = palette || {};
+        const { palettes: { prints = [] } = {} } = activeGarment;
+        grouped?.map((group: ObjectType) => {
+          const found = prints?.find((variant: ObjectType) => variant === variant_id)
+          if (found) acc.push(group)
+        })
         return acc
       },[])
+      
       dispatch(setActivePaletteItem({
         name,
         prints: allPrints,
@@ -43,15 +54,16 @@ const PrintPalette = () => {
   }
 
   useEffect(() => {
-    handlePaletteDispatchChange(activePalette?.name)  
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    if (matchedPrintPalettes.length) {
+      handlePaletteDispatchChange(matchedPrintPalettes?.[0]?.text || '')
+    }
+  }, [matchedPrintPalettes])
 
   return (
     <DropdownUI
       options={[
         {id: 'All', text: 'All', value: 'All'},
-        ...options
+        ...matchedPrintPalettes
       ]}
       onChange={(option) => handlePaletteChange(option)}
       defaultValue={activePalette?.name}

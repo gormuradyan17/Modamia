@@ -1,0 +1,55 @@
+@use 'variables';
+
+.GarmentDropdownCheckbox {
+    z-index: 10;
+    position: relative;
+    margin: 0 auto;
+    margin: 10px 0;
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    margin-right: 20px;
+    .headingUI {
+        max-width: max-content;
+    }
+    &__option {
+        cursor: pointer;
+        padding: 10px 15px;
+        color: variables.$appColor;
+        background-color: #f9f1f1;
+        font-size: 16px;
+        user-select: none;
+        transition: .3s all ease 0s;
+        text-transform: capitalize;
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        &:hover {
+            background-color: #fff;
+        }
+    }
+    &:last-child {
+        margin-right: 0;
+    }
+
+}
+
+.GarmentDropdownCheckbox__content {
+    margin-top: 10px;
+    outline: 1px solid #aa8a75;
+    height: auto;
+    max-height: 173px;
+    max-width: 180px;
+    width: 100%;
+    overflow-y: auto;
+    border-radius: 5px;
+    box-shadow: 0 2px 3px 0 rgba(34, 36, 38, .15);
+}
+
+.GarmentDropdownCheckbox__checkbox {
+    min-width: 20px;
+    width: 20px;
+    height: 20px;
+    accent-color: variables.$appColor;
+    margin-left: 20px;
+}

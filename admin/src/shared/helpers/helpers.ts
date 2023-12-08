@@ -83,6 +83,26 @@ export const getDropdownOptionsFromItemsVariants = (options: ArrayType) => {
   }, []) : []
 }
 
+export const getDropdownOptionsFromItemsPalettes = (options: ArrayType, type: string = 'colors') => {
+  return options?.length ? options.reduce((acc: any, option: ObjectType) => {
+    const { grouped = [] } = option || {};
+    const vName = grouped?.[0]?.variant?.[0]?.name || '';
+    const vElems: string[] = [];
+    if (type === 'colors') {
+      grouped?.map((group: ObjectType) => {
+        const elem = group?.colors?.[0] || {}
+        vElems.push(elem?.hexcode)
+      })
+    }
+    acc.push({
+      id: option?._id?.variant_id || '',
+      name: vName,
+      ...(type === 'colors' && { colors: vElems }) 
+    })
+    return acc
+  }, []) : []
+}
+
 export const getActiveItemTypeById = (options: ArrayType, id: string) => {
   const elem = options.find(option => option.id === id)
   return elem?.value || ''

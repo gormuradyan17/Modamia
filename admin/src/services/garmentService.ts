@@ -15,14 +15,21 @@ export const getSelectedGarment = (dispatch: any, id: string) => {
             bottoms = [],
             tops = [],
             sleeves = [],
-        } = {}, mannequin: { _id: mannequin_id = '' } = {}, garment: { name = ''} = {} } = res || {}
+        } = {}, palettes = {
+            colors: [],
+            prints: []
+        }, mannequin: { _id: mannequin_id = '' } = {}, garment: { name = ''} = {} } = res || {}
 
         const toDispatch = {
             name,
             mannequin_id,
             tops: [],
             bottoms: [],
-            sleeves: []
+            sleeves: [],
+            palettes: {
+                colors: [],
+                prints: []
+            }
         }
 
         toDispatch.tops = tops.reduce((acc: any, item: ObjectType) => {
@@ -48,6 +55,8 @@ export const getSelectedGarment = (dispatch: any, id: string) => {
             })
             return acc
         },[])
+        toDispatch.palettes = palettes
+
         dispatch(setGarmentFullState(toDispatch))
 
     }).catch(err => console.log(err))

@@ -32,6 +32,12 @@
     margin: 10px 20px 10px 0;
     flex-direction: column;
     flex: 0 0 120px;
+    cursor: pointer;
+    position: relative;
+    &:hover {
+       box-shadow: 0 0 5px variables.$appColor;
+       border-radius: 10px;
+    }
 }
 
 .silhouettes-list-text {
@@ -75,4 +81,5 @@
     display: flex;
     width: 100%;
     overflow-x: auto;
+    padding-left: 10px;
 }

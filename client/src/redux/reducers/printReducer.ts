@@ -28,7 +28,7 @@ const initialState: stateProps = {
 	printsVariants: [],
 	printsPalettes: [],
 	activePaletteItem: {
-		name: 'parisian you',
+		name: '',
 		prints: [],
 		_id: ''
 	}

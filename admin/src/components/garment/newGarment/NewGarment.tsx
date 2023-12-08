@@ -13,8 +13,13 @@ import InputUI from "shared/ui/InputUI/InputUI";
 import GarmentsSilhouettesListWrapper from "./GarmentsSilhouettesListWrapper";
 import { BASE_UPLOADS_SILHOUETTES_BOTTOMS_URL, BASE_UPLOADS_SILHOUETTES_SLEEVES_URL, BASE_UPLOADS_SILHOUETTES_TOPS_URL } from "shared/constants/genericApiRoutes";
 import { availableSilhouettes } from "redux/reducers/silhouetteReducer";
-import { ObjectType, getIsNewGarmentApproved } from "shared/helpers/helpers";
+import { ObjectType, getDropdownOptionsFromItemsPalettes, getIsNewGarmentApproved } from "shared/helpers/helpers";
 import { useNavigate } from "react-router-dom";
+import GarmentDropdownCheckbox from "../garmentDropdownCheckbox/GarmentDropdownCheckbox";
+import { colorsPalettes } from "redux/reducers/colorReducer";
+import { printsPalettes } from "redux/reducers/printReducer";
+import { getAvColorsPalettes } from "services/colorService";
+import { getAvPrintsPalettes } from "services/printService";
 
 const NewGarment = () => {
 
@@ -25,6 +30,8 @@ const NewGarment = () => {
     useEffect(() => {
         getAvSilhouettes(dispatch)
         getAvMannequins(dispatch)
+        getAvColorsPalettes(dispatch)
+        getAvPrintsPalettes(dispatch)
     }, [])
 
     const silhouettes = useSelector(availableSilhouettes)
@@ -32,7 +39,7 @@ const NewGarment = () => {
     const topSilhouettes = useMemo(() => {
         return silhouettes.filter((silhouette: ObjectType) => silhouette.type === 'Top')
     }, [silhouettes])
-  
+
     const bottomSilhouettes = useMemo(() => {
         return silhouettes.filter((silhouette: ObjectType) => silhouette.type === 'Bottom')
     }, [silhouettes])
@@ -41,6 +48,12 @@ const NewGarment = () => {
         return silhouettes.filter((silhouette: ObjectType) => silhouette?.type === 'Sleeve')
     }, [silhouettes])
 
+    const colorPalettes = useSelector(colorsPalettes)
+    const colorVariants = getDropdownOptionsFromItemsPalettes(colorPalettes) || [{}]
+
+    const printPalettes = useSelector(printsPalettes)
+    const printVariants = getDropdownOptionsFromItemsPalettes(printPalettes) || [{}]
+    
     const addNewGarment = async () => {
         if (details?.mannequin_id && details?.name) {
             await addGarment(details)
@@ -48,12 +61,12 @@ const NewGarment = () => {
             navigate('/garments')
         }
     }
-    
+
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { target: { name, value } } = event
         dispatch(setGarmentState({ name, value }))
     }
-    
+
     const setGarmentlist = (id: string, name: string) => {
         if (id) {
             const copyDetails = structuredClone(details)
@@ -89,6 +102,21 @@ const NewGarment = () => {
         }
     }
 
+    const handleDropdownChange = (event: ChangeEvent<HTMLInputElement>, option: ObjectType, type: string) => {
+        const { target: { checked } } = event
+        const { id } = option;
+        if (id) {
+            const copyDetailsData: ObjectType = structuredClone(details)
+            const palettes = copyDetailsData?.palettes;
+            if (checked) palettes?.[type].push(id)
+            else {
+                const idx = palettes?.[type].findIndex((item: string) => item === id)
+                if (idx !== -1) palettes?.[type].splice(idx, 1)
+            }
+            dispatch(setGarmentState({ name: 'palettes', value: palettes }))
+        }
+    }
+
     const isApproved = getIsNewGarmentApproved(details)
 
     return (
@@ -109,11 +137,29 @@ const NewGarment = () => {
                         name='name'
                         label="Name*"
                     />
-                    <GarmentsMannequinsList 
-                        details={details}
-                        callback={(event: ChangeEvent<HTMLInputElement>, id: string) => setGarmentMannequin(event, id)}
-                    />
-                    <GarmentsSilhouettesListWrapper 
+                    <div className="garments-list-top">
+                        <GarmentsMannequinsList
+                            details={details}
+                            callback={(event: ChangeEvent<HTMLInputElement>, id: string) => setGarmentMannequin(event, id)}
+                        />
+                        <div className="garments-list-dropdowns">
+                            <GarmentDropdownCheckbox
+                                options={colorVariants}
+                                onChange={(e: any, option: ObjectType) => handleDropdownChange(e, option, 'colors')}
+                                label="Color palettes"
+                                details={details}
+                                type='colors'
+                            />
+                            <GarmentDropdownCheckbox
+                                options={printVariants}
+                                onChange={(e: any, option: ObjectType) => handleDropdownChange(e, option, 'prints')}
+                                label="Print palettes"
+                                details={details}
+                                type='prints'
+                            />
+                        </div>
+                    </div>
+                    <GarmentsSilhouettesListWrapper
                         header='Top Silhouettes'
                         content={topSilhouettes}
                         srcBase={BASE_UPLOADS_SILHOUETTES_TOPS_URL}
@@ -122,7 +168,7 @@ const NewGarment = () => {
                         type='tops'
                         details={details}
                     />
-                    <GarmentsSilhouettesListWrapper 
+                    <GarmentsSilhouettesListWrapper
                         header='Bottom Silhouettes'
                         content={bottomSilhouettes}
                         srcBase={BASE_UPLOADS_SILHOUETTES_BOTTOMS_URL}
@@ -131,7 +177,7 @@ const NewGarment = () => {
                         type='bottoms'
                         details={details}
                     />
-                    <GarmentsSilhouettesListWrapper 
+                    <GarmentsSilhouettesListWrapper
                         header='Sleeve Silhouettes'
                         content={sleeveSilhouettes}
                         srcBase={BASE_UPLOADS_SILHOUETTES_SLEEVES_URL}

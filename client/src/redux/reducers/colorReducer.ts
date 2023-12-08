@@ -27,7 +27,7 @@ const initialState: stateProps = {
 	colorsVariants: [],
 	colorsPalettes: [],
 	activePaletteItem: {
-		name: 'parisian you',
+		name: '',
 		colors: [],
 		_id: ''
 	}

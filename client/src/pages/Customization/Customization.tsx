@@ -175,10 +175,7 @@ const Customization = () => {
       
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeGarment, id, activeColor, activePrint, activeCategory, activeImgUrl, activeType, frontBack, silhouettes,rangeValue]);
-  function changRange(e: ChangeEvent<HTMLInputElement>) {
-    setRangeValue(Number(e.target.value));
-    
-  }
+ 
   useEffect(() => {
     const { mannequin = {} } = activeGarment;
     for (const key in modelData) {
@@ -208,11 +205,10 @@ if(Object.keys(modelData).length){
         </div>
         <div className="customization-body">
           <CustomizationInfo infoData={{ name, price: totalPrice }} />
-          <CustomizationFeatures />
+          <CustomizationFeatures range={rangeValue} setRange={setRangeValue} />
           <ChangeSize />
           <AddToCart />
         </div>
-        <input type="range" min="0.01" max="1" step="0.01" value={rangeValue} onChange={changRange} />
       </div>
     </Container>
   );
