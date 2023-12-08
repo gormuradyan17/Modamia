@@ -5,7 +5,6 @@ const updatedModelData: any = {};
 
 export const getModelData = async (dispatch: any, id: string) => {
     try {
-      
       const res = await getGarment({ garment_id: id });
       for (let key in res.silhouettes) {
         const positions = Object.keys(res.silhouettes[key]);  
@@ -15,7 +14,7 @@ export const getModelData = async (dispatch: any, id: string) => {
       }
     } catch (err) {
       console.error(err);
-    }
+    }        
     dispatch(setInitialState(updatedModelData))
   };
   

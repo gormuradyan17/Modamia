@@ -20,11 +20,13 @@ import CustomizationLoader from "components/Customization/customizationLoader/Cu
 import SilhouettePositionBtn from "components/Customization/contents/SilhouetteContent/SilhouettePositionBtn";
 import ChangeSize from "components/Customization/contents/ChangeSize";
 import AddToCart from "components/Customization/contents/AddToCart";
-import { getProduct, getProductName, getProductPrice, setProductBack, setProductFront, setProductPrice, setProductSleeve } from "redux/reducers/addToCartReducer";
+import { getProduct, getProductName, getProductPrice, setActiveMannequinProduct, setProductBack, setProductFront, setProductPrice, setProductSleeve } from "redux/reducers/addToCartReducer";
 import { useParams } from "react-router-dom";
 import { getSelectedGarment } from "services/garmentService";
 import { garmentDetails } from "redux/reducers/garmentReducer";
 import { getCanvasDefaultImages } from "shared/helpers/helpers";
+import { availableModelData } from "redux/reducers/modelData";
+import { getModelData } from "services/modelDataService";
 
 const Customization = () => {
   const activeColor = useSelector(getMannequinActiveColor)
@@ -60,19 +62,22 @@ const Customization = () => {
   }
   )
 
-  
-  
-
   const params = useParams()
   const { id = '' } = params;
 
   const dispatch = useDispatch()
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [rangeValue, setRangeValue] = useState<number>(0.1);
-
   useEffect(() => {
     if (id) getSelectedGarment(dispatch, id)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
+
+  useEffect(() => {
+    if (id) getModelData(dispatch, id)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id])
+
   const updatedModelData:any = {};
 
   useEffect(() => {     
@@ -100,41 +105,51 @@ const Customization = () => {
             case "tops":
               modelData[frontBack][1].src = activeImgUrl;
               modelData[frontBack][1].price = price;
-              // modelData.frontBack[1].width=sizes.width
-              // modelData.frontBack[1].height=sizes.height
+              modelData[frontBack][1].width=sizes.width
+              modelData[frontBack][1].height=sizes.height
               break;
             case "bottoms":
               modelData.fronts[0].src = activeImgUrl;
               modelData.backs[0].src = activeImgUrl;
               modelData.fronts[0].price = price;
-              // modelData.fronts[0].width=sizes.width
-              // modelData.fronts[0].height=sizes.height
+              modelData.fronts[0].width=sizes.width
+              modelData.fronts[0].height=sizes.height
               break;
+              case "all": 
+              if(activeColor){
+                modelData.fronts[i].color = activeColor;
+                modelData.backs[i].color = activeColor;
+                modelData.sleeves[0].color = activeColor;
+  
+              } 
+                if (activePrint) {      
+                  modelData.fronts[i].activeCategory=activeCategory                
+                  modelData.backs[i].activeCategory=activeCategory                
+                  modelData.sleeves[i].activeCategory=activeCategory              
+                  modelData.fronts[i].printImageURL = activePrint?.highresurl;
+                  modelData.backs[i].printImageURL= activePrint?.highresurl
+                  modelData.sleeves[i].printImageURL= activePrint?.highresurl
+              
+                }
+                break;
             case "sleeves":
               modelData.sleeves[0].src = activeImgUrl;
               modelData.sleeves[0].price = price;
               modelData.sleeves[0].width=sizes.width
               modelData.sleeves[0].height=sizes.height
               break;
-            case "all":                  
-              modelData.fronts[i].color = activeColor;
-              // modelData.fronts[i].width = sizes.width;
-              // modelData.fronts[i].height = sizes.height;
-              modelData.backs[i].color = activeColor;
-              // modelData.backs[i].width = sizes.width;
-              // modelData.backs[i].height = sizes.height;
-              modelData.sleeves[0].color = activeColor;
-              modelData.sleeves[0].width = sizes.width;
-              modelData.sleeves[0].height = sizes.height;
-              break;
-            case "top":
+
+            case "top":              
               if(frontBack==="sleeves"){
-                modelData.fronts[0]=activeColor
+                modelData.fronts[0].color=activeColor
+                modelData.fronts[1].printImageURL=activePrint?.highresurl
               }
-              activeElem.color = activeColor;
-              if (activePrint) {
-                activeElem.printImageURL = activePrint?.highresurl;
-              }
+              // activeElem.color = activeColor;
+              if (activePrint) {                  
+                modelData.sleeves[0].printImageURL= activePrint?.highresurl
+                modelData[frontBack][1].printImageURL = activePrint?.highresurl;    
+                
+                      }
               break;
             case "bottom":
               modelData[frontBack][0].color = activeColor;
@@ -147,9 +162,10 @@ const Customization = () => {
             // modelData[frontBack][i].printImageURL = activePrint?.highresurl;
           }
         });
+
+        setModelData({ ...modelData });                
+        await canvasModelInit(rangeValue, modelData, frontBack, canvasRef, mannequin,updatedModelData,false);
   
-        setModelData({ ...modelData });
-        await canvasModelInit(rangeValue, modelData, frontBack, canvasRef, mannequin,updatedModelData);
       };
   
       drawManequin();
@@ -162,12 +178,17 @@ const Customization = () => {
     
   }
   useEffect(() => {
+    const { mannequin = {} } = activeGarment;
     for (const key in modelData) {
       for (const item of modelData[key]) {
         priceCount += item.price;
         dispatch(setProductPrice(priceCount))
       }
-    }
+    }    
+if(Object.keys(mannequin).length){
+  dispatch(setActiveMannequinProduct(mannequin))
+
+}    
     dispatch(setProductFront([{ ...modelData.fronts[1] }, { ...modelData.fronts[0] }]));
     dispatch(setProductBack([{ ...modelData.backs[1] }, { ...modelData.backs[0] }]));
     dispatch(setProductSleeve([{ ...modelData.sleeves[0] }]));

@@ -45,7 +45,7 @@ const PrintContent = () => {
             type:"bottom"
         },
     ]
-    useEffect(() => {
+    useEffect(() => {        
         dispatch(setMannequinType(activeType))
       // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [activeType])
@@ -53,7 +53,8 @@ const PrintContent = () => {
         <div className="print-content-container">
             <div className="btnContent">
                 {btns.map((opt:any) => (
-                    <ButtonUI key={opt.id} version="gray" onClick={()=>setActiveType(opt.type)}>{opt.colorPosition}</ButtonUI>
+                    <ButtonUI key={opt.id}  classN={activeType===opt.type ? "active" : ""}
+                     version="gray" onClick={()=>setActiveType(opt.type)}>{opt.colorPosition}</ButtonUI>
                 ))}
             </div>
             <div className="print-content customYScrollbar">

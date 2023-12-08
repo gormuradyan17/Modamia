@@ -28,7 +28,7 @@ export default function SilhouetteClothes({ data, type }: any) {
           ? `${BASE_UPLOADS_SILHOUETTES_URL}${type}/${clothes.silhouetteurl}`
           : clothes?.silhouetteurl
         return <div data-key={clothes?._id} key={idx} className={`clothes_item ${type === "tops" || type === 'sleeves' ? "clothes_tops" : "clothes_bottoms"}`}
-          onClick={() => {
+          onClick={() => {            
             setActiveImageUrl(clothes?._id ? imgUrl : '')
             setActiveType(type)
             setPrice(clothes.price)

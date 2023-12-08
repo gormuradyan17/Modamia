@@ -8,7 +8,7 @@ interface Props {
 const SilhouetteContentTabs: React.FC<Props> = ({ silhouettesData, kindSilhouette }) => {
     const topData = silhouettesData?.tops
     const bottomData = silhouettesData?.bottoms
-    const sleeveData = silhouettesData?.tops
+    const sleeveData = silhouettesData?.tops    
     return (
         <div className="silhouette-content">
             {kindSilhouette !== "sleeves" && <SilhouetteClothes data={topData} type="tops" />}
