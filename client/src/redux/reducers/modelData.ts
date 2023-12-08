@@ -26,16 +26,16 @@ interface Item {
   }
 const initialState: ModelDataState  = {
   fronts: [
-    { position: "bottom", src: "", color: "", printImageURL: "", activeCategory: "", price: 200, width: "", height: "", order: 1 },
-    { position: "top", src: "", color: "", printImageURL: "", activeCategory: "", price: 300, width: "", height: "", order: 2 },
+    // { position: "bottom", src: "", color: "", printImageURL: "", activeCategory: "", price: 200, width: "", height: "", order: 1 },
+    // { position: "top", src: "", color: "", printImageURL: "", activeCategory: "", price: 300, width: "", height: "", order: 2 },
   ],
   backs: [
-    { position: "bottom", src: "", color: "", printImageURL: "", activeCategory: "", price: 0, width: "", height: "", order: 2 },
-    { position: "top", src: "", color: "", printImageURL: "", activeCategory: "", price: 0, width: "", height: "", order: 1 },
+    // { position: "bottom", src: "", color: "", printImageURL: "", activeCategory: "", price: 0, width: "", height: "", order: 2 },
+    // { position: "top", src: "", color: "", printImageURL: "", activeCategory: "", price: 0, width: "", height: "", order: 1 },
   ],
   sleeves: [
-    { position: "top", src: "", color: "", printImageURL: "", activeCategory: "", price: 0, width: "", height: "", order: 3 },
-    { position: "bottom", src: "", color: "", printImageURL: "", activeCategory: "", price: 0, width: "", height: "", order: 0 }
+    // { position: "top", src: "", color: "", printImageURL: "", activeCategory: "", price: 0, width: "", height: "", order: 3 },
+    // { position: "bottom", src: "", color: "", printImageURL: "", activeCategory: "", price: 0, width: "", height: "", order: 0 }
   ]
 };
 
@@ -43,12 +43,12 @@ export const modelDataSlice = createSlice({
 	name: 'modelDataReducer',
 	initialState,
 	reducers: {
-        setInitialState:(state,action)=>{            
+     setInitialState:(state,action)=>{                  
           return action.payload; 
         },
 		setSrcModelData: (state, action:PayloadAction<UpdateSrcPayload&Item>) => {
             const {frontBack,i,activeImgUrl}=action.payload            
-            if (state[frontBack] && state[frontBack][i]) {              
+            if (state[frontBack] && state[frontBack][i]) {                            
                 state[frontBack][i].src = activeImgUrl;
             }
           },

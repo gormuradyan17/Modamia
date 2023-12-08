@@ -1,10 +1,17 @@
 import { BASE_UPLOADS_MANNEQUINS_BACKS_URL, BASE_UPLOADS_MANNEQUINS_FRONTS_URL } from "shared/constants/genericApiRoutes";
+import { updateArrWithElem } from "./helpers";
 
-const arr: ({ img: HTMLImageElement; position: string; widthImg: string; heightImg: any; order: number; } | undefined)[]=[]
+const arr: ({ img: HTMLImageElement; position: string; widthImg: string; heightImg: any; order: number;id:string,frontBack:string } | undefined)[]=[]
 
-export async function addModel(src: string, color: string, context: any, width: number, height: number, position: string, widthImg: string, heightImg: any, order: number) {
+export async function addModel(elem:any, width: number, height: number,frontBack:string,updateElem:any,fromBasket:boolean) {	
+	const src =elem.src || updateElem.src;
+	const color =elem.color ||  updateElem.color;
+	const position =elem.position ||  updateElem.position;
+	const order =elem.order ||  updateElem.order ;
+	const widthImg = fromBasket ? elem.width/10 : elem.width || updateElem.width;
+	const heightImg = fromBasket ? elem.height/10 : elem.height ||  updateElem.height;
+	const id = elem.id || updateElem.id 	
 	if (!src) return;
-  
 	const img: HTMLImageElement = new Image();
   
 	img.src = await colorImage(src, color, width, height);
@@ -12,16 +19,17 @@ export async function addModel(src: string, color: string, context: any, width: 
 	  img.onload = res;
 	});
 	
-	return { img, position, widthImg, heightImg, order };
+	return { img, position,color, widthImg, heightImg, order,frontBack,id };
   }
   
  
-  async function drawImagesInOrder(imagesToDraw: any[], context: any) {
-	
+  async function drawImagesInOrder(imagesToDraw: any[], context: any) {	
+		
 	const sortedImages = imagesToDraw.sort((a, b) => a.order - b.order);  
 	for (const image of sortedImages) {		
 	  const { img, position, widthImg, heightImg } = image;
-	  context.drawImage(img, 0, position === 'bottom' ? context.canvas.height - heightImg : 0, widthImg, heightImg);
+	  
+	  context.drawImage(img, 0, position.includes('bottom') ? context.canvas.height - heightImg : 0, widthImg, heightImg);
 	}
   }
 
@@ -99,6 +107,7 @@ export async function addImageProcess(printImageURL: string, imageSrc: string, c
 	const data = imageData.data;
 	
 	let img = new Image()
+	
 	img.src = printImageURL;
 	img.crossOrigin = "*";
 	await new Promise(res => {
@@ -127,21 +136,20 @@ export async function addImageProcess(printImageURL: string, imageSrc: string, c
 	const x = new Image();
 	x.src = ctxBg.canvas.toDataURL("image/png");
 	await new Promise(res => x.onload = res);
-	return	context.drawImage(x, 0,position === 'bottom' ? height-heightImage : 0,  widthImage, heightImage);
+	return	context.drawImage(x, 0, position.includes('bottom') ? height-heightImage : 0,  widthImage, heightImage);
 		
 }
 
-let elem: { img: HTMLImageElement; position: string; widthImg: string; heightImg: any; order: number; } | undefined;
-export const canvasModelInit = (num: number, modData: any, frontBack: string = "front", canvasRef: any, mannequin: any,updatedModelData:any) => {
+let elem: { img: HTMLImageElement; position: string; widthImg: string; heightImg: any; order: number;id:string,frontBack:string } | undefined;
+export const canvasModelInit = (num: number, modData: any, frontBack: string = "fronts", canvasRef: any, mannequin: any,updatedModelData:any,fromBasket:boolean) => {	
 	if (!canvasRef.current || !mannequin?._id) return;
 	const canvas = canvasRef.current; 
 	let ctx = canvas?.getContext("2d");
 	const img = new Image();
 	img.src = frontBack === "fronts" ? `${BASE_UPLOADS_MANNEQUINS_FRONTS_URL}${mannequin?.fronturl}` : frontBack === "backs" ? `${BASE_UPLOADS_MANNEQUINS_BACKS_URL}${mannequin?.backurl}` : `${BASE_UPLOADS_MANNEQUINS_FRONTS_URL}${mannequin?.fronturl}`
-
 	img.onload = async () => {
-		const canvasWidth=mannequin.width
-		const canvasHeight=mannequin.height
+		const canvasWidth=fromBasket ? mannequin.width/10 :  mannequin.width
+		const canvasHeight=fromBasket ? mannequin.height/10 :  mannequin.height
 		canvasRef.current.width = canvasWidth
 		canvasRef.current.height = canvasHeight
 
@@ -160,41 +168,36 @@ export const canvasModelInit = (num: number, modData: any, frontBack: string = "
 
 		ctx?.clearRect(0, 0, canvasWidth, canvasHeight);
 		ctx?.drawImage(img, x, y, drawWidth, drawHeight);
-		let url;
-		let width;
-		let height;
+		const frontSleeves = arr.findIndex((el) =>el?.frontBack==="sleeves");
 		
-		for (let i = 0; i < modData[frontBack].length; i++) {
-			//  url=modData[frontBack]?.[i]?.src ? modData[frontBack]?.[i]?.src : updatedModelData[frontBack]?.[i]?.src ;
-			 width=modData[frontBack]?.[i]?.width ? modData[frontBack]?.[i]?.width : updatedModelData[frontBack]?.[i]?.width  ;
-			 height=modData[frontBack]?.[i]?.height ? modData[frontBack]?.[i]?.height : updatedModelData[frontBack]?.[i]?.height  ;
-			
-			 
-			if (modData[frontBack][i].activeCategory === 'color') { 
-				elem=	await addModel(modData[frontBack]?.[i]?.src ? modData[frontBack]?.[i]?.src : updatedModelData[frontBack]?.[i]?.src , modData[frontBack][i].color, ctx, canvasWidth, canvasHeight, modData[frontBack][i].position,width,height,modData[frontBack][i].order ?  modData[frontBack][i].order : updatedModelData[frontBack][i].order );			
-				if(elem){
-					arr.push(elem)
-				}
-				drawImagesInOrder(arr, ctx);
-			} 
-			else if (modData[frontBack][i].activeCategory === 'print') {				
-				 addImageProcess(modData[frontBack][i].printImageURL, modData[frontBack]?.[i]?.src ? modData[frontBack]?.[i]?.src : updatedModelData[frontBack]?.[i]?.src , ctx, canvasWidth, canvasHeight, num, modData[frontBack][i].position,width,height);
-			}
-			 else {		
-					
-				elem=await addModel(modData[frontBack]?.[i]?.src ? modData[frontBack]?.[i]?.src : updatedModelData[frontBack]?.[i]?.src , modData[frontBack][i].color, ctx, canvasWidth, canvasHeight, modData[frontBack][i].position,width,height,modData[frontBack][i].order ?  modData[frontBack][i].order : updatedModelData[frontBack][i].order)	
-
-				if(elem){
-					arr.push(elem)
-				}
-				drawImagesInOrder(arr, ctx);
-			}			
-			if (frontBack === "sleeves") {								
-		    await addModel(modData[frontBack]?.[i]?.src ? modData[frontBack]?.[i]?.src : updatedModelData[frontBack]?.[i]?.src , modData.fronts[0].color, ctx, canvasWidth, canvasHeight, modData.fronts[0].position,modData.fronts[0].width,modData.fronts[0].height,modData[frontBack][i].order ?  modData[frontBack][i].order : updatedModelData[frontBack][i].order );
-		    await addModel(modData[frontBack]?.[i]?.src ? modData[frontBack]?.[i]?.src : updatedModelData[frontBack]?.[i]?.src , modData.fronts[1].color, ctx, canvasWidth, canvasHeight, modData.fronts[1].position,modData.fronts[1].width,modData.fronts[1].height,modData[frontBack][i].order ?  modData[frontBack][i].order : updatedModelData[frontBack][i].order);
-			}
+		if(!modData.sleeves[0].src && arr.length>2){		
+			arr.splice(frontSleeves,1)
 		}
-		arr.length=0
+		for (let i = 0; i < modData[frontBack].length; i++) {
+		
+			if (modData[frontBack][i].activeCategory === 'color') { 
+
+				elem=await addModel(modData[frontBack][i] , canvasWidth, canvasHeight,frontBack,updatedModelData[frontBack][i],fromBasket);			
+				updateArrWithElem(elem,arr,frontBack)
+				if(frontBack==="sleeves"){
+					elem=await addModel(modData.fronts[i] , canvasWidth, canvasHeight,"fronts",updatedModelData.fronts[i],fromBasket);			
+					updateArrWithElem(elem,arr,frontBack)
+				 }
+			} 
+			else if (modData[frontBack][i].activeCategory === 'print') {	
+				 addImageProcess(modData[frontBack][i].printImageURL, modData[frontBack]?.[i]?.src ? modData[frontBack]?.[i]?.src : updatedModelData[frontBack]?.[i]?.src , ctx, canvasWidth, canvasHeight, num, modData[frontBack][i].position ? modData[frontBack][i].position : updatedModelData[frontBack][i].position,modData[frontBack]?.[i]?.width ? modData[frontBack]?.[i]?.width : updatedModelData[frontBack]?.[i]?.width ,modData[frontBack]?.[i]?.height ? modData[frontBack]?.[i]?.height : updatedModelData[frontBack]?.[i]?.height );
+
+                 if(frontBack==="sleeves"){
+					addImageProcess(modData.fronts[i].printImageURL, modData.fronts?.[i]?.src ? modData.fronts?.[i]?.src : updatedModelData.fronts?.[i]?.src , ctx, canvasWidth, canvasHeight, num, modData.fronts[i].position,modData.fronts?.[i]?.width ? modData.fronts?.[i]?.width : updatedModelData.fronts?.[i]?.width ,modData.fronts?.[i]?.height ? modData.fronts?.[i]?.height : updatedModelData.fronts?.[i]?.height );
+
+				 }
+			}
+			 else {						
+				elem=await addModel(modData[frontBack]?.[i] , canvasWidth, canvasHeight,frontBack,updatedModelData[frontBack][i],fromBasket);			
+				updateArrWithElem(elem,arr,frontBack)
+			}			
+		}			
+		await drawImagesInOrder(arr, ctx);
 	};
 
 

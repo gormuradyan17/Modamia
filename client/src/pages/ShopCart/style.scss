@@ -1,6 +1,17 @@
+.product{
+    &_canvas{
+        display: flex;
+        border:1px solid #a57867;
+        padding: 10px;
+        // align-items: center;
+        // justify-content:center;
+    }
+
+}
 .shop_container{
-    display: flex;
-    align-items: center;
     height: 100%;
-    justify-content:center;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 50px;
 }

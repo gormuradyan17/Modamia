@@ -1,15 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { ArrayType, ObjectType } from "shared/helpers/helpers";
+import { ObjectType } from "shared/helpers/helpers";
 
 interface stateProps {
   dataInfo: {
     name: string,
     price: number,
-    front: ArrayType,
-    back: ArrayType,
-    sleeve: ArrayType,
     size: string,
-    customSize: {}
+    customSize: {},
+    modelData:ObjectType,
+    activeMannequin:ObjectType
   };
 }
 
@@ -17,11 +16,14 @@ const initialState: stateProps = {
   dataInfo: {
     name: "the juliette dress",
     price: 0,
-    front: [],
-    back: [],
-    sleeve: [],
+    modelData:{
+    fronts: [],
+    backs: [],
+    sleeves: [],
+    },
     size: "S",
-    customSize: {}
+    customSize: {},
+    activeMannequin:{}
   },
 };
 export const addToCartReducer = createSlice({
@@ -38,21 +40,25 @@ export const addToCartReducer = createSlice({
       state.dataInfo.size = action.payload;
     },
     setProductFront: (state, action) => {
-      state.dataInfo.front = action.payload
+      state.dataInfo.modelData.fronts = action.payload
     },
     setProductBack: (state, action) => {
-      state.dataInfo.back = action.payload
+      state.dataInfo.modelData.backs = action.payload
     },
     setProductSleeve: (state, action) => {
-      state.dataInfo.sleeve = action.payload
+      state.dataInfo.modelData.sleeves = action.payload
     },
     setProductCustomSize: (state, action) => {
       state.dataInfo.customSize = action.payload;
     },
+    setActiveMannequinProduct:(state,action)=>{    
+      state.dataInfo.activeMannequin=action.payload
+
+    }
   }
 });
 
-export const { setProductName, setProductPrice, setProductSize, setProductFront, setProductBack, setProductSleeve, setProductCustomSize } = addToCartReducer.actions;
+export const { setProductName, setProductPrice, setProductSize, setActiveMannequinProduct, setProductFront, setProductBack, setProductSleeve, setProductCustomSize } = addToCartReducer.actions;
 
 export const getProduct = (state: ObjectType) => state.addToCartReducer.dataInfo;
 export const getProductName = (state: ObjectType) => state.addToCartReducer.dataInfo.name;
@@ -62,5 +68,6 @@ export const getProductFront = (state: ObjectType) => state.addToCartReducer.dat
 export const getProductBack = (state: ObjectType) => state.addToCartReducer.dataInfo.back;
 export const getProductSleeve = (state: ObjectType) => state.addToCartReducer.dataInfo.sleeve;
 export const getProductCustomSize = (state: ObjectType) => state.addToCartReducer.dataInfo.customSize;
+export const getActiveMannequin = (state: ObjectType) => state.addToCartReducer.dataInfo.activeMannequin;
 
 export default addToCartReducer.reducer;
