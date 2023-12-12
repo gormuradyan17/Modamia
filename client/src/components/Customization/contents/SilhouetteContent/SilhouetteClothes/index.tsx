@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Slider from "react-slick";
 import { getMannequinLoading, setMannequinType, setMannequinUrl, setMannequinPrice, setSize } from "redux/reducers/mannequinReducer";
 import { BASE_UPLOADS_SILHOUETTES_URL } from "shared/constants/genericApiRoutes";
 
@@ -12,7 +13,14 @@ export default function SilhouetteClothes({ data, type }: any) {
   const dispatch = useDispatch()
 
   const isLoading = useSelector(getMannequinLoading)
-
+  const settings = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    arrow:true
+  };
   useEffect(() => {
     dispatch(setMannequinUrl(activeImageUrl))
     dispatch(setMannequinType(activeType))
@@ -23,11 +31,12 @@ export default function SilhouetteClothes({ data, type }: any) {
   
   return (
     <div className="clothes_content customXScrollbar">
-      {data && Boolean(data.length) ? data.map((clothes: any, idx: number) => {
+    {data && Boolean(data.length) ?   <Slider {...settings}>
+      { data.map((clothes: any, idx: number) => {
         const imgUrl = clothes?._id
           ? `${BASE_UPLOADS_SILHOUETTES_URL}${type}/${clothes.silhouetteurl}`
           : clothes?.silhouetteurl
-        return <div data-key={clothes?._id} key={idx} className={`clothes_item ${type === "tops" || type === 'sleeves' ? "clothes_tops" : "clothes_bottoms"}`}
+        return    <div data-key={clothes?._id} key={idx} className={`clothes_item ${type === "tops" || type === 'sleeves' ? "clothes_tops" : "clothes_bottoms"}`}
           onClick={() => {            
             setActiveImageUrl(clothes?._id ? imgUrl : '')
             setActiveType(type)
@@ -36,7 +45,9 @@ export default function SilhouetteClothes({ data, type }: any) {
           }}>
           <img key={clothes._id} src={imgUrl} alt="" />
         </div>
-      }) : null}
+      })}
+        </Slider> : null }
+
     </div>
   )
 }
