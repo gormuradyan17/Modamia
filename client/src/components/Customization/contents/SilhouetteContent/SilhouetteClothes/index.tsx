@@ -15,7 +15,7 @@ export default function SilhouetteClothes({ data, type }: any) {
   const isLoading = useSelector(getMannequinLoading)
   const settings = {
     dots: false,
-    infinite: true,
+    infinite: false,
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 1,
