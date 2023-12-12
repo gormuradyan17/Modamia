@@ -18,7 +18,7 @@ export const defaultGarmentState = {
 	palettes: {
 		colors: [],
 		prints: []
-	}
+	},
 }
 
 const initialState: stateProps = {

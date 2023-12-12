@@ -95,3 +95,12 @@ code {
     border-radius: 10px;
   }
 }
+
+._ellipsis {
+  display: block !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 1 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  -webkit-box-orient: vertical !important;
+}
