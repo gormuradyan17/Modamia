@@ -72,7 +72,7 @@
 }
 
 .mannequin-list {
-    width: 100%;
+    width: 68%;
     display: flex;
     overflow-x: auto;
 }
@@ -124,6 +124,19 @@
 .mannequin-list-text {
     max-width: 200px;
 }
+
+.garments-list-top {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+.garments-list-dropdowns {
+    display: flex;
+    width: 28%;
+    align-items: center;
+}
+
 .garment-input {
     width: 30px;
     height: 30px;

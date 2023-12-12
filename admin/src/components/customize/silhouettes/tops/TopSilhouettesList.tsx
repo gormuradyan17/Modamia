@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { availableSilhouettes, setSilhouetteData } from 'redux/reducers/silhouetteReducer';
 import { BASE_UPLOADS_SILHOUETTES_TOPS_URL } from 'shared/constants/genericApiRoutes';
-import { ObjectType, appColor } from 'shared/helpers/helpers';
+import { ArrayType, ObjectType, appColor } from 'shared/helpers/helpers';
 import { ButtonUI } from 'shared/ui/ButtonUI/ButtonUI';
 import HeadingUI from 'shared/ui/HeadingUI/HeadingUI';
 import PopupUI from 'shared/ui/PopupUI/PopupUI';
@@ -10,7 +10,6 @@ import EditSilhouette from '../EditSilhouette';
 import { formValidator } from 'utils/validators/validator';
 import { silhouetteFormOptions } from 'utils/validators/validatorOptions';
 import { removeSilhouette, updateSilhouette } from 'shared/api/dataApi';
-import { getAvSilhouettes } from 'services/silhouetteService';
 import RemoveSome from 'components/customize/removeSome/RemoveSome';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -24,13 +23,37 @@ const TopSilhouettesList = () => {
     const [isVisible, setIsVisible] = useState<boolean>(false)
     const [errors, setErrors] = useState<ObjectType>({})
     const dispatch = useDispatch()
-
+    
     const [isVisibleRemove, setIsVisibleRemove] = useState<boolean>(false)
     const [removableItem, setRemovableItem] = useState<ObjectType>({})
+    
+    const [draggableVariant, setDraggableVariant] = useState<number>(0)
+    const [silhouettesList, setSilhouettesList] = useState<ArrayType>([])
 
-    const topSilhouettes = useMemo(() => {
-        return silhouettes.filter((silhouette: ObjectType) => silhouette.type === 'Top')
-    }, [silhouettes])
+    useMemo(() => {
+        const data = silhouettes.filter((silhouette: ObjectType) => silhouette.type === 'Top')
+        setSilhouettesList(data)
+    },[silhouettes])
+
+    const onDragStart = (e: any, idx: number) => {
+        setDraggableVariant(idx)
+    };
+
+    const onDragOver = (e: any) => {
+        e.preventDefault();
+    };
+
+    const onDrop = async (e: any, idx: number) => {
+        e.preventDefault();
+        const fromElement = silhouettesList[draggableVariant]
+        const toElement = silhouettesList[idx]
+        if (fromElement && toElement && idx !== draggableVariant) {
+            const copySilhouettes = structuredClone(silhouettesList)
+            copySilhouettes[idx] = fromElement;
+            copySilhouettes[draggableVariant] = toElement;
+            setSilhouettesList(copySilhouettes)
+        }
+    };
 
     const editSilhouette = (silhouette: ObjectType) => {
         if (silhouette) {
@@ -98,8 +121,15 @@ const TopSilhouettesList = () => {
         <div className='silhouettes-items'>
             <HeadingUI text="Top Silhouettes" size="20px" />
             <div className="silhouettes-items-body customXScrollbar">
-                {topSilhouettes?.length ? topSilhouettes.map((silhouette: ObjectType) => {
-                    return <div className="silhouettes-list-silhouette" key={silhouette._id}>
+                {silhouettesList?.length ? silhouettesList.map((silhouette: ObjectType, idx: number) => {
+                    return <div
+                        className="silhouettes-list-silhouette"
+                        key={silhouette._id}
+                        draggable
+                        onDragStart={(e) => onDragStart(e, idx)}
+                        onDragOver={onDragOver}
+                        onDrop={(e) => onDrop(e, idx)}
+                    >
                         <HeadingUI classN="silhouettes-list-text _ellipsis" text={silhouette.name} color={appColor} size="16px" />
                         <div className="silhouettes-list-image">
                             <img src={`${BASE_UPLOADS_SILHOUETTES_TOPS_URL}${silhouette.silhouetteurl}`} className="silhouettes-list-img" alt={silhouette.name} />

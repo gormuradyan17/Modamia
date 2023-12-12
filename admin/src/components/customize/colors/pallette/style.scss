@@ -24,6 +24,12 @@ $colorFill: va(--colorFill);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    .ButtonUI {
+        margin-right: 0;
+        width: 30px;
+        height: 30px;
+        min-height: initial;
+    }
 }
 .palette-variantname {
     text-transform: capitalize;
@@ -31,14 +37,11 @@ $colorFill: va(--colorFill);
 .palette-content {
     width: 100%;
     display: flex;
-    border: 1px solid variables.$appColor;
-    border-radius: 5px;
     margin-top: 10px;
     height: 100px;
     width: max-content;
     max-width: 400px;
     overflow-x: auto;
-    box-shadow: 0 0 15px 0 rgba(0,0,0,.5);
 }
 
 .palette-elem {
@@ -51,7 +54,11 @@ $colorFill: va(--colorFill);
     padding: 10px 20px;
     box-sizing: border-box;
     cursor: pointer;
-    
+    margin-right: 5px;
+    border-radius: 5px;
+    &:last-child {
+        margin: 0;
+    }
 }
 
 .palette-elem-text {

@@ -25,7 +25,6 @@ const ColorContent = () => {
   const dispatch = useDispatch();
   const [type, setType] = useState("all");
 
-
   useEffect(() => {
     getAvColorsPalettes(dispatch);
     getAvColorsVariants(dispatch);

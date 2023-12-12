@@ -55,6 +55,24 @@ export const getManipulatedDataFromPalettes = (palettes: ArrayType, paletteName:
   return result
 }
 
+export const getConvertedDropdownOptionsFromVariantsMatched = (variants: ObjectType, items: string[], ) => {
+  const matched = items.reduce((acc: any, item: string) => {
+    const found = variants?.find((variant: ObjectType) => variant?._id === item)
+    if (found) acc.push(found)
+    return acc;
+  },[])
+
+  if (!matched.length) return []
+  return matched?.reduce((acc: any, variant: ObjectType) => {
+    acc.push({
+      id: variant?._id,
+      text: variant?.name || variant?.size ,
+      value: variant?.name ||  variant?.size,
+    })
+    return acc
+  },[])
+}
+
 export const getConvertedDropdownOptionsFromVariants = (variants: ObjectType) => {
   return variants?.reduce((acc: any, variant: ObjectType) => {
     
