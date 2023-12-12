@@ -192,8 +192,12 @@ export const canvasModelInit = (num: number, modData: any, frontBack: string = "
 
 				 }
 			}
-			 else {						
-				elem=await addModel(modData[frontBack]?.[i] , canvasWidth, canvasHeight,frontBack,updatedModelData[frontBack][i],fromBasket);			
+			 else {		
+				if(frontBack==="sleeves"){
+					elem=await addModel(modData.fronts?.[i] , canvasWidth, canvasHeight,"fronts",updatedModelData["fronts"][i],fromBasket);			
+					updateArrWithElem(elem,arr,"fronts")
+				 }		
+				 elem=await addModel(modData[frontBack]?.[i] , canvasWidth, canvasHeight,frontBack,updatedModelData[frontBack][i],fromBasket);			
 				updateArrWithElem(elem,arr,frontBack)
 			}			
 		}			
@@ -202,4 +206,5 @@ export const canvasModelInit = (num: number, modData: any, frontBack: string = "
 
 
 };
+
 
