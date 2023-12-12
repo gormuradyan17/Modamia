@@ -138,3 +138,18 @@ export async function updateArrWithElem(elem: any, arr: any[], frontBack: string
 
 }
 
+export const convertDefaultValue=(modelData:any,silhouettes:any)=>{
+	const updatedModelData: any = {};
+
+    for (let key in modelData) {
+      const position1 = modelData[key][0].position;
+      const position2 = modelData[key][1].position;
+
+
+      updatedModelData[key] = [
+        { ...modelData[key][0], ...getCanvasDefaultImages(silhouettes, key, position1) },
+        { ...modelData[key][1], ...getCanvasDefaultImages(silhouettes, key, position2) }
+      ];
+    }
+  return updatedModelData;
+}
