@@ -67,12 +67,12 @@
         font-family: Poppins-SemiBold;
         color: black;
         transition: 0.2s opacity;
-        position: relative;
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
         left: 4rem;
         font-size: 14px;
+        white-space: nowrap;
     }
 
     &._expanded {
