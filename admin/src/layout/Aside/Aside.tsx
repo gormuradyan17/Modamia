@@ -7,11 +7,14 @@ import AsideItem from './AsideItem';
 import AsideSub from './AsideSub';
 import { useDispatch, useSelector } from 'react-redux';
 import { isExpanded, setIsExpanded } from 'redux/reducers/asideReducer';
+import AsideGarment from './garment/AsideGarment';
+import { garmentDetails } from 'redux/reducers/garmentReducer';
 
 const Aside = () => {
 
     const expanded = useSelector(isExpanded)
     const dispatch  = useDispatch()
+    const details = useSelector(garmentDetails)
 
     const renderMenuItems = (items: ArrayType, isFirst: boolean = false) => {
         return items?.map(child => {
@@ -44,6 +47,7 @@ const Aside = () => {
                 <div className='admin-aside__routes'>
                     {renderMenuItems(adminPages, true)}
                 </div>
+                {/* {details?.name && <AsideGarment />} */}
             </div>
         </aside >
     );

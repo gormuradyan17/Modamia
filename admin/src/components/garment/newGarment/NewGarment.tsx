@@ -32,6 +32,9 @@ const NewGarment = () => {
         getAvMannequins(dispatch)
         getAvColorsPalettes(dispatch)
         getAvPrintsPalettes(dispatch)
+        return () => {
+            dispatch(resetGarmentState())
+        }
     }, [])
 
     const silhouettes = useSelector(availableSilhouettes)
