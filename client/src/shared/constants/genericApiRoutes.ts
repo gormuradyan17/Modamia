@@ -2,6 +2,7 @@ export const BASE_URL = process.env.REACT_APP_BASE_API_URL || ''
 export const API_URL = '/'
 export const BASE_UPLOADS_URL = BASE_URL + '/api/uploads/'
 export const API_URL_ADMIN = '/admin/'
+export const SHOPIFY_API_REDIRECT_URL = BASE_URL + '/api/auth'
 
 export const COLORS_URL = API_URL + 'colors'
 export const COLORS_VARIANTS_URL = API_URL + 'colors-variants'
