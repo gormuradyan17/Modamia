@@ -1,9 +1,9 @@
 import { lazy } from 'react';
 
 const AUTH = {
-	DASHBOARD: lazy(() => import('pages/Dashboard'))
+	DASHBOARD: lazy(() => import('pages/Dashboard')),
 	// PAGE_404: lazy(() => import('pages/auth/page404/Page404')),
-	// LOGIN: lazy(() => import('pages/auth/login/Login')),
+	SIGN_IN: lazy(() => import('pages/Signin/Signin')),
 };
 
 const LANDING = {
@@ -49,14 +49,14 @@ export const publicPages = [
 	// 	element: AUTH.PAGE_404,
 	// 	exact: true,
 	// },
-	// {
-	// 	id: 'login',
-	// 	text: 'Login',
-	// 	path: 'login',
-	// 	icon: faHome,
-	// 	element: AUTH.LOGIN,
-	// 	exact: true,
-	// },
+	{
+		id: 'signin',
+		text: 'Signin',
+		path: 'signin',
+		icon: '',
+		element: AUTH.SIGN_IN,
+		exact: true,
+	},
 	{
 		id: "Dashboard",
 		text: "Home Page",
