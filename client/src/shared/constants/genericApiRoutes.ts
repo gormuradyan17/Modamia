@@ -4,9 +4,19 @@ export const BASE_UPLOADS_URL = BASE_URL + '/api/uploads/'
 export const API_URL_ADMIN = '/admin/'
 export const SHOPIFY_API_REDIRECT_URL = BASE_URL + '/api/auth'
 
+//color
 export const COLORS_URL = API_URL + 'colors'
+export const ADD_COLOR_URL = API_URL + 'add-color'
+export const ADD_COLOR_VARIANT_URL = API_URL + 'add-color-variant'
 export const COLORS_VARIANTS_URL = API_URL + 'colors-variants'
 export const COLORS_PALETTES_URL = API_URL + 'colors-palettes'
+export const ADD_COLOR_PALETTE_URL = API_URL + 'add-color-palette'
+export const REMOVE_COLOR_PALETTE_URL = API_URL + 'remove-color-palette'
+export const ORDER_PALETTE_COLORS_URL = API_URL + 'order-palette-colors'
+export const EDIT_COLOR_URL = API_URL + 'edit-color'
+export const REMOVE_COLOR_URL = API_URL + 'remove-color'
+
+//mannequins
 export const MANNEQUINS_URL = API_URL + 'mannequins'
 export const MANNEQUIN_WITH_SILHOUETTES_URL = API_URL + 'mannequin-with-silhouettes'
 
@@ -14,43 +24,11 @@ export const BASE_UPLOADS_MANNEQUINS_URL = BASE_UPLOADS_URL + 'mannequins/'
 export const BASE_UPLOADS_MANNEQUINS_FRONTS_URL = BASE_UPLOADS_MANNEQUINS_URL + 'fronts/'
 export const BASE_UPLOADS_MANNEQUINS_BACKS_URL = BASE_UPLOADS_MANNEQUINS_URL + 'backs/'
 
+//prints
 export const BASE_UPLOADS_PRINTS_URL = BASE_UPLOADS_URL + 'prints/'
 export const BASE_UPLOADS_PRINTS_HIGHS_URL = BASE_UPLOADS_PRINTS_URL + 'highs/'
 export const BASE_UPLOADS_PRINTS_PREVIEWS_URL = BASE_UPLOADS_PRINTS_URL + 'previews/'
 
-export const widthM = 483;
-export const heightM = 1056;
-export const width = 1056;
-export const height= 483;
-
-
-
-export const M_I = "/image/Mannequin/mannequin2.png";
-
-export const B_G1 = "/image/Prints/print1.png";
-export const B_G2 = "/image/Prints/print2.png";
-export const B_G3 = "/image/Prints/print3.png";
-
-export const T_I1 = "/image/Silhouettes/top/top1.png";
-export const T_I2 = "/image/Silhouettes/top/top-2.png";
-export const T_I3 = "/image/Silhouettes/top/top3.png";
-export const T_I4 = "/image/Silhouettes/top/top.png";
-export const T_N  = "/image/Silhouettes/top/top.png"
-
-export const B_I1 = "/image/Silhouettes/bottom/pant1.png";
-export const B_I2 = "/image/Silhouettes/bottom/bottom.png";
-export const B_I3 = "/image/Silhouettes/bottom/skirt1.png";
-export const B_I4 = "/image/Silhouettes/bottom/skirt2.png";
-export const B_I5 = "/image/Silhouettes/bottom/skirt3.png";
-export const B_I6 = "/image/Silhouettes/bottom/skirt-4.png";
-export const B_N=   "/image/Silhouettes/bottom/bottom.png"
-
-export const S_I1 = "/image/Silhouettes/sleeve/sleeve-1.png"
-export const S_I2 = "/image/Silhouettes/sleeve/sleeve-2.png"
-export const S_I3 = "/image/Silhouettes/sleeve/sleeve-3.png"
- 
-export const T_B1="/image/Silhouettes/sleeve/sleeve-1.png"
-export const B_B1="/image/Silhouettes/sleeve/sleeve-1.png"
 
 // Silhouette
 
@@ -69,10 +47,14 @@ export const BASE_UPLOADS_SILHOUETTES_SLEEVES_URL = BASE_UPLOADS_SILHOUETTES_URL
 
 export const PRINTS_URL = API_URL + 'prints'
 export const PRINTS_VARIANTS_URL = API_URL + 'prints-variants'
-export const ADD_PRINT_URL = API_URL_ADMIN + 'add-print'
-export const ADD_PRINT_VARIANT_URL = API_URL_ADMIN + 'add-print-variant'
-export const EDIT_PRINT_URL = API_URL_ADMIN + 'edit-print'
+export const ADD_PRINT_URL = API_URL + 'add-print'
+export const ADD_PRINT_VARIANT_URL = API_URL + 'add-print-variant'
+export const EDIT_PRINT_URL = API_URL + 'edit-print'
 export const PRINTS_PALETTES_URL = API_URL + 'prints-palettes'
+export const ADD_PRINT_PALETTE_URL = API_URL + 'add-print-palette'
+export const REMOVE_PRINT_PALETTE_URL = API_URL + 'remove-print-palette'
+export const ORDER_PALETTE_PRINTS_URL = API_URL + 'order-palette-prints'
+export const REMOVE_PRINT_URL = API_URL + 'remove-print'
 
 
 // Size

@@ -1,4 +1,4 @@
-import { SHOPIFY_API_REDIRECT_URL, width } from './../constants/genericApiRoutes';
+import { SHOPIFY_API_REDIRECT_URL } from './../constants/genericApiRoutes';
 import { AnimationObject } from "shared/objectModels/AnimationModel";
 import NoSleeve from 'assets/images/no-sleeve.png'
 import { BASE_UPLOADS_SILHOUETTES_URL } from "shared/constants/genericApiRoutes";
@@ -179,3 +179,19 @@ export const convertDefaultValue=(modelData:any,silhouettes:any)=>{
     }
   return updatedModelData;
 }
+
+export const getDropdownOptionsFromItemsVariants = (options: ArrayType) => {
+  return options?.length ? options.reduce((acc: any, option: ObjectType) => {
+    acc.push({
+      id: option?._id,
+      text: option?.name,
+      value: option?.name,
+    })
+    return acc
+  }, []) : []
+}
+
+export const eraseCookie = (name: string) => {
+  document.cookie = name + `=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
+}
+

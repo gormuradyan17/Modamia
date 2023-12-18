@@ -106,7 +106,6 @@ export const addColor = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');
 	return http.post(ADD_COLOR_URL, body)
 }
-
 export const addColorVariant = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');
 	return http.post(ADD_COLOR_VARIANT_URL, body)
@@ -153,7 +152,7 @@ export const getPrintsPalettes = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');
 	return http.get(PRINTS_PALETTES_URL, body)
 }
-
+// addPrintPalette, removePrint, removePrintPalette, updatePrint
 export const addPrintPalette = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');
 	return http.post(ADD_PRINT_PALETTE_URL, body)
@@ -163,6 +162,7 @@ export const removePrintPalette = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');
 	return http.post(REMOVE_PRINT_PALETTE_URL, body)
 }
+
 
 export const orderPalettePrints = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');

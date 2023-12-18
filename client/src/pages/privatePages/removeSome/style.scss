@@ -1,0 +1,20 @@
+.remove-some {
+    display: flex;
+    flex-direction: column;
+    &-text {
+        margin: 20px 0;
+        color: red;
+        text-align: center;
+        span {
+            font-size: 20px;
+            font-weight: 900;
+            text-transform: capitalize;
+        }
+    }
+    &-actions {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+}

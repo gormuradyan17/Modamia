@@ -24,7 +24,7 @@ export const privatePages = [
 	{
 		id: 'Dashboard',
 		text: 'Dashboard',
-		path: '',
+		path: 'home',
 		icon: faHome,
 		element: LANDING.DASHBOARD,
 		exact: true,
