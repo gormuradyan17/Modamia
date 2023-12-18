@@ -2,7 +2,6 @@ export const BASE_URL = process.env.REACT_APP_BASE_API_URL || ''
 export const API_URL = '/'
 export const BASE_UPLOADS_URL = BASE_URL + '/api/uploads/'
 export const API_URL_ADMIN = '/admin/'
-export const SHOPIFY_API_REDIRECT_URL = BASE_URL + '/api/auth'
 
 export const COLORS_URL = API_URL + 'colors'
 export const COLORS_VARIANTS_URL = API_URL + 'colors-variants'
@@ -63,8 +62,6 @@ export const BASE_UPLOADS_SILHOUETTES_TOPS_URL = BASE_UPLOADS_SILHOUETTES_URL + 
 export const BASE_UPLOADS_SILHOUETTES_BOTTOMS_URL = BASE_UPLOADS_SILHOUETTES_URL + 'bottoms/'
 export const BASE_UPLOADS_SILHOUETTES_SLEEVES_URL = BASE_UPLOADS_SILHOUETTES_URL + 'sleeves/'
 
-
-
 // Print
 
 export const PRINTS_URL = API_URL + 'prints'
@@ -73,7 +70,6 @@ export const ADD_PRINT_URL = API_URL_ADMIN + 'add-print'
 export const ADD_PRINT_VARIANT_URL = API_URL_ADMIN + 'add-print-variant'
 export const EDIT_PRINT_URL = API_URL_ADMIN + 'edit-print'
 export const PRINTS_PALETTES_URL = API_URL + 'prints-palettes'
-
 
 // Size
 

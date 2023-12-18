@@ -1,0 +1,8 @@
+export const SHOPIFY_SHOP = process.env.SHOPIFY_SHOP || ''
+export const SHOPIFY_CLIENT_ID = process.env.SHOPIFY_CLIENT_ID || ''
+export const SHOPIFY_CLIENT_SECRET = process.env.SHOPIFY_CLIENT_SECRET || ''
+export const SHOPIFY_REDIRECT_URL = process.env.SHOPIFY_REDIRECT_URL || ''
+export const SHOPIFY_SCOPES = 'read_products'
+export const SHOPIFY_ACCECC_TOKEN = process.env.SHOPIFY_ACCECC_TOKEN || ''
+export const SHOPIFY_ACCECC_API_KEY = process.env.SHOPIFY_ACCECC_API_KEY || ''
+export const SHOPIFY_ACCECC_API_SECRET = process.env.SHOPIFY_ACCECC_API_SECRET || ''

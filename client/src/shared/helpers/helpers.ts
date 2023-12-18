@@ -1,4 +1,3 @@
-import { SHOPIFY_API_REDIRECT_URL, width } from './../constants/genericApiRoutes';
 import { AnimationObject } from "shared/objectModels/AnimationModel";
 import NoSleeve from 'assets/images/no-sleeve.png'
 import { BASE_UPLOADS_SILHOUETTES_URL } from "shared/constants/genericApiRoutes";
@@ -6,14 +5,6 @@ import { BASE_UPLOADS_SILHOUETTES_URL } from "shared/constants/genericApiRoutes"
 export type ArrayType = Array<Record<string, any>>
 export type ObjectType = Record<string, any>
 export const appColor = '#aa8a75';
-
-export const shopifyConfig = {
-  authorizationUrl: '',
-  clientId: process.env.REACT_APP_SHOPIFY_CLIENT_ID || '',
-  redirectUri: SHOPIFY_API_REDIRECT_URL,
-  responseType: 'code',
-  scope: 'read_products',
-};
 
 export const PortalAnimations: AnimationObject = {
     fadeIn: [

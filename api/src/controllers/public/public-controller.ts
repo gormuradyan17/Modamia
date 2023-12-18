@@ -1,3 +1,4 @@
+import authService from '../../services/auth-service';
 import publicService from '../../services/public-service'
 
 class PublicController {
@@ -22,7 +23,7 @@ class PublicController {
 
     async getColorsPalettes(req: any, res: any, next: any) {
         try {
-            const {color_id = '', variant_id = ''} = req.query
+            const { color_id = '', variant_id = '' } = req.query
             const palettes = await publicService.getColorsPalettes(color_id, variant_id);
             return res.json(palettes);
         } catch (error) {
@@ -32,7 +33,7 @@ class PublicController {
 
     async getPrints(req: any, res: any, next: any) {
         try {
-            const {variant = ''} = req.query
+            const { variant = '' } = req.query
             const prints = await publicService.getPrints(variant);
             return res.json(prints);
         } catch (error) {
@@ -51,7 +52,7 @@ class PublicController {
 
     async getPrintsPalettes(req: any, res: any, next: any) {
         try {
-            const {print_id = '', variant_id = ''} = req.query
+            const { print_id = '', variant_id = '' } = req.query
             const palettes = await publicService.getPrintsPalettes(print_id, variant_id);
             return res.json(palettes);
         } catch (error) {
@@ -122,6 +123,14 @@ class PublicController {
         } catch (error) {
             next(error);
         }
+    }
+
+    async signinShopify(req: any, res: any, next: any) {
+        return res.redirect(await authService.signinShopify())
+    }
+
+    async redirectShopify(req: any, res: any, next: any) {
+        return await authService.fetchShopifyUser(req.query.code)
     }
 }
 
