@@ -9,10 +9,14 @@ const UserSchema = new mongoose.Schema(
     },
     shopify_id: {
       type: String,
-      required: true,
+      required: false,
       unique: true,
     },
     name: {
+      type: String,
+      required: true,
+    },
+    token: {
       type: String,
       required: true,
     },

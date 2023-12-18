@@ -14,7 +14,7 @@ function LoginSignBtn() {
           <Link to="/login">Login</Link>
         </li>
         <li  className='join_user'>
-        <Link to="/join">Join</Link>
+        <Link to="/signin">Join</Link>
         </li>
       </ul>
     </div>

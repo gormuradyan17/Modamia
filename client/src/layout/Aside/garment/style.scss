@@ -1,0 +1,42 @@
+@use 'variables';
+
+.aside-garment {
+    margin-top: 10px;
+    border-top: 1px solid variables.$appColor;
+
+    &__layer {
+        position: relative;
+        width: 100%;
+        cursor: pointer;
+        transition: 0.2s all ease 0s;
+        display: flex;
+        align-items: center;
+        box-sizing: border-box;
+        -webkit-user-select: none;
+        user-select: none;
+        height: max-content;
+        padding: 13px 18px 13px 21px;
+        position: relative;
+
+        &-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .headingUI {
+            opacity: 0;
+            font-family: Poppins-SemiBold;
+            color: black;
+            transition: 0.2s opacity;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 4rem;
+            font-size: 14px;
+            max-width: 210px;
+            &._expanded {
+                opacity: 1;
+            }
+        }
+    }
+}

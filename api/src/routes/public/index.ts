@@ -36,5 +36,6 @@ router.post('/search-garment', publicController.searchGarments)
 
 router.get('/shopify/authorize', publicController.signinShopify)
 router.get('/shopify/redirect', publicController.redirectShopify)
+router.post('/shopify/getUser', publicController.getShopifyUser)
 
 export default router

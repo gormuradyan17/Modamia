@@ -1,5 +1,6 @@
 import authService from '../../services/auth-service';
 import publicService from '../../services/public-service'
+import { REACT_BASE_URL } from '../../utils/constants/variables';
 
 class PublicController {
 
@@ -126,11 +127,31 @@ class PublicController {
     }
 
     async signinShopify(req: any, res: any, next: any) {
-        return res.redirect(await authService.signinShopify())
+        try {
+            return res.redirect(await authService.signinShopify())
+        } catch (err: any) {
+            console.log(err)            
+        }
     }
 
     async redirectShopify(req: any, res: any, next: any) {
-        return await authService.fetchShopifyUser(req.query.code)
+        const user = await authService.fetchShopifyUser(req.query.code)
+        if (user && user?.token) {
+            res.cookie('shopifyToken', user?.token, {
+                maxAge: 30 * 24 * 60 * 60 * 1000,
+            })
+        }
+        return res.redirect(REACT_BASE_URL)
+    }
+
+    async getShopifyUser(req: any, res: any, next: any) {
+        try {
+            const { token = '' } = req.body
+            const user = await authService.getShopifyUser(token);
+            return res.json(user?.[0] || null);
+        } catch (err: any) {
+            console.log(err)            
+        }
     }
 }
 
