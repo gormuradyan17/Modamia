@@ -1,54 +1,110 @@
+import { faBasketShopping, faDiceD20, faGlobe, faHome, faPalette, faShirt, faUser, faUserTie } from '@fortawesome/free-solid-svg-icons';
 import { lazy } from 'react';
 
 const AUTH = {
 	DASHBOARD: lazy(() => import('pages/Dashboard')),
-	// PAGE_404: lazy(() => import('pages/auth/page404/Page404')),
 	SIGN_IN: lazy(() => import('pages/Signin/Signin')),
 };
 
 const LANDING = {
-	// DASHBOARD: lazy(() => import('pages/dashboard/Dashboard')),
+	DASHBOARD: lazy(() => import('pages/privatePages/Dashboard')),
 	CUSTOMIZATION: lazy(() => import('pages/Customization/Customization')),
 	CUSTOMIZATION_GARMENTS: lazy(() => import('pages/CustomizationGarments/CustomizationGarments')),
-	SHOPCART: lazy(() => import('pages/ShopCart'))
+	SHOPCART: lazy(() => import('pages/ShopCart')),
+	PROFILE: lazy(() => import("pages/privatePages/Profile")),
+	PRODUCTS: lazy(() => import("pages/privatePages/Products")),
+	GARMENTS: lazy(() => import("pages/privatePages/Garments")),
+	ALLGARMENTS: lazy(() => import('pages/privatePages/Garments/AllGarments')),
+	MYGARMENTS: lazy(() => import('pages/privatePages/Garments/MyGarments')),
+	COLORPRINTLIB: lazy(() => import("pages/privatePages/ColorPrintLib")),
+	NOTFOUND: lazy(() => import("pages/NotFound"))
 };
 
 export const privatePages = [
 	{
-		id: 'Customization',
-		text: 'Customization Page',
-		path: 'customization',
-		icon: '',
-		element: LANDING.CUSTOMIZATION_GARMENTS,
+		id: 'Dashboard',
+		text: 'Dashboard',
+		path: '',
+		icon: faHome,
+		element: LANDING.DASHBOARD,
 		exact: true,
+		isPrivate: true,
 	},
 	{
 		id: 'Customization',
-		text: 'Customization Page',
-		path: 'customization/:id',
+		text: 'Customization',
+		path: '/customization',
+		icon: faDiceD20,
+		element: LANDING.CUSTOMIZATION_GARMENTS,
+		isPrivate: true,
+	},
+	{
+		id: 'Customization Page',
+		path: '/customization/:id',
 		icon: '',
 		element: LANDING.CUSTOMIZATION,
 		exact: true,
 	},
 	{
 		id: 'ShopCart',
-		text: 'Shop Page',
-		path: 'shopcart',
-		icon: '',
+		text: 'Cart',
+		path: '/shopcart',
+		icon: faBasketShopping,
 		element: LANDING.SHOPCART,
+		isPrivate: true,
+	},
+
+	{
+		id: 'Profile',
+		text: 'Profile',
+		path: '/profile',
+		icon: faUser,
+		element: LANDING.PROFILE,
 		exact: true,
-	}
+		isPrivate: true,
+	},
+	{
+		id: 'Garments',
+		text: 'Garments',
+		path: '/garments',
+		icon: faShirt,
+		element: LANDING.GARMENTS,
+		exact: true,
+		isPrivate: true,
+		children: [
+			{
+				id: 'all-garments',
+				text: 'All Garments',
+				path: '/all-garments',
+				icon: faGlobe,
+				element: LANDING.ALLGARMENTS,
+				exact: true,
+				isPrivate: true,
+			},
+			{
+				id: 'my-garments',
+				text: 'My Garments',
+				path: '/my-garments',
+				icon: faUserTie,
+				element: LANDING.MYGARMENTS,
+				exact: true,
+				isPrivate: true,
+			},
+		]
+	},
+	{
+		id: 'COLORPRINTLIB',
+		text: 'Color & print library',
+		path: '/colorprintlib',
+		icon: faPalette,
+		element: LANDING.COLORPRINTLIB,
+		isPrivate: true,
+		exact: true
+	},
+
 ]
 
 export const publicPages = [
-	// {
-	// 	id: 'Page404',
-	// 	text: '404 Page',
-	// 	path: '404',
-	// 	icon: faHome,
-	// 	element: AUTH.PAGE_404,
-	// 	exact: true,
-	// },
 	{
 		id: 'signin',
 		text: 'Signin',
@@ -63,8 +119,9 @@ export const publicPages = [
 		path: "/",
 		icon: "",
 		element: AUTH.DASHBOARD,
-		exact: true
-	}
+		exact: true,
+		isPrivate: false,
+	},
 ];
 
 const contents = { publicPages, privatePages };
