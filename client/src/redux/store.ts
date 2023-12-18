@@ -8,6 +8,7 @@ import sizeReducer from "./reducers/sizeReducer"
 import addToCartReducer from "./reducers/addToCartReducer"
 import garmentReducer from "./reducers/garmentReducer"
 import modelDataReducer from "./reducers/modelData"
+import userReducer from "./reducers/userReducer"
 export const store = configureStore({
   reducer: {
     asideReducer,
@@ -18,6 +19,7 @@ export const store = configureStore({
     sizeReducer,
     addToCartReducer,
     garmentReducer,
-    modelDataReducer
+    modelDataReducer,
+    userReducer
   },
 })

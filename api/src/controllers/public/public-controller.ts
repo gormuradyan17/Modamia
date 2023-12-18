@@ -1,4 +1,6 @@
+import authService from '../../services/auth-service';
 import publicService from '../../services/public-service'
+import { REACT_BASE_URL } from '../../utils/constants/variables';
 
 class PublicController {
 
@@ -22,7 +24,7 @@ class PublicController {
 
     async getColorsPalettes(req: any, res: any, next: any) {
         try {
-            const {color_id = '', variant_id = ''} = req.query
+            const { color_id = '', variant_id = '' } = req.query
             const palettes = await publicService.getColorsPalettes(color_id, variant_id);
             return res.json(palettes);
         } catch (error) {
@@ -32,7 +34,7 @@ class PublicController {
 
     async getPrints(req: any, res: any, next: any) {
         try {
-            const {variant = ''} = req.query
+            const { variant = '' } = req.query
             const prints = await publicService.getPrints(variant);
             return res.json(prints);
         } catch (error) {
@@ -51,7 +53,7 @@ class PublicController {
 
     async getPrintsPalettes(req: any, res: any, next: any) {
         try {
-            const {print_id = '', variant_id = ''} = req.query
+            const { print_id = '', variant_id = '' } = req.query
             const palettes = await publicService.getPrintsPalettes(print_id, variant_id);
             return res.json(palettes);
         } catch (error) {
@@ -121,6 +123,34 @@ class PublicController {
             return res.json(silhouettes);
         } catch (error) {
             next(error);
+        }
+    }
+
+    async signinShopify(req: any, res: any, next: any) {
+        try {
+            return res.redirect(await authService.signinShopify())
+        } catch (err: any) {
+            console.log(err)            
+        }
+    }
+
+    async redirectShopify(req: any, res: any, next: any) {
+        const user = await authService.fetchShopifyUser(req.query.code)
+        if (user && user?.token) {
+            res.cookie('shopifyToken', user?.token, {
+                maxAge: 30 * 24 * 60 * 60 * 1000,
+            })
+        }
+        return res.redirect(REACT_BASE_URL)
+    }
+
+    async getShopifyUser(req: any, res: any, next: any) {
+        try {
+            const { token = '' } = req.body
+            const user = await authService.getShopifyUser(token);
+            return res.json(user?.[0] || null);
+        } catch (err: any) {
+            console.log(err)            
         }
     }
 }

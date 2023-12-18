@@ -1,4 +1,3 @@
-import { SHOPIFY_API_REDIRECT_URL } from './../constants/genericApiRoutes';
 import { AnimationObject } from "shared/objectModels/AnimationModel";
 import NoSleeve from 'assets/images/no-sleeve.png'
 import { BASE_UPLOADS_SILHOUETTES_URL } from "shared/constants/genericApiRoutes";
@@ -6,14 +5,6 @@ import { BASE_UPLOADS_SILHOUETTES_URL } from "shared/constants/genericApiRoutes"
 export type ArrayType = Array<Record<string, any>>
 export type ObjectType = Record<string, any>
 export const appColor = '#aa8a75';
-
-export const shopifyConfig = {
-  authorizationUrl: '',
-  clientId: process.env.REACT_APP_SHOPIFY_CLIENT_ID || '',
-  redirectUri: SHOPIFY_API_REDIRECT_URL,
-  responseType: 'code',
-  scope: 'read_products',
-};
 
 export const PortalAnimations: AnimationObject = {
     fadeIn: [
@@ -180,6 +171,26 @@ export const convertDefaultValue=(modelData:any,silhouettes:any)=>{
   return updatedModelData;
 }
 
+export const setCookie = (name: string, value: any, days: number) => {
+  var expires = "";
+  if (days) {
+    var date = new Date();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+    expires = "; expires=" + date.toUTCString();
+  }
+  document.cookie = name + "=" + (value || "") + expires + "; path=/";
+}
+
+export const getCookie = (name: string) => {
+  var nameEQ = name + "=";
+  var ca = document.cookie.split(';');
+  for (var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+  }
+  return null;
+}
 export const getDropdownOptionsFromItemsVariants = (options: ArrayType) => {
   return options?.length ? options.reduce((acc: any, option: ObjectType) => {
     acc.push({
@@ -188,8 +199,7 @@ export const getDropdownOptionsFromItemsVariants = (options: ArrayType) => {
       value: option?.name,
     })
     return acc
-  }, []) : []
-}
+  }, []) : [] }
 
 export const eraseCookie = (name: string) => {
   document.cookie = name + `=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`;

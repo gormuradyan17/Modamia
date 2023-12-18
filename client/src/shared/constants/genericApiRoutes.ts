@@ -2,7 +2,6 @@ export const BASE_URL = process.env.REACT_APP_BASE_API_URL || ''
 export const API_URL = '/'
 export const BASE_UPLOADS_URL = BASE_URL + '/api/uploads/'
 export const API_URL_ADMIN = '/admin/'
-export const SHOPIFY_API_REDIRECT_URL = BASE_URL + '/api/auth'
 
 //color
 export const COLORS_URL = API_URL + 'colors'
@@ -41,8 +40,6 @@ export const BASE_UPLOADS_SILHOUETTES_TOPS_URL = BASE_UPLOADS_SILHOUETTES_URL + 
 export const BASE_UPLOADS_SILHOUETTES_BOTTOMS_URL = BASE_UPLOADS_SILHOUETTES_URL + 'bottoms/'
 export const BASE_UPLOADS_SILHOUETTES_SLEEVES_URL = BASE_UPLOADS_SILHOUETTES_URL + 'sleeves/'
 
-
-
 // Print
 
 export const PRINTS_URL = API_URL + 'prints'
@@ -56,7 +53,6 @@ export const REMOVE_PRINT_PALETTE_URL = API_URL + 'remove-print-palette'
 export const ORDER_PALETTE_PRINTS_URL = API_URL + 'order-palette-prints'
 export const REMOVE_PRINT_URL = API_URL + 'remove-print'
 
-
 // Size
 
 export const SIZE_URL = API_URL + 'sizes'
@@ -68,3 +64,8 @@ export const EDIT_SIZE_URL = API_URL_ADMIN + 'edit-size'
 export const GARMENTS_URL = API_URL + 'garments'
 export const GARMENT_URL = API_URL + 'garment'
 export const SEARCH_GARMENT_URL = API_URL + 'search-garment'
+
+// Auth
+
+export const SIGNIN_SHOPIFY_URL = BASE_URL + '/api/shopify/authorize'
+export const GET_SHOPIFY_USER_URL = API_URL + '/shopify/getUser'

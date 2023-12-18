@@ -32,4 +32,10 @@ router.get('/garments', publicController.getGarments)
 router.post('/garment', publicController.getGarment)
 router.post('/search-garment', publicController.searchGarments)
 
+// auth
+
+router.get('/shopify/authorize', publicController.signinShopify)
+router.get('/shopify/redirect', publicController.redirectShopify)
+router.post('/shopify/getUser', publicController.getShopifyUser)
+
 export default router

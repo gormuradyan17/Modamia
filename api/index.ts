@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+dotenv.config();
 import path from 'path'
 import cors from 'cors'
 import router from './src/routes'
@@ -8,14 +9,13 @@ import helmet from "helmet";
 import morgan from "morgan";
 import multer from "multer";
 import express from "express";
-const upload = require('express-fileupload')
+import upload from 'express-fileupload';
+// const upload = require('express-fileupload')
 // const errorMidleware = require('./middlewares/error')
 // const passport = require('passport')
 // import HttpError from "./utils/HttpError";
 const app = express();
-app.use(cookieParser())
-
-dotenv.config();
+app.use(cookieParser());
 
 // const storage = multer.diskStorage({
 // 	destination: (req, file, cb) => {
