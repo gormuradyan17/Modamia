@@ -9,7 +9,7 @@ router.post('/signin', adminSigninValidators, adminController.signin)
 
 // auth
 
-// router.use(authMiddleware);
+router.use(authMiddleware);
 
 router.post('/refresh', adminController.refresh)
 router.post('/signout', adminController.signout)

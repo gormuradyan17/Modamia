@@ -1,5 +1,19 @@
 const router = require("express").Router();
 import publicController from '../../controllers/public/public-controller'
+import { signinValidators, signupValidators } from '../../utils/validators/validators';
+
+
+// Auth 
+
+router.get('/shopify/authorize', publicController.signinShopify)
+router.get('/shopify/redirect', publicController.redirectShopify)
+router.post('/shopify/getUser', publicController.getShopifyUser)
+
+router.post('/signin', signinValidators, publicController.signin)
+router.post('/signup', signupValidators, publicController.signup)
+
+router.post('/refresh', publicController.refresh)
+router.post('/signout', publicController.signout)
 
 // Color
 
@@ -31,11 +45,5 @@ router.get('/silhouettes-types', publicController.getSilhouettesTypes)
 router.get('/garments', publicController.getGarments)
 router.post('/garment', publicController.getGarment)
 router.post('/search-garment', publicController.searchGarments)
-
-// auth
-
-router.get('/shopify/authorize', publicController.signinShopify)
-router.get('/shopify/redirect', publicController.redirectShopify)
-router.post('/shopify/getUser', publicController.getShopifyUser)
 
 export default router

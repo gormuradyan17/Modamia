@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 import AdminModel from '../models/Admin'
+import UserModel from '../models/User'
 
 class TokenService {
 
@@ -20,8 +21,8 @@ class TokenService {
     validateAccessToken(token: any) {
 
         try {
-            const adminData = jwt.verify(token, process.env.SECRET);
-            return adminData;
+            const data = jwt.verify(token, process.env.SECRET);
+            return data;
         } catch (error) {
             return null;
         }
@@ -31,8 +32,8 @@ class TokenService {
     validateRefreshToken(token: any) {
 
         try {
-            const adminData = jwt.verify(token, process.env.SECRET_REFRESH);
-            return adminData;
+            const data = jwt.verify(token, process.env.SECRET_REFRESH);
+            return data;
         } catch (error) {
             return null;
         }
@@ -50,6 +51,7 @@ class TokenService {
         return AdminData.refreshToken;
 
     }
+    
     async removeToken(refreshToken: any) {
 
         const AdminData = await AdminModel.findOne({ refreshToken });
@@ -64,6 +66,32 @@ class TokenService {
         const AdminData = await AdminModel.findOne({ refreshToken });
         return AdminData.refreshToken;
 
+    }
+
+    async saveTokenUser(adminId: any, refreshToken: any) {
+
+        const AdminData = await UserModel.findOne({ _id: adminId })
+        if (AdminData.refreshToken === refreshToken) {
+            return AdminData.refreshToken;
+        }
+        AdminData.refreshToken = refreshToken;
+        AdminData.save();
+        return AdminData.refreshToken;
+
+    }
+    
+    async removeTokenUser(refreshToken: any) {
+
+        const AdminData = await UserModel.findOne({ refreshToken });
+        AdminData.refreshToken = '';
+        AdminData.save();
+        return AdminData.refreshToken;
+
+    }
+
+    async findTokenUser(refreshToken: any) {
+        const AdminData = await UserModel.findOne({ refreshToken });
+        return AdminData.refreshToken;
     }
 
     async verifyExpiration(refreshToken: any) {
