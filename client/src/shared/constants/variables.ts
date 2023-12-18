@@ -1,0 +1,5 @@
+export const SHOPIFY_SHOP = process.env.REACT_APP_SHOPIFY_SHOP || ''
+export const SHOPIFY_CLIENT_ID = process.env.REACT_APP_SHOPIFY_CLIENT_ID || ''
+export const SHOPIFY_CLIENT_SECRET = process.env.REACT_APP_SHOPIFY_CLIENT_SECRET || ''
+export const SHOPIFY_REDIRECT_URL = process.env.REACT_APP_SHOPIFY_REDIRECT_URL || ''
+export const SHOPIFY_SCOPES = 'read_products'

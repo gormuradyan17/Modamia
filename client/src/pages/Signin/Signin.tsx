@@ -1,24 +1,35 @@
-import OAuthPopup from 'react-oauth-popup';
-import { shopifyConfig } from 'shared/helpers/helpers';
-import signin from "../../assets/images/singin.gif"
-import OauthPopup from 'react-oauth-popup';
+import signinBG from "../../assets/images/singin.gif"
 import { ButtonUI } from 'shared/ui/ButtonUI/ButtonUI';
 import HeadingUI from 'shared/ui/HeadingUI/HeadingUI';
 import "./style.scss"
+import { useSelector } from "react-redux";
+import { isLogged } from "redux/reducers/userReducer";
+import { Navigate } from "react-router-dom";
 const Signin = () => {
 
-    const handleSuccess = (response: any) => {
-        console.log('response => ', response)
-        // Handle the success response (response.code) and exchange it for an access token
-    };
+    const isAuth = useSelector(isLogged)
+
+    if (isAuth) return <Navigate to='/home' />
+
+    // Postponed
+
+    // const signinWithShopify = async () => {
+    //     window.open(SIGNIN_SHOPIFY_URL)
+    // };
+
+    const signin = async () => {
+        // here the signin logic.
+    }
 
     return (
         <div className='signin_container'>
-        <img src={signin} alt="" />
+        <img src={signinBG} alt="" />
         <div className='signin_text_block'>
+            {/* <HeadingUI text='Sign in Via Shopify' color='#a57867' size='40px'/> */}
+            {/* <ButtonUI onClick={signinWithShopify}>Sign in</ButtonUI> */}
             <HeadingUI text='Sign in' color='#a57867' size='40px'/>
-            <ButtonUI>sign in</ButtonUI>
-         {/* <OauthPopup config={shopifyConfig} onSuccess={handleSuccess} /> */}
+            {/* Here inputs */}
+            <ButtonUI onClick={signin}>Sign in</ButtonUI>
         </div>
         </div>
        
