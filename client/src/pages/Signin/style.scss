@@ -1,0 +1,33 @@
+.signin {
+
+    &_container {
+        width: 50%;
+        display: flex;
+        padding: 40px 20px;
+        box-shadow: 0px 2px 3px 5px #f9f6ef;
+        margin: 60px auto;
+        border-radius: 10px;
+        img{
+            width: 100%;
+            min-width: 300px;
+            max-width: 30vw;
+            object-fit: cover;
+        }
+        @media screen and (max-width:768px) {
+          flex-direction: column;
+
+        }
+    }
+
+    &_text_block {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        button{
+            width:35%;
+        }
+    }
+}
