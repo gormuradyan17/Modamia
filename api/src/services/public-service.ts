@@ -8,8 +8,77 @@ import MannequinModel from '../models/Mannequin'
 import SilhouetteModel from '../models/Silhouette'
 import SizeModel from '../models/Size'
 import { getGarmentQuery, getGarmentsQuery, searchGarmentsQuery } from '../queries/GarmentsQueries'
+import UserModel from '../models/User'
+import UserDto from '../dtos/user-dto';
+import tokenService from './token-service';
+import ApiError from '../exceptions/api-error';
+import bcrypt from 'bcryptjs'
 
 class PublicService {
+
+    // Auth
+
+    async signin(req: any) {
+        try {
+            const { email } = req
+
+            var user = await UserModel.findOne({ email })
+            const userDto = new UserDto(user);
+            const tokens = tokenService.generateTokens({ ...userDto });
+            await tokenService.saveTokenUser(userDto.id, tokens.refreshToken);
+
+            return { ...tokens, user: userDto }
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async signup(body: any) {
+        try {
+            const { email, password, name } = body;
+            const hashPassword = await bcrypt.hash(password, 10)
+            const user = await UserModel.create({email, name, password: hashPassword})
+            
+            // const userDto = new UserDto(user);
+            // const tokens = tokenService.generateTokens({...userDto});
+            // await tokenService.saveToken(userDto.id, false, tokens.refreshToken);
+            
+            // return {...tokens,user: userDto}
+
+            return user;
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async refresh(refreshToken: any) {
+        try {
+            if (!refreshToken) {
+                throw ApiError.UnauthorizedError();
+            }
+            const userData = tokenService.validateRefreshToken(refreshToken);
+            const tokenFromDb = await tokenService.findTokenUser(refreshToken);
+            if (!userData || !tokenFromDb) {
+                throw ApiError.UnauthorizedError();
+            }
+            if (await tokenService.verifyExpiration(refreshToken) === true) {
+                tokenService.removeTokenUser(refreshToken);
+                throw ApiError.UnauthorizedError();
+            }
+            const user = await UserModel.findById(userData.id);
+            const useDto = new UserDto(user);
+
+            return { user: useDto }
+        } catch (error) {
+            throw ApiError.UnauthorizedError();
+        }
+    }
+
+    async signout(refreshToken: any) {
+        await tokenService.removeToken(refreshToken);
+        return true;
+    }
 
     async getColors() {
         const colors = await ColorModel.find({})

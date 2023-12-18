@@ -1,6 +1,8 @@
+import { validationResult } from 'express-validator';
 import authService from '../../services/auth-service';
 import publicService from '../../services/public-service'
 import { REACT_BASE_URL } from '../../utils/constants/variables';
+import ApiError from '../../exceptions/api-error';
 
 class PublicController {
 
@@ -126,6 +128,8 @@ class PublicController {
         }
     }
 
+    // Auth
+
     async signinShopify(req: any, res: any, next: any) {
         try {
             return res.redirect(await authService.signinShopify())
@@ -151,6 +155,58 @@ class PublicController {
             return res.json(user?.[0] || null);
         } catch (err: any) {
             console.log(err)            
+        }
+    }
+
+    async signin(req: any, res: any, next: any) {
+        try {
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                res.status(400).json({ msg: 'Validation error', errors: errors.array() });
+            }
+            const data = await publicService.signin(req.body);
+            res.cookie('refreshToken', data?.refreshToken, {
+                maxAge: 30 * 24 * 60 * 60 * 1000,
+                httpOnly: true
+            })
+
+            return res.json(data);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async signup(req: any, res: any, next: any) {
+        try {
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return next(ApiError.BadRequest('Validation error', errors.array()))
+            }
+            const userData = await publicService.signup(req.body);
+            return res.json(userData);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async refresh(req: any, res: any, next: any) {
+        try {
+            const { refToken } = req.cookies;
+            const data = await publicService.refresh(refToken);
+            return res.json(data);
+        } catch (error) {
+            return res.status(400).json({ msg: 'User is not authentificated', errors: [] });
+        }
+    }
+
+    async signout(req: any, res: any, next: any) {
+        try {
+            const { refToken } = req.cookies;
+            const token = await publicService.signout(refToken)
+            res.clearCookie('refToken');
+            return res.json(token);
+        } catch (error) {
+            next(error);
         }
     }
 }
