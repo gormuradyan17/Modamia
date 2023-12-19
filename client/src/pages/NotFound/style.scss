@@ -21,10 +21,11 @@
     position: relative;
     background-color: #E4C0AB;
     height: 100vh;
- }
- .go_to_home {
+    width: 100%;
+}
+.go_to_home {
     text-align: center;
-    font: 16px/12px;
+    font: 16px;
     font-weight: bold;
     letter-spacing: 0;
     padding: 0px 20px;

@@ -1,4 +1,4 @@
-import { COLORS_URL, PRINTS_URL, MANNEQUINS_URL, SILHOUETTES_URL, ADD_SILHOUETTE_URL, EDIT_SILHOUETTE_URL, COLORS_VARIANTS_URL, PRINTS_VARIANTS_URL, ADD_PRINT_URL, ADD_PRINT_VARIANT_URL, EDIT_PRINT_URL, SILHOUETTES_TYPES_URL, COLORS_PALETTES_URL, PRINTS_PALETTES_URL, SIZE_URL, ADD_SIZE_URL, EDIT_SIZE_URL, MANNEQUIN_WITH_SILHOUETTES_URL, GARMENTS_URL, GARMENT_URL, SEARCH_GARMENT_URL, SIGNIN_SHOPIFY_URL, GET_SHOPIFY_USER_URL } from "shared/constants/genericApiRoutes";
+import { COLORS_URL, PRINTS_URL, MANNEQUINS_URL, SILHOUETTES_URL, ADD_SILHOUETTE_URL, EDIT_SILHOUETTE_URL, COLORS_VARIANTS_URL, PRINTS_VARIANTS_URL, ADD_PRINT_URL, ADD_PRINT_VARIANT_URL, EDIT_PRINT_URL, SILHOUETTES_TYPES_URL, COLORS_PALETTES_URL, PRINTS_PALETTES_URL, SIZE_URL, ADD_SIZE_URL, EDIT_SIZE_URL, MANNEQUIN_WITH_SILHOUETTES_URL, GARMENTS_URL, GARMENT_URL, SEARCH_GARMENT_URL, SIGNIN_SHOPIFY_URL, GET_SHOPIFY_USER_URL, ADD_COLOR_URL, ADD_COLOR_VARIANT_URL, ADD_COLOR_PALETTE_URL, REMOVE_COLOR_URL, REMOVE_COLOR_PALETTE_URL, EDIT_COLOR_URL, ADD_PRINT_PALETTE_URL, REMOVE_PRINT_PALETTE_URL, REMOVE_PRINT_URL, SIGNIN_USER, SIGNUP_USER } from "shared/constants/genericApiRoutes";
 import { BaseApi } from "./baseApi";
 
 export const getColors = (body: Record<string, any> = {}) => {
@@ -16,6 +16,35 @@ export const getColorsPalettes = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');
 	return http.get(COLORS_PALETTES_URL, body)
 }
+
+export const addColor = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(ADD_COLOR_URL, body)
+}
+export const addColorVariant = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(ADD_COLOR_VARIANT_URL, body)
+}
+
+export const addColorPalette = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(ADD_COLOR_PALETTE_URL, body)
+}
+
+export const removeColor = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(REMOVE_COLOR_URL, body)
+}
+
+export const removeColorPalette = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(REMOVE_COLOR_PALETTE_URL, body)
+}
+export const updateColor = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(EDIT_COLOR_URL, body)
+}
+//print
 
 export const getPrints = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');
@@ -50,6 +79,20 @@ export const updatePrint = (body: Record<string, any> = {}) => {
 	http.removeDefaultHeader()
 	return http.post(EDIT_PRINT_URL, body, undefined)
 }
+export const addPrintPalette = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(ADD_PRINT_PALETTE_URL, body)
+}
+
+export const removePrintPalette = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(REMOVE_PRINT_PALETTE_URL, body)
+}
+export const removePrint = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(REMOVE_PRINT_URL, body)
+}
+
 export const getMannequins = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');
 	return http.get(MANNEQUINS_URL, body)
@@ -127,4 +170,14 @@ export const signinShopify = () => {
 export const getShopifyUser = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');
 	return http.post(GET_SHOPIFY_USER_URL, body)
+}
+
+export const signInUser=(body: Record<string, any> = {})=>{
+	const http=new BaseApi('/api');
+	return http.post(SIGNIN_USER,body)
+}
+
+export const signUpUser=(body: Record<string, any> = {})=>{
+	const http=new BaseApi('/api');
+	return http.post(SIGNUP_USER,body)
 }

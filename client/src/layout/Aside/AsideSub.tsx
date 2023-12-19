@@ -1,7 +1,7 @@
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ObjectType } from 'shared/helpers/helpers';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect,  useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { isExpanded } from 'redux/reducers/asideReducer';

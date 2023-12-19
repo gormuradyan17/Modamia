@@ -11,7 +11,7 @@ function LoginSignBtn() {
         <FontAwesomeIcon icon={faMagnifyingGlass} /> 
          </li>
         <li className='login_user'>
-          <Link to="/login">Login</Link>
+          <Link to="/signup">Login</Link>
         </li>
         <li  className='join_user'>
         <Link to="/signin">Join</Link>

@@ -4,6 +4,7 @@ import { lazy } from 'react';
 const AUTH = {
 	DASHBOARD: lazy(() => import('pages/Dashboard')),
 	SIGN_IN: lazy(() => import('pages/Signin/Signin')),
+	SIGN_UP:lazy(()=>import('pages/SignUp'))
 };
 
 const LANDING = {
@@ -24,7 +25,7 @@ export const privatePages = [
 	{
 		id: 'Dashboard',
 		text: 'Dashboard',
-		path: '',
+		path: '/home',
 		icon: faHome,
 		element: LANDING.DASHBOARD,
 		exact: true,
@@ -111,6 +112,14 @@ export const publicPages = [
 		path: 'signin',
 		icon: '',
 		element: AUTH.SIGN_IN,
+		exact: true,
+	},
+	{
+		id: 'signup',
+		text: 'SignUp',
+		path: 'signup',
+		icon: '',
+		element: AUTH.SIGN_UP,
 		exact: true,
 	},
 	{

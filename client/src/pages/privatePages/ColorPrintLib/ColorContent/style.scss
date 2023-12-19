@@ -1,0 +1,140 @@
+$colorFill: var(--colorFill);
+@use 'variables';
+
+.new-color {
+    position: relative;
+}
+
+.new-color-actions {
+    margin-top: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.add-button {
+    margin: 20px 0;
+}
+
+.colors-list {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+    &-color {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 10px 20px 10px 0;
+        flex-direction: column;
+    }
+}
+
+.color-text {
+    margin-bottom: 5px;
+    color: variables.$appColor !important;
+    max-width: 110px;
+}
+
+.color-span {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: $colorFill;
+    border: 1px solid variables.$appColor;
+    margin: 10px 0;
+}
+
+.color-button {
+    padding: 10px 15px !important;
+    min-height: 15px !important;
+}
+
+.new-color-btn {
+    position: absolute;
+    right: 0;
+    z-index: 1;
+}
+
+.new-item-variant {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+
+    button {
+        border: none;
+        outline: none;
+        padding: 10px;
+        border-radius: 3px;
+        cursor: pointer;
+        font-size: 12px;
+        background-color: variables.$appColor;
+        color: #fff;
+    }
+
+    >.InputUI {
+        width: 100%;
+    }
+}
+
+.new-item-variant-save {
+    position: relative;
+    width: 100%;
+
+    input {
+        padding-right: 50px;
+    }
+
+    >button {
+        position: absolute;
+        right: 10px;
+        transform: translateY(-50%);
+        top: 50%;
+    }
+}
+
+.colors-list-buttons {
+    display: flex;
+    position: relative;
+}
+
+.palettes-list-content {
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+    width: max-content;
+    border: 1px solid variables.$appColor;
+    border-radius: 5px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.palettes-list-option {
+    cursor: pointer;
+    padding: 10px 15px;
+    color: variables.$appColor;
+    background-color: #f9f1f1;
+    font-size: 16px;
+    user-select: none;
+    transition: .3s all ease 0s;
+    text-transform: capitalize;
+    position: relative;
+    display: flex;
+    padding-right: 60px;
+    &:hover {
+        background-color: #fff;
+    }
+}
+
+.palettes-list-checkbox {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    accent-color: variables.$appColor
+}

@@ -14,15 +14,15 @@ import { getUserShopify } from 'services/userService';
 const AppRouter = () => {
 
 
-    const isAuth = useSelector(isLogged)
+    // const isAuth = useSelector(isLogged)
 
     const dispatch = useDispatch()
 
     useEffect(() => {
-        const token = getCookie('shopifyToken')
+        const token = getCookie('accessToken')
         if (token) {
             const checkUser = async () => {
-                await getUserShopify(dispatch, token);
+               await getUserShopify(dispatch, token);
             }
             checkUser()
         } else {

@@ -3,25 +3,31 @@ import './style.scss'
 import { useEffect } from "react";
 
 interface Props {
-    value: string,
+    value?: string,
     placeholder?: string,
     type?: string,
     callback: CallbackSkeletonType,
     label?: string,
-    name: string,
+    name?: string,
     error?: string,
+    autoComplete?: string,
     classN?: string,
+    disabled?: boolean,
+    defaultChecked?: boolean,
 }
 
 const InputUI = ({
-    value,
+    value = '',
     placeholder = '',
     type = 'text',
     callback,
     label = '',
     name,
     error,
-    classN = ''
+    autoComplete = '',
+    classN = '',
+    disabled = false,
+    defaultChecked = false
 }: Props) => {
     // const refInput = useRef<HTMLInputElement | null>(null)
     // const refSpan = useRef<HTMLInputElement | null>(null)
@@ -51,12 +57,13 @@ const InputUI = ({
             </label>}
             {error && <span className="error-message">{error}</span>}
             <input 
-                className={`InputUI__input${error ? ' _error' : ''}`}
+                className={`InputUI__input${error ? ' _error' : ''}${disabled ? ' _disabled' : ''}`}
                 id={`InputUI-${name}`}
                 name={name}
                 type={type}
-                value={value}
-                onChange={callback}
+                onChange={(event) => !disabled && callback(event)}
+                {...(type === 'checkbox' ? {checked: defaultChecked} : {value})}
+                {...(autoComplete) && {autoComplete}}
                 {...(placeholder && {placeholder})}
             />
         </div>
