@@ -2,37 +2,56 @@ import signinBG from "../../assets/images/singin.gif"
 import { ButtonUI } from 'shared/ui/ButtonUI/ButtonUI';
 import HeadingUI from 'shared/ui/HeadingUI/HeadingUI';
 import "./style.scss"
-import { useSelector } from "react-redux";
-import { isLogged } from "redux/reducers/userReducer";
-import { Navigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserData, isLogged, setIsLogged, setUserData } from "redux/reducers/userReducer";
+import { Navigate, useNavigate } from "react-router-dom";
+import InputUI from "shared/ui/InputUI/InputUI";
+import { ChangeEvent, FormEvent, useState } from "react";
+import { ObjectType, setCookie } from "shared/helpers/helpers";
+import { authUserSignin } from "services/userService";
 const Signin = () => {
-
+    const dispatch = useDispatch()
     const isAuth = useSelector(isLogged)
-
+    const userData = useSelector(getUserData)
+    const navigate=useNavigate()
+    const [errors, setErrors] = useState<ObjectType>({
+        password: '',
+        email: ''
+    })
     if (isAuth) return <Navigate to='/home' />
-
     // Postponed
 
     // const signinWithShopify = async () => {
     //     window.open(SIGNIN_SHOPIFY_URL)
     // };
-
-    const signin = async () => {
-        // here the signin logic.
+    const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const { target: { name, value } } = event
+        dispatch(setUserData({ name, value }))
     }
+    const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
 
+        const response: any = await authUserSignin(userData, setErrors);
+        if (response?.accessToken) {
+            setCookie('accessToken', response.accessToken, 365)
+            dispatch(setIsLogged(true));
+            navigate('/home');
+        }
+    }
     return (
         <div className='signin_container'>
-        <img src={signinBG} alt="" />
-        <div className='signin_text_block'>
-            {/* <HeadingUI text='Sign in Via Shopify' color='#a57867' size='40px'/> */}
-            {/* <ButtonUI onClick={signinWithShopify}>Sign in</ButtonUI> */}
-            <HeadingUI text='Sign in' color='#a57867' size='40px'/>
-            {/* Here inputs */}
-            <ButtonUI onClick={signin}>Sign in</ButtonUI>
+            <img src={signinBG} alt="" />
+            <div className='signin_text_block'>
+                <HeadingUI text='Sign in' color='#a57867' size='40px' />
+                <form action="" onSubmit={onSubmit}>
+                    <InputUI type="text" placeholder="email" callback={handleInputChange} name="email" value={userData?.email} error={errors?.email} />
+                    <InputUI type="password" placeholder="password" callback={handleInputChange} name="password" value={userData?.password}
+                        error={errors?.password} />
+                    <ButtonUI type="submit">Sign in</ButtonUI>
+                </form>
+            </div>
         </div>
-        </div>
-       
+
     );
 };
 
