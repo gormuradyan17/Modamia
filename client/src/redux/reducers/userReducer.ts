@@ -24,8 +24,10 @@ export const userSlice = createSlice({
 			state.userData = action.payload;
 		},
 		setUserState: (state, action) => {
-			const { name = '', value = '' } = action.payload
-			state.userState[name] = value;
+			if(Object.keys(action.payload).length){
+				const { name , value } = action.payload
+				state.userState[name] = value;
+			}
 		},
 	},
 });

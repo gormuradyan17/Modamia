@@ -1,5 +1,5 @@
 import { setIsLogged, setUserData } from "redux/reducers/userReducer"
-import { checkUser, getShopifyUser, signInUser, signUpUser } from "shared/api/dataApi"
+import { getShopifyUser, signInUser, signUpUser, signoutUser, checkUser } from "shared/api/dataApi"
 import { ObjectType } from "shared/helpers/helpers"
 import { CallbackSkeletonType } from "shared/objectModels/GenericModel"
 
@@ -8,7 +8,7 @@ export const checkAuth = async () => {
 	return response;
 }
 
-export const getUserShopify = (dispatch: any, token: string) => {
+export const getUserShopify = (dispatch: any, token: string) => {    
     getShopifyUser({ token }).then(res => {
         if (res && res?._id) {
             dispatch(setUserData(res))
@@ -37,16 +37,22 @@ export const authUserSignin = (signinData: ObjectType, setErrors: CallbackSkelet
     }).catch(error => console.log(error))
 };
 
-export const authUserSignUp=(signinData: ObjectType, setErrors: CallbackSkeletonType)=>{
-    return signUpUser(signinData).then((res) => {
+export const authUserSignUp=(signupData: ObjectType, setErrors: CallbackSkeletonType)=>{ 
+    return signUpUser(signupData).then((res) => {
         if (res?.errors) {
             const passwordError = res?.errors?.find((err: ObjectType) => err?.path === 'password')?.msg || ''
+            const nameError = res?.errors?.find((err: ObjectType) => err?.path === 'name')?.msg || ''
             const emailError = res?.errors?.find((err: ObjectType) => err?.path === 'email')?.msg || ''
             return setErrors({
                 password: passwordError,
                 email: emailError,
+                name:nameError,
             })
         }
         return res
     }).catch(error => console.log(error))
 }
+
+export const userSignout = async () => {
+	return await signoutUser()
+};

@@ -19,11 +19,7 @@ const Signin = () => {
         email: ''
     })
     if (isAuth) return <Navigate to='/home' />
-    // Postponed
-
-    // const signinWithShopify = async () => {
-    //     window.open(SIGNIN_SHOPIFY_URL)
-    // };
+    
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { target: { name, value } } = event
         dispatch(setUserState({ name, value }))
@@ -34,6 +30,7 @@ const Signin = () => {
         const response: any = await authUserSignin(userData, setErrors);
         if (response?.accessToken) {
             setCookie('accessToken', response.accessToken, 365)
+            setCookie('refreshToken', response.refreshToken, 365)
             dispatch(setIsLogged(true));
             navigate('/home');
         }

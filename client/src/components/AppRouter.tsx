@@ -8,16 +8,11 @@ import Footer from './Footer';
 import Aside from 'layout/Aside/Aside';
 import NotFound from 'pages/NotFound';
 import { useDispatch } from 'react-redux';
-import { isLogged, setIsLogged, setUserData } from 'redux/reducers/userReducer';
+import { setIsLogged, setUserData } from 'redux/reducers/userReducer';
 import { checkAuth } from 'services/userService';
 
 const AppRouter = () => {
-
-
-    // const isAuth = useSelector(isLogged)
-
     const dispatch = useDispatch()
-
     useEffect(() => {
         const token = getCookie('accessToken')
         if (token) {

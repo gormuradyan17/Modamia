@@ -179,7 +179,6 @@ const Customization = () => {
       dispatch(setProductBack([modelData.backs[1].src ? { ...modelData.backs[1]} : {...model.backs[1]}, modelData.backs[0].src ? { ...modelData.backs[0]} : {...model.backs[0]}]));
       dispatch(setProductSleeve([modelData.sleeves[0].src ? { ...modelData.sleeves[0]} :  { ...model.sleeves[0]} ]));
     }
-    // console.log(modelData);
     
   }, [modelData,silhouettes])
 
