@@ -10,7 +10,6 @@ const UserSchema = new mongoose.Schema(
     shopify_id: {
       type: String,
       required: false,
-      unique: true,
     },
     name: {
       type: String,
