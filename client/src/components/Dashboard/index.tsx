@@ -8,16 +8,17 @@ import Wardrobe from "./Wardrobe";
 import "./style.scss"
 
 
-const DashboardContent=()=>{
-    return(
+const DashboardContent = () => {
+    
+    return (
         <section>
-        <CaptionContent/>
-        <FeaturedCollections/>
-        <HandmadeContent/>
-        <Wardrobe/>
-        <ComplementColor/>
-        <ModamiaPromise/>
-        <Handcrafted/>
+            <CaptionContent />
+            <FeaturedCollections />
+            <HandmadeContent />
+            <Wardrobe />
+            <ComplementColor />
+            <ModamiaPromise />
+            <Handcrafted />
         </section>
     )
 }

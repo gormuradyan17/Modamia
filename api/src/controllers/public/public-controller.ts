@@ -180,7 +180,7 @@ class PublicController {
         try {
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
-                return next(ApiError.BadRequest('Validation error', errors.array()))
+                res.status(400).json({ msg: 'Validation error', errors: errors.array() });
             }
             const userData = await publicService.signup(req.body);
             return res.json(userData);
@@ -191,8 +191,8 @@ class PublicController {
 
     async refresh(req: any, res: any, next: any) {
         try {
-            const { refToken } = req.cookies;
-            const data = await publicService.refresh(refToken);
+            const { refreshToken } = req.cookies;
+            const data = await publicService.refresh(refreshToken);
             return res.json(data);
         } catch (error) {
             return res.status(400).json({ msg: 'User is not authentificated', errors: [] });
@@ -201,9 +201,9 @@ class PublicController {
 
     async signout(req: any, res: any, next: any) {
         try {
-            const { refToken } = req.cookies;
-            const token = await publicService.signout(refToken)
-            res.clearCookie('refToken');
+            const { refreshToken } = req.cookies;
+            const token = await publicService.signout(refreshToken)
+            res.clearCookie('refreshToken');
             return res.json(token);
         } catch (error) {
             next(error);
