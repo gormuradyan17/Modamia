@@ -2,7 +2,6 @@ import { body } from 'express-validator'
 import bcrypt from 'bcryptjs'
 import Admin from '../../models/Admin'
 import User from '../../models/User'
-
 export const adminSigninValidators = [
     body('email')
         .custom(async (value, { req }) => {

@@ -81,6 +81,7 @@ class AuthService {
             console.log(err)
         }
     }
+
 }
 
 export default new AuthService();

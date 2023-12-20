@@ -26,7 +26,6 @@ class PublicService {
             const userDto = new UserDto(user);
             const tokens = tokenService.generateTokens({ ...userDto });
             await tokenService.saveTokenUser(userDto.id, tokens.refreshToken);
-
             return { ...tokens, user: userDto }
 
         } catch (error) {

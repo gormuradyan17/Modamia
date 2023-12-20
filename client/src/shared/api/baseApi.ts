@@ -1,13 +1,11 @@
 import { BASE_URL } from "shared/constants/genericApiRoutes";
-import { localStorageSync, sessionStorageSync } from "shared/helpers/storageHelper";
+import { getCookie } from "shared/helpers/helpers";
 
 export class BaseApi {
   private baseApi: string = '';
-  private storeToken: string = sessionStorageSync.privateToken;
-  private assocaiteToken: string = localStorageSync.token;
+  private accessToken: string = getCookie('accessToken') || '';
   private additionalHeaders: any | null = null;
   private clearHeader: boolean = true;
-
 
   constructor(
     private apiPrefix: string = '',
@@ -17,22 +15,21 @@ export class BaseApi {
     this.baseApi = this.baseUrl + this.apiPrefix || '';
   }
   private getAuthHeader() {
-    return this.headers || this.buildHeaders(this.storeToken, this.assocaiteToken);
+    return this.headers || this.buildHeaders(this.accessToken);
   }
 
   public setAdditionalHeaders(headers: any) {
     this.additionalHeaders = headers;
   }
-  
+
   public removeDefaultHeader() {
     this.clearHeader = false;
   }
 
   public buildHeaders(authToken: string = '', assocaiteToken: string = '') {
     return {
-      "Content-Type": "application/json",
-      ...(authToken && { Authorization: `Bearer ${authToken}`}),
-      ...(assocaiteToken && {'Associate-Authorization': `${assocaiteToken}`}),
+      ...(this.clearHeader && { "Content-Type": "application/json" }),
+      ...(authToken && { Authorization: `Bearer ${authToken}` }),
       ...(this.additionalHeaders)
     }
   }
@@ -42,10 +39,6 @@ export class BaseApi {
   }
 
   private handleResponse(res: Response) {
-    if (!res.ok) {
-      console.error('Error response:', res);
-      throw new Error('Network response was not ok');
-    }
     return res.json();
   }
 
@@ -61,16 +54,20 @@ export class BaseApi {
 
   public post(url: string,
     payload: any = {},
-    headers: any = this.getAuthHeader()
+    headers: any = this.getAuthHeader(),
+    isFormData: boolean = false,
   ): Promise<any> {
     return fetch(this.getUrl(url), {
       method: "POST",
       headers,
       redirect: "follow",
       cache: "no-cache",
-      body: JSON.stringify(payload)
+      credentials: "include",
+      body: isFormData ? payload : JSON.stringify(payload)
     }).then(this.handleResponse)
-    .catch(err => console.log(err))
+      .catch(err => {
+        throw err;
+      })
   }
 
   public put(url: string,

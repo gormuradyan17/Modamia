@@ -1,5 +1,6 @@
 const router = require("express").Router();
 import publicController from '../../controllers/public/public-controller'
+import { authMiddleware } from '../../middlewares/auth';
 import { signinValidators, signupValidators } from '../../utils/validators/validators';
 
 
@@ -11,6 +12,8 @@ router.post('/shopify/getUser', publicController.getShopifyUser)
 
 router.post('/signin', signinValidators, publicController.signin)
 router.post('/signup', signupValidators, publicController.signup)
+
+// router.use(authMiddleware);
 
 router.post('/refresh', publicController.refresh)
 router.post('/signout', publicController.signout)
