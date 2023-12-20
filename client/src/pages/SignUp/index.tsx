@@ -4,16 +4,16 @@ import InputUI from "shared/ui/InputUI/InputUI"
 import signinBG from "../../assets/images/singin.gif"
 import "./style.scss"
 import { useDispatch, useSelector } from "react-redux"
-import { getUserData, setIsLogged, setUserData } from "redux/reducers/userReducer"
+import { getUserState, setUserState } from "redux/reducers/userReducer"
 import { ChangeEvent, FormEvent, useState } from "react"
-import { ObjectType, setCookie } from "shared/helpers/helpers"
+import { ObjectType } from "shared/helpers/helpers"
 import { authUserSignUp } from "services/userService"
 import { useNavigate } from "react-router-dom"
 
 const SignUp = () => {
   const dispatch=useDispatch()
   const navigate=useNavigate()
-  const userData = useSelector(getUserData)
+  const userData = useSelector(getUserState)
   const [errors, setErrors] = useState<ObjectType>({
       name:'',
       password: '',
@@ -22,7 +22,7 @@ const SignUp = () => {
   })
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { target: { name, value } } = event
-    dispatch(setUserData({ name, value }))
+    dispatch(setUserState({ name, value }))
 }
 
 

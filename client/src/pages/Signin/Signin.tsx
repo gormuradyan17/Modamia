@@ -3,7 +3,7 @@ import { ButtonUI } from 'shared/ui/ButtonUI/ButtonUI';
 import HeadingUI from 'shared/ui/HeadingUI/HeadingUI';
 import "./style.scss"
 import { useDispatch, useSelector } from "react-redux";
-import { getUserData, isLogged, setIsLogged, setUserData } from "redux/reducers/userReducer";
+import { getUserState, isLogged, setIsLogged, setUserState } from "redux/reducers/userReducer";
 import { Navigate, useNavigate } from "react-router-dom";
 import InputUI from "shared/ui/InputUI/InputUI";
 import { ChangeEvent, FormEvent, useState } from "react";
@@ -12,8 +12,8 @@ import { authUserSignin } from "services/userService";
 const Signin = () => {
     const dispatch = useDispatch()
     const isAuth = useSelector(isLogged)
-    const userData = useSelector(getUserData)
-    const navigate=useNavigate()
+    const userData = useSelector(getUserState)
+    const navigate = useNavigate()
     const [errors, setErrors] = useState<ObjectType>({
         password: '',
         email: ''
@@ -26,7 +26,7 @@ const Signin = () => {
     // };
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { target: { name, value } } = event
-        dispatch(setUserData({ name, value }))
+        dispatch(setUserState({ name, value }))
     }
     const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()

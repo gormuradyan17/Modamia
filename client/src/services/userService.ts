@@ -1,8 +1,12 @@
 import { setIsLogged, setUserData } from "redux/reducers/userReducer"
-import { getShopifyUser, signInUser, signUpUser } from "shared/api/dataApi"
+import { checkUser, getShopifyUser, signInUser, signUpUser } from "shared/api/dataApi"
 import { ObjectType } from "shared/helpers/helpers"
 import { CallbackSkeletonType } from "shared/objectModels/GenericModel"
 
+export const checkAuth = async () => {
+	const response = await checkUser()
+	return response;
+}
 
 export const getUserShopify = (dispatch: any, token: string) => {
     getShopifyUser({ token }).then(res => {
@@ -19,9 +23,7 @@ export const getUserShopify = (dispatch: any, token: string) => {
     })
 }
 
-export const authUserSignin = (signinData: ObjectType, setErrors: CallbackSkeletonType) => {
-    console.log(55);
-    
+export const authUserSignin = (signinData: ObjectType, setErrors: CallbackSkeletonType) => {    
     return signInUser(signinData).then((res) => {
         if (res?.errors) {
             const passwordError = res?.errors?.find((err: ObjectType) => err?.path === 'password')?.msg || ''
