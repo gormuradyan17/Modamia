@@ -19,8 +19,10 @@ export const userSlice = createSlice({
 			state.isLogged = action.payload;
 		},
 		setUserData: (state, action) => {
-			const { name = '', value = '' } = action.payload
-			state.userData[name] = value;
+			if(Object.keys(action.payload).length){
+				const { name , value } = action.payload
+				state.userData[name] = value;
+			}
 		},
 	},
 });

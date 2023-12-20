@@ -34,6 +34,7 @@ const Signin = () => {
         const response: any = await authUserSignin(userData, setErrors);
         if (response?.accessToken) {
             setCookie('accessToken', response.accessToken, 365)
+            setCookie('refreshToken', response.refreshToken, 365)
             dispatch(setIsLogged(true));
             navigate('/home');
         }
