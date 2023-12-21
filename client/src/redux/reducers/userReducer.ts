@@ -29,10 +29,13 @@ export const userSlice = createSlice({
 				state.userState[name] = value;
 			}
 		},
+		setUserFullState: (state, action) => {
+			state.userState = action.payload;
+		}
 	},
 });
 
-export const { setIsLogged, setUserData, setUserState } = userSlice.actions;
+export const { setIsLogged, setUserData, setUserState, setUserFullState } = userSlice.actions;
 
 export const isLogged = (state: ObjectType) => state.userReducer.isLogged;
 export const getUserData = (state: ObjectType) => state.userReducer.userData;

@@ -111,3 +111,31 @@ export const signupValidators = [
         .isLength({ min: 3 }).withMessage('Name field has been a min 3 symbols')
         .trim()
 ]
+
+export const editValidators = [
+    body('email')
+        .optional()
+        .isEmail().withMessage('Input a correct email')
+        .custom(async (value, { req }) => {
+            if (value) { // Validate only if email is not empty
+                try {
+                    const user = await User.findOne({ email: value })
+                    if (user) {
+                        return Promise.reject('User already exists')
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        })
+        .normalizeEmail(),
+    body('password', 'Password has been min 6 symbols')
+        .optional()
+        .isLength({ min: 6, max: 56 })
+        .isAlphanumeric()
+        .trim(),
+    body('name')
+        .optional()
+        .isLength({ min: 3 }).withMessage('Name field has been a min 3 symbols')
+        .trim()
+]

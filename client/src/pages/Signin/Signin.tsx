@@ -8,7 +8,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import InputUI from "shared/ui/InputUI/InputUI";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { ObjectType, setCookie } from "shared/helpers/helpers";
-import { authUserSignin } from "services/userService";
+import { authUserSignin, editUserData } from "services/userService";
 const Signin = () => {
     const dispatch = useDispatch()
     const isAuth = useSelector(isLogged)
@@ -35,9 +35,22 @@ const Signin = () => {
             navigate('/home');
         }
     }
+
+    const testEdit = async () => {
+        const testData = {
+            email: 'test@tyest.tset',
+            name: 'asdad',
+            password: 'asdadadsa'
+        }
+
+        const response: any = await editUserData(testData, setErrors);
+        console.log('response => ', response)
+    }
+
     return (
         <div className='signin_container'>
             <img src={signinBG} alt="" />
+            <ButtonUI onClick={testEdit}>TESTTT</ButtonUI>
             <div className='signin_text_block'>
                 <HeadingUI text='Sign in' color='#a57867' size='40px' />
                 <form action="" onSubmit={onSubmit}>

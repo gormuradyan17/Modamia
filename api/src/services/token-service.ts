@@ -94,6 +94,11 @@ class TokenService {
         return AdminData.refreshToken;
     }
 
+    async findUserByToken(refreshToken: any) {
+        const AdminData = await UserModel.findOne({ refreshToken });
+        return AdminData;
+    }
+
     async verifyExpiration(refreshToken: any) {
         return jwt.decode(refreshToken).exp < Math.ceil(new Date().getTime() / 1000);
     };

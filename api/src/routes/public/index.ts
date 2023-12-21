@@ -1,7 +1,7 @@
 const router = require("express").Router();
 import publicController from '../../controllers/public/public-controller'
 import { authMiddleware } from '../../middlewares/auth';
-import { signinValidators, signupValidators } from '../../utils/validators/validators';
+import { editValidators, signinValidators, signupValidators } from '../../utils/validators/validators';
 
 
 // Auth 
@@ -17,6 +17,7 @@ router.post('/signup', signupValidators, publicController.signup)
 
 router.post('/refresh', publicController.refresh)
 router.post('/signout', publicController.signout)
+router.post('/edit', editValidators, publicController.edit)
 
 // Color
 

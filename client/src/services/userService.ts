@@ -1,11 +1,11 @@
 import { setIsLogged, setUserData } from "redux/reducers/userReducer"
-import { getShopifyUser, signInUser, signUpUser, signoutUser, checkUser } from "shared/api/dataApi"
+import { checkUser, editUser, getShopifyUser, signInUser, signUpUser, signoutUser } from "shared/api/dataApi"
 import { ObjectType } from "shared/helpers/helpers"
 import { CallbackSkeletonType } from "shared/objectModels/GenericModel"
 
 export const checkAuth = async () => {
-	const response = await checkUser()
-	return response;
+    const response = await checkUser()
+    return response;
 }
 
 export const getUserShopify = (dispatch: any, token: string) => {    
@@ -23,7 +23,7 @@ export const getUserShopify = (dispatch: any, token: string) => {
     })
 }
 
-export const authUserSignin = (signinData: ObjectType, setErrors: CallbackSkeletonType) => {    
+export const authUserSignin = (signinData: ObjectType, setErrors: CallbackSkeletonType) => {
     return signInUser(signinData).then((res) => {
         if (res?.errors) {
             const passwordError = res?.errors?.find((err: ObjectType) => err?.path === 'password')?.msg || ''
@@ -37,7 +37,7 @@ export const authUserSignin = (signinData: ObjectType, setErrors: CallbackSkelet
     }).catch(error => console.log(error))
 };
 
-export const authUserSignUp=(signupData: ObjectType, setErrors: CallbackSkeletonType)=>{ 
+export const authUserSignUp = (signupData: ObjectType, setErrors: CallbackSkeletonType) => {
     return signUpUser(signupData).then((res) => {
         if (res?.errors) {
             const passwordError = res?.errors?.find((err: ObjectType) => err?.path === 'password')?.msg || ''
@@ -56,3 +56,18 @@ export const authUserSignUp=(signupData: ObjectType, setErrors: CallbackSkeleton
 export const userSignout = async () => {
 	return await signoutUser()
 };
+export const editUserData = (data: ObjectType, setErrors: CallbackSkeletonType) => {
+    return editUser(data).then((res) => {
+        if (res?.errors) {
+            const passwordError = res?.errors?.find((err: ObjectType) => err?.path === 'password')?.msg || ''
+            const emailError = res?.errors?.find((err: ObjectType) => err?.path === 'email')?.msg || ''
+            const nameError = res?.errors?.find((err: ObjectType) => err?.path === 'name')?.msg || ''
+            return setErrors({
+                password: passwordError,
+                email: emailError,
+                name: nameError
+            })
+        }
+        return res
+    }).catch(error => console.log(error))
+}

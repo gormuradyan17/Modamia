@@ -73,3 +73,4 @@ export const SIGNUP_USER = API_URL + '/signup';
 export const SIGNIN_USER = API_URL + 'signin';
 export const USER_REFRESH_URL = API_URL + 'refresh'
 export const USER_SIGNOUT_URL = API_URL + 'signout'
+export const USER_EDIT_URL = API_URL + 'edit'
