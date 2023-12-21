@@ -209,6 +209,19 @@ class PublicController {
             next(error);
         }
     }
+
+    async edit(req: any, res: any, next: any) {
+        try {
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ msg: 'Validation error', errors: errors.array() });
+            }
+            const data = await publicService.edit(req)
+            return res.json(data);
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 export default new PublicController()
