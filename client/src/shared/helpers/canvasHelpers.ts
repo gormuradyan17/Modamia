@@ -8,8 +8,8 @@ export async function addModel(elem:any, width: number, height: number,frontBack
 	const color =elem.color ||  updateElem.color;
 	const position =elem.position ||  updateElem.position;
 	const order =elem.order ||  updateElem.order ;
-	const widthImg = fromBasket ? elem.width/10 : elem.width || updateElem.width;
-	const heightImg = fromBasket ? elem.height/10 : elem.height ||  updateElem.height;
+	const widthImg = fromBasket ? elem.width/5 : elem.width || updateElem.width;
+	const heightImg = fromBasket ? elem.height/5 : elem.height ||  updateElem.height;
 	const id = elem.id || updateElem.id 	
 	if (!src) return;
 	const img: HTMLImageElement = new Image();
@@ -148,8 +148,8 @@ export const canvasModelInit = (num: number, modData: any, frontBack: string = "
 	const img = new Image();
 	img.src = frontBack === "fronts" ? `${BASE_UPLOADS_MANNEQUINS_FRONTS_URL}${mannequin?.fronturl}` : frontBack === "backs" ? `${BASE_UPLOADS_MANNEQUINS_BACKS_URL}${mannequin?.backurl}` : `${BASE_UPLOADS_MANNEQUINS_FRONTS_URL}${mannequin?.fronturl}`
 	img.onload = async () => {
-		const canvasWidth=fromBasket ? mannequin.width/10 :  mannequin.width
-		const canvasHeight=fromBasket ? mannequin.height/10 :  mannequin.height
+		const canvasWidth=fromBasket ? mannequin.width/5 :  mannequin.width
+		const canvasHeight=fromBasket ? mannequin.height/5 :  mannequin.height
 		canvasRef.current.width = canvasWidth
 		canvasRef.current.height = canvasHeight
 

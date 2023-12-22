@@ -46,8 +46,13 @@ router.get('/silhouettes-types', publicController.getSilhouettesTypes)
 
 // Garment
 
-router.get('/garments', publicController.getGarments)
+router.post('/garments', publicController.getGarments)
 router.post('/garment', publicController.getGarment)
 router.post('/search-garment', publicController.searchGarments)
+
+// Cart
+
+router.post('/add-cart', publicController.addCart)
+router.post('/remove-cart', publicController.removeCart)
 
 export default router

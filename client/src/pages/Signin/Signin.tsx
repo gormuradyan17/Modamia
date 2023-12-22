@@ -8,7 +8,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import InputUI from "shared/ui/InputUI/InputUI";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { ObjectType, setCookie } from "shared/helpers/helpers";
-import { authUserSignin, editUserData } from "services/userService";
+import { authUserSignin } from "services/userService";
 const Signin = () => {
     const dispatch = useDispatch()
     const isAuth = useSelector(isLogged)
@@ -29,7 +29,6 @@ const Signin = () => {
         const response: any = await authUserSignin(userData, setErrors);
         if (response?.accessToken) {
             setCookie('accessToken', response.accessToken, 365)
-            setCookie('refreshToken', response.refreshToken, 365)
             dispatch(setIsLogged(true));
             navigate('/home');
         }

@@ -1,5 +1,5 @@
 import { setIsLogged, setUserData } from "redux/reducers/userReducer"
-import { checkUser, editUser, getShopifyUser, signInUser, signUpUser, signoutUser } from "shared/api/dataApi"
+import { addToCart, checkUser, editUser, getShopifyUser, removeFromCart, signInUser, signUpUser, signoutUser } from "shared/api/dataApi"
 import { ObjectType } from "shared/helpers/helpers"
 import { CallbackSkeletonType } from "shared/objectModels/GenericModel"
 
@@ -71,3 +71,11 @@ export const editUserData = (data: ObjectType, setErrors: CallbackSkeletonType) 
         return res
     }).catch(error => console.log(error))
 }
+
+export const addCart = async (body: ObjectType) => {
+	return await addToCart(body)
+};
+
+export const removeCart = async (body: ObjectType) => {
+	return await removeFromCart(body)
+};

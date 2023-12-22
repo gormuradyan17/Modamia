@@ -15,6 +15,7 @@ import {
   getMannequinType,
   getMannequinUrl,
   getSize,
+  getTestModelData,
   setActiveCategory,
   setActiveColor,
 } from "redux/reducers/mannequinReducer";
@@ -22,11 +23,11 @@ import CustomizationLoader from "components/Customization/customizationLoader/Cu
 import SilhouettePositionBtn from "components/Customization/contents/SilhouetteContent/SilhouettePositionBtn";
 import ChangeSize from "components/Customization/contents/ChangeSize";
 import AddToCart from "components/Customization/contents/AddToCart";
-import { getProductName, getProductPrice, setActiveMannequinProduct, setProductBack, setProductFront, setProductPrice, setProductSleeve } from "redux/reducers/addToCartReducer";
+import { getProductName, getProductPrice, setActiveMannequinProduct, setProductBack, setProductFront, setProductGarment, setProductName, setProductPrice, setProductSleeve } from "redux/reducers/addToCartReducer";
 import { useParams } from "react-router-dom";
 import { getSelectedGarment } from "services/garmentService";
 import { garmentDetails } from "redux/reducers/garmentReducer";
-import { convertDefaultValue} from "shared/helpers/helpers";
+import { convertDefaultValue } from "shared/helpers/helpers";
 import { getModelData } from "services/modelDataService";
 
 const Customization = () => {
@@ -43,10 +44,13 @@ const Customization = () => {
   const totalPrice = useSelector(getProductPrice)
   const sizes = useSelector(getSize)
 
+  const testModelData = useSelector(getTestModelData)
+
   let priceCount = 0;
 
 
   const { silhouettes = {} } = activeGarment;
+  
   const [modelData, setModelData] = useState<any>({
     fronts: [
       { position: "bottom", src: "", color: "", printImageURL: "", activeCategory, price: 200, width: "", height: "", order: "" },
@@ -68,6 +72,7 @@ const Customization = () => {
   const dispatch = useDispatch()
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [rangeValue, setRangeValue] = useState<number>(0.1);
+  
   useEffect(() => {
     if (id) getSelectedGarment(dispatch, id)
     dispatch(setActiveColor(""));
@@ -78,7 +83,8 @@ const Customization = () => {
 
 
   useEffect(() => {
-   const convertValue=convertDefaultValue(modelData,silhouettes)
+    const convertValue = convertDefaultValue(modelData,silhouettes)
+    
     if (activeGarment?.mannequin?._id) {
       const { mannequin = {} } = activeGarment;
 
@@ -149,17 +155,17 @@ const Customization = () => {
             // modelData[frontBack][i].printImageURL = activePrint?.highresurl;
           }
 
-        });         
+        });
         setModelData({ ...modelData });
-        await canvasModelInit(rangeValue, modelData, frontBack, canvasRef, mannequin, convertValue, false);
+        await canvasModelInit(rangeValue, modelData, frontBack, canvasRef, mannequin,Object.keys(testModelData).length ? testModelData : convertValue, false);
 
       };
 
       drawManequin();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeGarment, id, activeColor, activePrint, activeCategory, activeImgUrl, activeType, frontBack, silhouettes,rangeValue]);
- 
+  }, [activeGarment, id, activeColor, activePrint, activeCategory, activeImgUrl, activeType, frontBack, silhouettes, rangeValue]);
+
   useEffect(() => {
     const { mannequin = {} } = activeGarment;
     for (const key in modelData) {
@@ -172,15 +178,17 @@ const Customization = () => {
       dispatch(setActiveMannequinProduct(mannequin))
 
     }
-    const model=convertDefaultValue(modelData,silhouettes)
-    
+    const model = convertDefaultValue(modelData, silhouettes)
+
     if (Object.keys(modelData).length) {
-      dispatch(setProductFront([modelData.fronts[1].src ? { ...modelData.fronts[1]} : {...model.fronts[1]}, modelData.fronts[0].src ? { ...modelData.fronts[0]} : {...model.fronts[0]}]));
-      dispatch(setProductBack([modelData.backs[1].src ? { ...modelData.backs[1]} : {...model.backs[1]}, modelData.backs[0].src ? { ...modelData.backs[0]} : {...model.backs[0]}]));
-      dispatch(setProductSleeve([modelData.sleeves[0].src ? { ...modelData.sleeves[0]} :  { ...model.sleeves[0]} ]));
+      dispatch(setProductName(activeGarment?.garment?.name));
+      dispatch(setProductGarment(activeGarment?.garment?._id));
+      dispatch(setProductFront([modelData.fronts[1].src ? { ...modelData.fronts[1] } : { ...model.fronts[1] }, modelData.fronts[0].src ? { ...modelData.fronts[0] } : { ...model.fronts[0] }]));
+      dispatch(setProductBack([modelData.backs[1].src ? { ...modelData.backs[1] } : { ...model.backs[1] }, modelData.backs[0].src ? { ...modelData.backs[0] } : { ...model.backs[0] }]));
+      dispatch(setProductSleeve([modelData.sleeves[0].src ? { ...modelData.sleeves[0] } : { ...model.sleeves[0] }]));
     }
-    
-  }, [modelData,silhouettes])
+
+  }, [modelData, silhouettes])
 
   return (
     <Container>

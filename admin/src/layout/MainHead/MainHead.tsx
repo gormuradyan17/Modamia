@@ -28,7 +28,7 @@ const MainHead = ({
 				eraseCookie('accessToken')
 				dispatch(setIsAuth(false));
                 dispatch(setActiveSuperAdmin({}))
-				navigate('/login');
+				navigate('/signin');
 			}
 		} catch (error) {
 			console.log(error);

@@ -7,29 +7,34 @@ interface stateProps {
     price: number,
     size: string,
     customSize: {},
-    modelData:ObjectType,
-    activeMannequin:ObjectType
+    garment_id: string,
+    modelData: ObjectType,
+    activeMannequin: ObjectType
   };
 }
 
 const initialState: stateProps = {
   dataInfo: {
-    name: "the juliette dress",
+    name: "",
     price: 0,
-    modelData:{
-    fronts: [],
-    backs: [],
-    sleeves: [],
+    garment_id: '',
+    modelData: {
+      fronts: [],
+      backs: [],
+      sleeves: [],
     },
-    size: "S",
+    size: "",
     customSize: {},
-    activeMannequin:{}
+    activeMannequin: {}
   },
 };
 export const addToCartReducer = createSlice({
   name: "addToCartReducer",
   initialState,
   reducers: {
+    setProductGarment: (state, action) => {
+      state.dataInfo.garment_id = action.payload;
+    },
     setProductName: (state, action) => {
       state.dataInfo.name = action.payload;
     },
@@ -51,14 +56,16 @@ export const addToCartReducer = createSlice({
     setProductCustomSize: (state, action) => {
       state.dataInfo.customSize = action.payload;
     },
-    setActiveMannequinProduct:(state,action)=>{    
-      state.dataInfo.activeMannequin=action.payload
-
+    setActiveMannequinProduct: (state, action) => {
+      state.dataInfo.activeMannequin = action.payload
+    },
+    setProductFullState: (state, action) => {
+      state.dataInfo = action.payload;
     }
   }
 });
 
-export const { setProductName, setProductPrice, setProductSize, setActiveMannequinProduct, setProductFront, setProductBack, setProductSleeve, setProductCustomSize } = addToCartReducer.actions;
+export const { setProductFullState, setProductGarment, setProductName, setProductPrice, setProductSize, setActiveMannequinProduct, setProductFront, setProductBack, setProductSleeve, setProductCustomSize } = addToCartReducer.actions;
 
 export const getProduct = (state: ObjectType) => state.addToCartReducer.dataInfo;
 export const getProductName = (state: ObjectType) => state.addToCartReducer.dataInfo.name;

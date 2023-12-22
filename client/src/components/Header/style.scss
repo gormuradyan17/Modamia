@@ -122,4 +122,10 @@
         align-items: center;
     }
 
+    &_logout {
+        span {
+            cursor: pointer;
+        }
+    }
+
 }

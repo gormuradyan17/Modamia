@@ -1,0 +1,19 @@
+@use 'variables';
+
+.product_info_body-content {
+    > .headingUI {
+        text-transform: capitalize;
+    }
+    &-text {
+        display: flex;
+        align-items: center;
+        margin: 5px 0;
+        > .headingUI {
+            margin-right: 5px;
+        }
+        > span {
+            color: variables.$appColor;
+            font-weight: 700;
+        }
+    }
+}
