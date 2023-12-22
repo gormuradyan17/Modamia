@@ -7,11 +7,13 @@ import { Header } from './Header';
 import Footer from './Footer';
 import Aside from 'layout/Aside/Aside';
 import NotFound from 'pages/NotFound';
-import { useDispatch } from 'react-redux';
-import { setIsLogged, setUserData } from 'redux/reducers/userReducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { isLogged, setIsLogged, setUserData } from 'redux/reducers/userReducer';
 import { checkAuth } from 'services/userService';
 
 const AppRouter = () => {
+    const logged=useSelector(isLogged);
+    
     const dispatch = useDispatch()
     useEffect(() => {
         const token = getCookie('accessToken')
@@ -51,7 +53,7 @@ const AppRouter = () => {
             <main className='main-content'>
                 <Routes>
                     <Route element={<Aside />}>
-                        {renderRoutes(privatePages)}
+                     {renderRoutes(privatePages)}
                     </Route>
                     {renderRoutes(publicPages)}
                     <Route path='*' element={<NotFound />} />

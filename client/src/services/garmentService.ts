@@ -10,11 +10,14 @@ export const getAvGarments = (dispatch: any, userId: string) => {
 }
 
 export const getSelectedGarment = (dispatch: any, id: string) => {
+    console.log(id,"iddd");
+    
     getGarment({ garment_id: id }).then(res => {   
-        const { details = {}, ...data } = res;          
+        const { details = {}, ...data } = res; 
+        console.log(res,"ressss");
+                 
         dispatch(setGarmentFullState(data))
         if (details?.details && Object.keys(details?.details).length) {
-            console.log('details?.details => ', details?.details)
             dispatch(setTestModelData(details?.details?.modelData))
             // dispatch(setActivePrint(details?.details))
             // dispatch(setProductFullState(details?.details))

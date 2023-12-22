@@ -22,7 +22,7 @@
 
 .topmenu {
     display: flex;
-    gap: 3em;
+    gap: 2em;
     list-style: none;
     justify-content: space-between;
     padding: 0;
@@ -34,7 +34,7 @@
     display: inline-block;
     font-family: 'Playfair Display regular';
     text-transform: capitalize;
-    font-size: 1.1rem;
+    font-size: 1rem;
     text-decoration: none;
     letter-spacing: 1.35px;
     font-weight: 400;
@@ -63,7 +63,7 @@
 }
 
 .svg-inline--fa {
-    font-size: 20px;
+    font-size: 16px;
     color: #bbaa9a;
     background-color: transparent;
     border: 0;
@@ -102,7 +102,7 @@
         gap: 20px;
         a {
             text-decoration: none;
-            font-size: 16px;
+            font-size:.8rem;
             font-family: Poppins;
             font-weight: 300;
             color: #a57867;

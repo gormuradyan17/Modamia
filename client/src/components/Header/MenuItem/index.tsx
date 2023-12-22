@@ -5,7 +5,6 @@ function MenuItem() {
     <div className='main-menu'>
     <ul className='topmenu'>
         <li><Link to="/">Shop</Link></li>
-        <li><Link to="/">Community</Link></li>
     </ul>
     </div>
   )

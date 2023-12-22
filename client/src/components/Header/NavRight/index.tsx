@@ -36,7 +36,7 @@ function LoginSignBtn() {
           </li>
         </> : <div className='user_logged'>
           <li className='user_account'>
-            <Link to="/myaccount">
+            <Link to="/profile">
               <FontAwesomeIcon icon={faUser} />
               <span>My Account</span>
             </Link>

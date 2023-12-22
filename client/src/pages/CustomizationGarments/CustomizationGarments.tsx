@@ -4,12 +4,13 @@ import HeadingUI from 'shared/ui/HeadingUI/HeadingUI';
 import { ObjectType, appColor } from 'shared/helpers/helpers';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { BASE_UPLOADS_MANNEQUINS_FRONTS_URL } from 'shared/constants/genericApiRoutes';
 import { useNavigate } from 'react-router-dom';
 import { availableGarments, setGarmentFullState } from 'redux/reducers/garmentReducer';
-import { getAvGarments, getAvSearchedGarments } from 'services/garmentService';
+import { getAvGarments, getAvSearchedGarments, getSelectedGarment } from 'services/garmentService';
 import InputUI from 'shared/ui/InputUI/InputUI';
 import useDebounce from 'utils/hooks/useDebounce';
+import GarmentsMannequin from './GarmentsMannequin';
+import { BASE_UPLOADS_MANNEQUINS_FRONTS_URL } from 'shared/constants/genericApiRoutes';
 
 interface Props {
     userId?: string
@@ -29,10 +30,12 @@ const CustomizationGarments = ({
         getAvGarments(dispatch, userId)
     }, [])
 
-    const handleGarmentClick = (garment: ObjectType) => {
+    const handleGarmentClick = (garment: ObjectType) => {        
         if (garment?._id) {
+            getSelectedGarment(dispatch,'65859dd860a9cfd4b8ac0a8a')
             dispatch(setGarmentFullState(garment))
-            navigate(`/customization/${garment?._id}`)
+            // navigate(`/customization/${garment?._id}`)
+            navigate(`/customization/65859dd860a9cfd4b8ac0a8a`)
         }
     }
 
@@ -68,14 +71,19 @@ const CustomizationGarments = ({
                     />
                     {!!garments?.length && <div className='customization-mannequins-list'>
                         {garments.map((garment: ObjectType) => {
-                            const { mannequin = {}, garment: activeGarment } = garment;
-                            return <div key={mannequin?._id} className='customization-elem' onClick={() => handleGarmentClick(activeGarment)}>
-                                <HeadingUI text={activeGarment?.name} size='16px' color={appColor} align='center' />
-                                <div className="customization-mannequin">
-                                    <img src={`${BASE_UPLOADS_MANNEQUINS_FRONTS_URL}${mannequin?.fronturl}`} alt={mannequin?.name} />
-                                </div>
-                            </div>
-                        })}
+                            const { mannequin = {}, garment: activeGarment, details} = garment;
+                      console.log(garment,"activeGarmentactiveGarmentactiveGarment");
+                      
+                       return <div key={garment?._id ||  mannequin?._id} className='customization-elem' onClick={() => handleGarmentClick(activeGarment)}>
+                             <HeadingUI text={activeGarment?.name} size='16px' color={appColor} align='center' />
+                         {details ?  <GarmentsMannequin data={details}/> :   <div className="customization-mannequin">
+                                 <img src={`${BASE_UPLOADS_MANNEQUINS_FRONTS_URL}${mannequin?.fronturl}`} alt={mannequin?.name} />
+                             </div>
+                             } 
+                         </div>
+                            
+                        })
+                    }
                     </div>}
                 </div>
             </Container>

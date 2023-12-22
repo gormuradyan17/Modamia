@@ -50,6 +50,7 @@ const Customization = () => {
 
 
   const { silhouettes = {} } = activeGarment;
+  
   const [modelData, setModelData] = useState<any>({
     fronts: [
       { position: "bottom", src: "", color: "", printImageURL: "", activeCategory, price: 200, width: "", height: "", order: "" },
@@ -80,16 +81,10 @@ const Customization = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
 
-  useEffect(() => {
-    if ((Object.keys(testModelData)?.length)) {
-      // console.log('testModelData => ', testModelData)
-      setModelData(testModelData)
-    }
-  },[testModelData])
-
 
   useEffect(() => {
-    const convertValue = convertDefaultValue(modelData, silhouettes)
+    const convertValue = convertDefaultValue(modelData,silhouettes)
+    
     if (activeGarment?.mannequin?._id) {
       const { mannequin = {} } = activeGarment;
 
@@ -161,10 +156,8 @@ const Customization = () => {
           }
 
         });
-        console.log('{ ...modelData } => ', { ...modelData })
-        console.log('testModelData => ', testModelData)
         setModelData({ ...modelData });
-        await canvasModelInit(rangeValue, modelData, frontBack, canvasRef, mannequin, convertValue, false);
+        await canvasModelInit(rangeValue, modelData, frontBack, canvasRef, mannequin,Object.keys(testModelData).length ? testModelData : convertValue, false);
 
       };
 
