@@ -13,6 +13,7 @@ import ColorsList from "./ColorsList";
 import { colorFormOptions } from "utils/validators/validatorOptions";
 import { formValidator } from "utils/validators/validator";
 import { ObjectType } from "shared/helpers/helpers";
+import { getUserData } from "redux/reducers/userReducer";
 
 const ColorContent = () => {
 
@@ -21,12 +22,15 @@ const ColorContent = () => {
     const [isVisible, setIsVisible] = useState<boolean>(false)
     const cDetails = useSelector(colorDetails)
     const [errors, setErrors] = useState<ObjectType>({})
+    const userData = useSelector(getUserData)
 
     useEffect(() => {
-        getAvColors(dispatch)
-        getAvColorsVariants(dispatch)
-        getAvColorsPalettes(dispatch)
-    }, [])
+        if (userData && userData?.id) {
+            getAvColors(dispatch, '', userData?.id)
+            getAvColorsVariants(dispatch, userData?.id)
+            getAvColorsPalettes(dispatch, userData?.id)
+        }
+    }, [userData])
 
     const addNewColor = async (e: HTMLFormElement) => {
         e.preventDefault()
@@ -50,11 +54,11 @@ const ColorContent = () => {
 
     return (
         <div className="colors-pallette">
-            <MainHead text="Customize Colors" />
+            <MainHead text="My Colors" />
             <ButtonUI classN="add-button" onClick={() => setIsVisible(true)} type="button">New Color</ButtonUI>
             <MainBody>
                 <div className="colors-pallette-list">
-                    <HeadingUI text="Colors List" size="22px" />
+                    {colors?.length ? <HeadingUI text="Colors List" size="22px" /> : null }
                     {colors?.length ? <ColorsList colors={colors} /> : null}
                 </div>
                 {isVisible && <PopupUI callback={closePopup}>

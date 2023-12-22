@@ -21,15 +21,29 @@ router.post('/edit', editValidators, publicController.edit)
 
 // Color
 
-router.get('/colors', publicController.getColors)
-router.get('/colors-variants', publicController.getColorsVariants)
-router.get('/colors-palettes', publicController.getColorsPalettes)
+router.post('/colors', publicController.getColors)
+router.post('/colors-variants', publicController.getColorsVariants)
+router.post('/colors-palettes', publicController.getColorsPalettes)
+router.post('/add-color', publicController.addColor)
+router.post('/edit-color', publicController.editColor)
+router.post('/add-color-variant', publicController.addColorVariant)
+router.post('/add-color-palette', publicController.addColorPalette)
+router.post('/remove-color-palette', publicController.removeColorPalette)
+router.post('/order-palette-colors', publicController.orderPaletteColors)
+router.post('/remove-color', publicController.removeColor)
 
 // Print
 
-router.get('/prints', publicController.getPrints)
-router.get('/prints-variants', publicController.getPrintsVariants)
-router.get('/prints-palettes', publicController.getPrintsPalettes)
+router.post('/prints', publicController.getPrints)
+router.post('/prints-variants', publicController.getPrintsVariants)
+router.post('/prints-palettes', publicController.getPrintsPalettes)
+router.post('/add-print', publicController.addPrint)
+router.post('/edit-print', publicController.editPrint)
+router.post('/add-print-variant', publicController.addPrintVariant)
+router.post('/add-print-palette', publicController.addPrintPalette)
+router.post('/remove-print-palette', publicController.removePrintPalette)
+router.post('/order-palette-prints', publicController.orderPalettePrints)
+router.post('/remove-print', publicController.removePrint)
 
 // Mannequin
 

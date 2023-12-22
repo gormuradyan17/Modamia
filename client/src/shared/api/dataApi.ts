@@ -3,18 +3,17 @@ import { BaseApi } from "./baseApi";
 
 export const getColors = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');
-	const { colorVariant = '' } = body;
-	return http.get(`${COLORS_URL}${colorVariant ? `?variant=${colorVariant}` : ''}`, body)
+	return http.post(COLORS_URL, body)
 }
 
 export const getColorsVariants = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');
-	return http.get(COLORS_VARIANTS_URL, body)
+	return http.post(COLORS_VARIANTS_URL, body)
 }
 
 export const getColorsPalettes = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');
-	return http.get(COLORS_PALETTES_URL, body)
+	return http.post(COLORS_PALETTES_URL, body)
 }
 
 export const addColor = (body: Record<string, any> = {}) => {
@@ -48,19 +47,17 @@ export const updateColor = (body: Record<string, any> = {}) => {
 
 export const getPrints = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');
-	const { printVariant = '' } = body;
-	return http.get(`${PRINTS_URL}${printVariant ? `?variant=${printVariant}` : ''}`, body)
+	return http.post(PRINTS_URL, body)
 }
-
 
 export const getPrintsVariants = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');
-	return http.get(PRINTS_VARIANTS_URL, body)
+	return http.post(PRINTS_VARIANTS_URL, body)
 }
 
 export const getPrintsPalettes = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');
-	return http.get(PRINTS_PALETTES_URL, body)
+	return http.post(PRINTS_PALETTES_URL, body)
 }
 
 export const addPrint = (body: Record<string, any> = {}) => {

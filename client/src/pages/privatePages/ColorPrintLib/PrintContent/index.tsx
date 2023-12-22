@@ -10,30 +10,35 @@ import NewPrint from "./NewPrint";
 import { getAvPrints, getAvPrintsPalettes, getAvPrintsVariants } from "services/printService";
 import { availablePrints, resetPrintState } from "redux/reducers/printReducer";
 import PrintsList from "./PrintsList";
+import { getUserData } from "redux/reducers/userReducer";
 
 const PrintContent = () => {
 
     const [isVisible, setIsVisible] = useState<boolean>(false)
     const prints = useSelector(availablePrints)
     const dispatch = useDispatch()
+    const userData = useSelector(getUserData)
+
     const closePopup = () => {
         setIsVisible(false)
         dispatch(resetPrintState())
     }
 
     useEffect(() => {
-        getAvPrints(dispatch)
-        getAvPrintsVariants(dispatch)
-        getAvPrintsPalettes(dispatch)
-    }, [])
+        if (userData && userData?.id) {
+            getAvPrints(dispatch, '', userData?.id)
+            getAvPrintsVariants(dispatch, userData?.id)
+            getAvPrintsPalettes(dispatch, userData?.id)
+        }
+    }, [userData])
 
     return (
         <div>
-            <MainHead text="Customize Prints" />
+            <MainHead text="My Prints" />
             <ButtonUI classN="add-button" onClick={() => setIsVisible(true)} type="button">New Print</ButtonUI>
             <MainBody>
                 <div className="prints-pallette-list">
-                    <HeadingUI text="Print List" size="22px" />
+                    {prints?.length ? <HeadingUI text="Print List" size="22px" /> : null}
                     {prints?.length ? <PrintsList prints={prints} /> : null}
                 </div>
                 {isVisible && <PopupUI callback={closePopup}>

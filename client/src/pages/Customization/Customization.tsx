@@ -76,14 +76,14 @@ const Customization = () => {
     if (id) getSelectedGarment(dispatch, id)
     dispatch(setActiveColor(""));
     dispatch(setActiveCategory("silhouette"));
-    if (id) getModelData(dispatch, id)
+    // if (id) getModelData(dispatch, id)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
 
   useEffect(() => {
     if ((Object.keys(testModelData)?.length)) {
       // console.log('testModelData => ', testModelData)
-      setModelData(testModelData)
+      // setModelData(testModelData)
     }
   },[testModelData])
 

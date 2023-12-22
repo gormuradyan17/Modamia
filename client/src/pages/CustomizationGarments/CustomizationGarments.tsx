@@ -29,10 +29,10 @@ const CustomizationGarments = ({
         getAvGarments(dispatch, userId)
     }, [])
 
-    const handleGarmentClick = (garment: ObjectType) => {
-        if (garment?._id) {
+    const handleGarmentClick = (garment: ObjectType, id: string) => {
+        if (id && garment?._id) {
             dispatch(setGarmentFullState(garment))
-            navigate(`/customization/${garment?._id}`)
+            navigate(`/customization/${id}`)
         }
     }
 
@@ -68,8 +68,8 @@ const CustomizationGarments = ({
                     />
                     {!!garments?.length && <div className='customization-mannequins-list'>
                         {garments.map((garment: ObjectType) => {
-                            const { mannequin = {}, garment: activeGarment } = garment;
-                            return <div key={mannequin?._id} className='customization-elem' onClick={() => handleGarmentClick(activeGarment)}>
+                            const { mannequin = {}, garment: activeGarment, _id = '' } = garment;
+                            return <div key={mannequin?._id} className='customization-elem' onClick={() => handleGarmentClick(activeGarment, _id || activeGarment?._id)}>
                                 <HeadingUI text={activeGarment?.name} size='16px' color={appColor} align='center' />
                                 <div className="customization-mannequin">
                                     <img src={`${BASE_UPLOADS_MANNEQUINS_FRONTS_URL}${mannequin?.fronturl}`} alt={mannequin?.name} />
