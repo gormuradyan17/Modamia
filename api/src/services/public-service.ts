@@ -79,6 +79,19 @@ class PublicService {
         return true;
     }
 
+    async edit(req: any) {
+        try {
+            const { refreshToken } = req.cookies;
+            const userData = await tokenService.findUserByToken(refreshToken);
+            const query = { _id: userData?._id};
+            await UserModel.findOneAndUpdate(query, req.body, { upsert: true });
+            const data = await UserModel.find({})
+            return data
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     async getColors() {
         const colors = await ColorModel.find({})
         return colors;

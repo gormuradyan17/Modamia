@@ -11,7 +11,7 @@ import "./style.scss"
 const DashboardContent = () => {
     
     return (
-        <section>
+        <section className="dashboard">
             <CaptionContent />
             <FeaturedCollections />
             <HandmadeContent />

@@ -37,7 +37,6 @@ const SignUp = () => {
 
     if (repeatPass === userData?.password) {
       const response = await authUserSignUp(userData, setErrors);
-      console.log(response, "responseresponse");
 
       if (response) {
         await appendSnackbar(Variant.success, {

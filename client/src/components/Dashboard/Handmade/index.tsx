@@ -27,7 +27,7 @@ const HandmadeContent = () => {
             <p className="handmade_title">HANDMADE JUST FOR YOU</p>
             <div className="handmade_content">
                 {data.map(i => (
-                    <div key={i.id} className={`block_${i.id}`}>
+                    <div key={i.id} className={`block block_${i.id}`}>
                         <img src={i.image} alt="" />
                         <p className="handmade_link">{i.text}
                             <FontAwesomeIcon icon={faArrowRight} /></p>

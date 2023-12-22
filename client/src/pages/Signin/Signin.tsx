@@ -8,7 +8,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import InputUI from "shared/ui/InputUI/InputUI";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { ObjectType, setCookie } from "shared/helpers/helpers";
-import { authUserSignin } from "services/userService";
+import { authUserSignin, editUserData } from "services/userService";
 const Signin = () => {
     const dispatch = useDispatch()
     const isAuth = useSelector(isLogged)
@@ -26,7 +26,6 @@ const Signin = () => {
     }
     const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-
         const response: any = await authUserSignin(userData, setErrors);
         if (response?.accessToken) {
             setCookie('accessToken', response.accessToken, 365)
@@ -35,6 +34,7 @@ const Signin = () => {
             navigate('/home');
         }
     }
+
     return (
         <div className='signin_container'>
             <img src={signinBG} alt="" />
