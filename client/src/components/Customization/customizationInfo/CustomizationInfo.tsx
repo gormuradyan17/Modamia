@@ -10,7 +10,7 @@ const CustomizationInfo = ({ infoData }: Props) => {
   return (
     <div className="customization-info">
       <HeadingUI classN="customization-info-name" text={infoData.name} size="22px" color="#a57867" />
-      <HeadingUI text={`AMD ${infoData.price}`} size="18px" color="#c37489" />
+      <HeadingUI text={`$ ${infoData.price}`} size="18px" color="#c37489" />
     </div>
   );
 };

@@ -83,7 +83,8 @@ class PublicController {
 
     async getGarments(req: any, res: any, next: any) {
         try {
-            const garments = await publicService.getGarments();
+            const { user_id = '' } = req.body;
+            const garments = await publicService.getGarments(user_id);
             return res.json(garments);
         } catch (error) {
             next(error);
@@ -92,8 +93,9 @@ class PublicController {
 
     async getGarment(req: any, res: any, next: any) {
         try {
-            const { garment_id = '' } = req.body
-            const garment = await publicService.getGarment(garment_id);
+            const { garment_id = '' } = req.body;
+            const { refreshToken } = req.cookies;
+            const garment = await publicService.getGarment(garment_id, refreshToken);
             return res.json(garment);
         } catch (error) {
             next(error);
@@ -102,8 +104,8 @@ class PublicController {
 
     async searchGarments(req: any, res: any, next: any) {
         try {
-            const { criteria = '' } = req.body
-            const garments = await publicService.searchGarments(criteria);
+            const { criteria = '', user_id = '' } = req.body
+            const garments = await publicService.searchGarments(criteria, user_id);
             return res.json(garments);
         } catch (error) {
             next(error);
@@ -217,6 +219,25 @@ class PublicController {
                 return res.status(400).json({ msg: 'Validation error', errors: errors.array() });
             }
             const data = await publicService.edit(req)
+            return res.json(data);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async addCart(req: any, res: any, next: any) {
+        try {
+            const { refreshToken } = req.cookies;
+            const data = await publicService.addCart(req.body, refreshToken)
+            return res.json(data);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async removeCart(req: any, res: any, next: any) {
+        try {
+            const data = await publicService.removeCart(req.body)
             return res.json(data);
         } catch (error) {
             next(error);

@@ -1,8 +1,9 @@
+import CustomizationGarments from "pages/CustomizationGarments/CustomizationGarments"
 
 const AllGarments = () => {
   return (
     <div>
-      AllGarments
+      <CustomizationGarments />
     </div>
   )
 }

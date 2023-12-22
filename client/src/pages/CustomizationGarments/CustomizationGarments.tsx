@@ -2,7 +2,7 @@ import Container from 'layout/Container/Container';
 import './style.scss'
 import HeadingUI from 'shared/ui/HeadingUI/HeadingUI';
 import { ObjectType, appColor } from 'shared/helpers/helpers';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { BASE_UPLOADS_MANNEQUINS_FRONTS_URL } from 'shared/constants/genericApiRoutes';
 import { useNavigate } from 'react-router-dom';
@@ -11,40 +11,47 @@ import { getAvGarments, getAvSearchedGarments } from 'services/garmentService';
 import InputUI from 'shared/ui/InputUI/InputUI';
 import useDebounce from 'utils/hooks/useDebounce';
 
-const CustomizationMannequins = () => {
+interface Props {
+    userId?: string
+}
+
+const CustomizationGarments = ({
+    userId = ''
+}: Props) => {
 
     const dispatch = useDispatch()
-
+    const mounted = useRef<boolean>(false)
     const garments = useSelector(availableGarments)
 
     const navigate = useNavigate()
 
     useEffect(() => {
-        getAvGarments(dispatch)
+        getAvGarments(dispatch, userId)
     }, [])
 
     const handleGarmentClick = (garment: ObjectType) => {
         if (garment?._id) {
             dispatch(setGarmentFullState(garment))
-            navigate(`${garment?._id}`)
+            navigate(`/customization/${garment?._id}`)
         }
     }
 
     const [criteria, setCriteria] = useState<string>('');
     const debouncedCriteria = useDebounce(criteria, 500);
-  
+
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-      const { target: { value } } = event
-      if (!criteria?.length) return setCriteria(value.trim())
-      setCriteria(value)
+        const { target: { value } } = event
+        if (!criteria?.length) return setCriteria(value.trim())
+        setCriteria(value)
     }
-  
+
     const getGarmentsByCriteria = async () => {
-      return await getAvSearchedGarments(dispatch,criteria)
+        return await getAvSearchedGarments(dispatch, criteria, userId)
     }
-  
+
     useEffect(() => {
-      getGarmentsByCriteria()
+        if (!mounted.current) mounted.current = true;
+        else getGarmentsByCriteria();
     }, [debouncedCriteria]);
 
     return (
@@ -76,4 +83,4 @@ const CustomizationMannequins = () => {
     );
 };
 
-export default CustomizationMannequins;
+export default CustomizationGarments;

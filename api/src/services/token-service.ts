@@ -37,7 +37,7 @@ class TokenService {
         } catch (error) {
             return null;
         }
-
+8
     }
 
     async saveToken(adminId: any, refreshToken: any) {
@@ -70,33 +70,31 @@ class TokenService {
 
     async saveTokenUser(adminId: any, refreshToken: any) {
 
-        const AdminData = await UserModel.findOne({ _id: adminId })
-        if (AdminData.refreshToken === refreshToken) {
-            return AdminData.refreshToken;
+        const UserData = await UserModel.findOne({ _id: adminId })
+        if (UserData.refreshToken === refreshToken) {
+            return UserData.refreshToken;
         }
-        AdminData.refreshToken = refreshToken;
-        AdminData.save();
-        return AdminData.refreshToken;
+        UserData.refreshToken = refreshToken;
+        UserData.save();
+        return UserData.refreshToken;
 
     }
     
     async removeTokenUser(refreshToken: any) {
-
-        const AdminData = await UserModel.findOne({ refreshToken });
-        AdminData.refreshToken = '';
-        AdminData.save();
-        return AdminData.refreshToken;
-
+        const UserData = await UserModel.findOne({ refreshToken });
+        UserData.refreshToken = '';
+        UserData.save();
+        return UserData.refreshToken;
     }
 
     async findTokenUser(refreshToken: any) {
-        const AdminData = await UserModel.findOne({ refreshToken });
-        return AdminData.refreshToken;
+        const UserData = await UserModel.findOne({ refreshToken });
+        return UserData.refreshToken;
     }
 
     async findUserByToken(refreshToken: any) {
-        const AdminData = await UserModel.findOne({ refreshToken });
-        return AdminData;
+        const UserData = await UserModel.findOne({ refreshToken });
+        return UserData;
     }
 
     async verifyExpiration(refreshToken: any) {

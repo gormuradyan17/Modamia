@@ -4,8 +4,9 @@ import GarmentModel from '../models/Garment'
 import mongoose from 'mongoose';
 import MannequinModel from '../models/Mannequin'
 import SilhouetteModel from '../models/Silhouette'
+import CartModel from '../models/Cart';
 
-export const getGarmentsQuery = async (isAdmin: boolean = false) => {
+export const getGarmentsQuery = async (isAdmin: boolean = false, user_id: string = '') => {
     const topQuery = [
         {
             $lookup: {
@@ -41,6 +42,11 @@ export const getGarmentsQuery = async (isAdmin: boolean = false) => {
         },
         {
             $unwind: '$mannequin'
+        },
+        {
+            $match: {
+                ...(!user_id && { 'garment.user_id': { $exists: false } }),
+            }
         },
         { $sort: { 'garment.createdAt': 1 } },
     ]
@@ -173,7 +179,7 @@ export const getGarmentsQuery = async (isAdmin: boolean = false) => {
     ]);
 }
 
-export const getGarmentQuery = async (garment_id: string = '', isAdmin: boolean = false, isSearchable: boolean = false) => {
+export const getGarmentQuery = async (garment_id: string = '', isAdmin: boolean = false, isSearchable: boolean = false, user_id: string = '') => {
     const topQuery = [
         {
             $match: {
@@ -307,26 +313,6 @@ export const getGarmentQuery = async (garment_id: string = '', isAdmin: boolean 
                             }
                         },
                     },
-                    // palettes: {
-                    //     colors: {
-                    //         $filter: {
-                    //             input: '$colors',
-                    //             as: 'color',
-                    //             cond: {
-                    //                 $ne: ['$$color', null]
-                    //             }
-                    //         },
-                    //     },
-                    //     prints: {
-                    //         $filter: {
-                    //             input: '$prints',
-                    //             as: 'print',
-                    //             cond: {
-                    //                 $ne: ['$$print', null]
-                    //             }
-                    //         },
-                    //     }
-                    // }
                 }
             },
             ...bottomQuery
@@ -454,6 +440,7 @@ export const getGarmentQuery = async (garment_id: string = '', isAdmin: boolean 
             $project: {
                 _id: 0,
                 garment: '$garment',
+                ...(user_id && { details: '$details' }),
                 ...(!isSearchable && {
                     silhouettes: {
                         fronts: {
@@ -576,10 +563,19 @@ export const getGarmentQuery = async (garment_id: string = '', isAdmin: boolean 
             }
         }
     ])
+
     result[0].palettes = palettes?.[0]?.palettes || {
         colors: [],
         prints: []
     }
+
+    if (user_id) {
+        const garment_id_object = new mongoose.Types.ObjectId(garment_id);
+        const garment_id_string = garment_id_object.toString();
+        const details = await CartModel.find({ user_id: new mongoose.Types.ObjectId(user_id), 'details.garment_id': garment_id_string })
+        result[0].details = details?.[0] || {}
+    }
+
     return result?.[0] || {};
 }
 
@@ -606,7 +602,7 @@ export const updateGarmentsQuery = async (garment_id: string, list: Array<Record
                     order: silhouette?.order,
                     silhouetteType: type,
                 });
-                const queryMannequin = { _id: mannequin_id}
+                const queryMannequin = { _id: mannequin_id }
                 const mannequin = await MannequinModel.find(queryMannequin)
                 if (mannequin?.[0]) {
                     const querySilhouette = { '_id': silhouette?.id };
@@ -662,7 +658,7 @@ export const updateGarmentPalettesQuery = async (garment_id: string, list: Array
     }
 }
 
-export const searchGarmentsQuery = async (criteria: string = '', isAdmin: boolean = false) => {
+export const searchGarmentsQuery = async (criteria: string = '', isAdmin: boolean = false, user_id: string = '') => {
     const topQuery = [
         {
             $lookup: {
@@ -676,6 +672,10 @@ export const searchGarmentsQuery = async (criteria: string = '', isAdmin: boolea
             $unwind: '$mannequin',
         },
     ]
+    const userQuery = {
+        ...(user_id && { 'user_id': new mongoose.Types.ObjectId(user_id) }),
+        ...(!user_id && { 'user_id': { $exists: false } }),
+    }
     const data = await GarmentModel.aggregate([
         ...topQuery,
         {
@@ -684,6 +684,7 @@ export const searchGarmentsQuery = async (criteria: string = '', isAdmin: boolea
                     { 'name': { $regex: criteria, $options: 'i' } },
                     { 'mannequin.name': { $regex: criteria, $options: 'i' } },
                 ],
+                $and: [userQuery],
             },
         },
         {
@@ -692,7 +693,7 @@ export const searchGarmentsQuery = async (criteria: string = '', isAdmin: boolea
     ]);
 
     const res = await Promise.all(data.map(async (item: Record<string, any>) => {
-        const garment = await getGarmentQuery(item?._id, isAdmin, true);
+        const garment = await getGarmentQuery(item?._id, isAdmin, true, user_id);
         return garment;
     }));
 
@@ -700,4 +701,48 @@ export const searchGarmentsQuery = async (criteria: string = '', isAdmin: boolea
     const filteredRes = res.filter((garment) => garment !== undefined);
 
     return filteredRes;
+}
+
+export const getGarmentsByCartQuery = async (isAdmin: boolean = false, user_id: string = '') => {
+
+    return await CartModel.aggregate([
+        {
+            $match: {
+                'user_id': new mongoose.Types.ObjectId(user_id),
+            },
+        },
+        {
+            $addFields: {
+                'details.garment_id': {
+                    $toObjectId: '$details.garment_id', // Convert to ObjectId
+                },
+                'details.activeMannequin._id': {
+                    $toObjectId: '$details.activeMannequin._id', // Convert to ObjectId
+                },
+            },
+        },
+        {
+            $lookup: {
+                from: 'garments',
+                localField: 'details.garment_id',
+                foreignField: '_id',
+                as: 'garmentArray',
+            },
+        },
+        {
+            $lookup: {
+                from: 'mannequins',
+                localField: 'details.activeMannequin._id',
+                foreignField: '_id',
+                as: 'mannequinArray',
+            },
+        },
+        {
+            $project: {
+                garment: { $arrayElemAt: ['$garmentArray', 0] }, // Extract the first element from the array
+                mannequin: { $arrayElemAt: ['$mannequinArray', 0] }, // Extract the first element from the array
+                details: '$details',
+            },
+        },
+    ])
 }
