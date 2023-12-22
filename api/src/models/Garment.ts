@@ -16,6 +16,10 @@ const GarmentSchema: GarmentInterface = new mongoose.Schema(
             ref: 'Mannequin',
             required: true,
         },
+        user_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+        }
     },
     { timestamps: true }
 );

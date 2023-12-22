@@ -74,3 +74,5 @@ export const SIGNIN_USER = API_URL + 'signin';
 export const USER_REFRESH_URL = API_URL + 'refresh'
 export const USER_SIGNOUT_URL = API_URL + 'signout'
 export const USER_EDIT_URL = API_URL + 'edit'
+export const ADD_TO_CART_URL = API_URL + 'add-cart'
+export const REMOVE_FROM_CART_URL = API_URL + 'remove-cart'

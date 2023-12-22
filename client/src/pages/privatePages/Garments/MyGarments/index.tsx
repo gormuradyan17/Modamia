@@ -1,9 +1,15 @@
-import React from 'react'
+import CustomizationGarments from "pages/CustomizationGarments/CustomizationGarments"
+import { useSelector } from "react-redux"
+import { getUserData } from "redux/reducers/userReducer"
 
 const MyGarments = () => {
+
+  const userData = useSelector(getUserData)
+  if (!userData.id) return <></>
+  
   return (
     <div>
-     MyGarments 
+      <CustomizationGarments userId={userData?.id} />
     </div>
   )
 }

@@ -1,0 +1,65 @@
+@use 'variables';
+
+.counterUI{
+    &__body{
+        display: flex;
+        align-items: center;
+    }
+    button {
+        background-color: transparent;
+        border: none;
+        outline: none;
+        appearance: none;
+        cursor: pointer;
+        padding: 0;
+    }
+    &__button {
+        background: #D9F0FA !important;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+   
+    &__number{
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
+        margin: 0 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: variables.$appColor;
+        span {
+            font-weight: 700;
+            font-size: 20px;
+            line-height: 32px;
+            color: #fff;
+        }
+    }
+    &__plus{
+        &::after{
+            content: url('../../../assets/icons/Plus.svg');
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+    }
+    &__minus{
+        &::after{
+            content: url('../../../assets/icons/Minus.svg');
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            padding-bottom: 6px;
+            transform: translate(-50%, -50%);
+        }
+    }
+}

@@ -16,7 +16,7 @@ function LoginSignBtn() {
       if (data) {
         eraseCookie('accessToken')
         dispatch(setIsLogged(false));
-        navigate('/login');
+        navigate('/signin');
       }
     } catch (error) {
       console.log(error);

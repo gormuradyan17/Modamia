@@ -7,7 +7,8 @@ import PrintPaletteModel from '../models/PrintPalette'
 import MannequinModel from '../models/Mannequin'
 import SilhouetteModel from '../models/Silhouette'
 import SizeModel from '../models/Size'
-import { getGarmentQuery, getGarmentsQuery, searchGarmentsQuery } from '../queries/GarmentsQueries'
+import CartModel from '../models/Cart'
+import { getGarmentQuery, getGarmentsByCartQuery, getGarmentsQuery, searchGarmentsQuery } from '../queries/GarmentsQueries'
 import UserModel from '../models/User'
 import UserDto from '../dtos/user-dto';
 import tokenService from './token-service';
@@ -75,7 +76,7 @@ class PublicService {
     }
 
     async signout(refreshToken: any) {
-        await tokenService.removeToken(refreshToken);
+        await tokenService.removeTokenUser(refreshToken);
         return true;
     }
 
@@ -218,18 +219,22 @@ class PublicService {
         return mannequins;
     }
 
-    async getGarments() {
-        const garments = await getGarmentsQuery()
-        return garments
+    async getGarments(user_id: string = '') {
+        if (user_id) {
+            const garments = await getGarmentsByCartQuery(false, user_id)
+            return garments;
+        }
+        return await getGarmentsQuery(false)
     }
     
-    async getGarment(garment_id: string = '') {
-        const garment = await getGarmentQuery(garment_id)
+    async getGarment(garment_id: string = '', refreshToken: any) {
+        const userData = await tokenService.findUserByToken(refreshToken);
+        const garment = await getGarmentQuery(garment_id, false, false, userData?._id)
         return garment
     }
     
-    async searchGarments(criteria: string) {
-        const garments = await searchGarmentsQuery(criteria)
+    async searchGarments(criteria: string, user_id: string) {
+        const garments = await searchGarmentsQuery(criteria, false, user_id)
         return garments
     }
 
@@ -254,6 +259,30 @@ class PublicService {
             back: silhouettesBack,
             sleeve: silhouettesSleeve
         };
+    }
+
+    async addCart(body: any, refreshToken: any) {
+        try {
+            const { details } = body;
+            const userData = await tokenService.findUserByToken(refreshToken);
+            const data = await CartModel.create({ user_id: userData?._id , details })
+            return data
+        } catch (error) {
+            console.log(error)
+            return false;
+        }
+    }
+
+    async removeCart(body: any) {
+        try {
+            const { cart_id } = body;
+            const query = { '_id': cart_id}
+            await ColorVariantModel.deleteOne(query);
+            return true;
+        } catch (error) {
+            console.log(error)
+            return false;
+        }
     }
 
 }
