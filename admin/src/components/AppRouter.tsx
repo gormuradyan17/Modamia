@@ -1,14 +1,10 @@
-import { useSelector } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
 import contents from 'routes/contentRoutes';
 import { ArrayType } from 'shared/helpers/helpers';
 import React from 'react';
-import { isLoggedIn } from 'redux/reducers/authReducer';
 import PrivateWrapper from 'layout/PrivateWrapper/PrivateWrapper';
 
 const AppRouter = () => {
-
-    const isAuth = useSelector(isLoggedIn)
 
     const { publicPages, adminPages, garmentPages } = contents;
 

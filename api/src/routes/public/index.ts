@@ -68,5 +68,6 @@ router.post('/search-garment', publicController.searchGarments)
 
 router.post('/add-cart', publicController.addCart)
 router.post('/remove-cart', publicController.removeCart)
+router.post('/edit-cart', publicController.editCart)
 
 export default router

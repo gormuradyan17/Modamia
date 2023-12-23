@@ -6,11 +6,9 @@ const MyGarments = () => {
 
   const userData = useSelector(getUserData)
   if (!userData.id) return <></>
-  
+
   return (
-    <div>
-      <CustomizationGarments userId={userData?.id} />
-    </div>
+    <CustomizationGarments userId={userData?.id} title="My Garments" />
   )
 }
 

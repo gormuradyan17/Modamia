@@ -7,39 +7,47 @@ import { Header } from './Header';
 import Footer from './Footer';
 import Aside from 'layout/Aside/Aside';
 import NotFound from 'pages/NotFound';
-import { useDispatch } from 'react-redux';
-import { setIsLogged, setUserData } from 'redux/reducers/userReducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { isLogged, setIsLogged, setUserData } from 'redux/reducers/userReducer';
 import { checkAuth } from 'services/userService';
+import PrivateWrapper from 'layout/PrivateWrapper/PrivateWrapper';
 
 const AppRouter = () => {
-    const dispatch = useDispatch()
-    useEffect(() => {
-        const token = getCookie('accessToken')
+    const logged = useSelector(isLogged);
+    const dispatch = useDispatch();
+
+    const checkAuthentication = async () => {
+        const token = getCookie('accessToken');
         if (token) {
-            const checkUser = async () => {
-                const data = await checkAuth();
-                if (data && data?.user?.id) {
-                    await dispatch(setIsLogged(true));
-                    await dispatch(setUserData(data?.user))
-                } else {
-                    eraseCookie('accessToken')
-                    await dispatch(setIsLogged(false));
-                    await dispatch(setUserData({}))
-                }
+            const data = await checkAuth();
+            if (data && data?.user?.id) {
+                dispatch(setIsLogged(true));
+                dispatch(setUserData(data?.user));
+            } else {
+                eraseCookie('accessToken');
+                dispatch(setIsLogged(false));
+                dispatch(setUserData({}));
             }
-            checkUser()
         } else {
-            dispatch(setUserData({}))
-            dispatch(setIsLogged(false))
+            dispatch(setUserData({}));
+            dispatch(setIsLogged(false));
         }
-    }, [])
+    };
+
+    useEffect(() => {
+        checkAuthentication();
+    }, []);
 
     const { publicPages, privatePages } = contents;
 
+    const allPages = [...publicPages, ...privatePages]
+
     const renderRoutes = (pages: ArrayType) => {
-        return pages.map((RouteElem: ObjectType) => (
+        return pages.map(RouteElem => (
             <React.Fragment key={RouteElem.id}>
-                <Route path={RouteElem.path} element={<RouteElem.element />} />
+                <Route path={RouteElem.path} element={
+                    RouteElem?.isPrivate ? <PrivateWrapper><RouteElem.element /></PrivateWrapper> : <RouteElem.element />
+                } />
                 {RouteElem.children && renderRoutes(RouteElem.children)}
             </React.Fragment>
         ));
@@ -48,17 +56,16 @@ const AppRouter = () => {
     return (
         <>
             <Header />
+            {logged && <Aside />}
             <main className='main-content'>
                 <Routes>
-                    <Route element={<Aside />}>
-                        {renderRoutes(privatePages)}
-                    </Route>
-                    {renderRoutes(publicPages)}
+                    {allPages && renderRoutes(allPages)}
                     <Route path='*' element={<NotFound />} />
                 </Routes>
             </main>
             <Footer />
         </>
     );
-}
+};
+
 export default AppRouter;

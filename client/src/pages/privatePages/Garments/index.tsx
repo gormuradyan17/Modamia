@@ -1,10 +1,8 @@
-import React from 'react'
+import AllGarments from './AllGarments'
 
 const Garments = () => {
   return (
-    <div>
-      Garments
-    </div>
+    <AllGarments />
   )
 }
 

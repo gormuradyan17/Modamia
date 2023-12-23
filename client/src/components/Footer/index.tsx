@@ -9,7 +9,7 @@ const Footer=()=>{
         <footer>
         <FooterEmail/>
         <SocialMedia/>
-        <FooterTop/>
+        {/* <FooterTop/> */}
         <FooterBottom/>
         </footer>
     )

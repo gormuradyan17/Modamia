@@ -26,7 +26,6 @@ const Signin = () => {
     }
     const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-
         const response: any = await authUserSignin(userData, setErrors);
         if (response?.accessToken) {
             setCookie('accessToken', response.accessToken, 365)

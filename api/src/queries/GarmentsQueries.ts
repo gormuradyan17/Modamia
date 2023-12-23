@@ -185,7 +185,7 @@ export const getGarmentQuery = async (
     isSearchable: boolean = false,
     user_id: string = '',
 ) => {
-    const query = { '_id': new mongoose.Types.ObjectId(garment_id), user_id }
+    const query = { '_id': new mongoose.Types.ObjectId(garment_id), ...(user_id && { user_id }), }
     const cartItem = await CartModel.find(query)
     let manipulatedId = ''
     if (cartItem && Object.keys(cartItem).length) manipulatedId = cartItem?.[0]?.details?.garment_id || null
@@ -582,7 +582,11 @@ export const getGarmentQuery = async (
             prints: []
         }
     
-        if (user_id && cartItem && Object.keys(cartItem).length && cartItem?.length) result[0].details = cartItem?.[0]
+        if (user_id && cartItem && Object.keys(cartItem).length && cartItem?.length) {
+            const copyData = JSON.parse(JSON.stringify(cartItem[0]))
+            copyData.isCart = true
+            result[0].details = copyData
+        }
     
         return result?.[0] || {};
     }
@@ -703,7 +707,7 @@ export const searchGarmentsQuery = async (criteria: string = '', isAdmin: boolea
     ]);
 
     const res = await Promise.all(data.map(async (item: Record<string, any>) => {
-        const garment = await getGarmentQuery(item?._id, isAdmin, true, user_id);
+        const garment = await getGarmentQuery(item?._id, isAdmin, true, user_id ? user_id : '');
         return garment;
     }));
 

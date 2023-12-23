@@ -376,6 +376,16 @@ class PublicController {
             next(error);
         }
     }
+
+    async editCart(req: any, res: any, next: any) {
+        try {
+            const { refreshToken } = req.cookies;
+            const data = await publicService.editCart(req.body, refreshToken)
+            return res.json(data);
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 export default new PublicController()

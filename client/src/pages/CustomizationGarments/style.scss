@@ -3,8 +3,9 @@
 .customization-mannequins {
     margin-top: 48px;
     padding: 50px;
+    width: 100%;
 }
-.customization-body {
+.customization-body-mannequins {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -30,6 +31,9 @@
     position: relative;
     overflow: hidden;
     border: 1px solid variables.$appColor;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border-radius: 10px;
     margin: 10px;
     cursor: pointer;

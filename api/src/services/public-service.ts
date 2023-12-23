@@ -744,6 +744,22 @@ class PublicService {
         }
     }
 
+    async editCart(body: any, refreshToken: any) {
+        try {
+            const { details, _id } = body;
+            const userData = await tokenService.findUserByToken(refreshToken);
+            const query = { user_id: new ObjectId(userData?._id), _id }
+            const data = await CartModel.find(query)
+            if (data && data.length) {
+                return await CartModel.findOneAndUpdate(query, {details}, { upsert: true });
+            }
+            return false
+        } catch (error) {
+            console.log(error)
+            return false;
+        }
+    }
+
 }
 
 export default new PublicService();

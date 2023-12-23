@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkmodamia_app=self.webpackChunkmodamia_app||[]).push([[900,422],{8121:(a,e,s)=>{s.r(e),s.d(e,{default:()=>n});var t=s(117),d=s(9434),i=s(1482),u=s(184);const n=()=>{const a=(0,d.v9)(i.is);return a.id?(0,u.jsx)(t.default,{userId:null===a||void 0===a?void 0:a.id,title:"My Garments"}):(0,u.jsx)(u.Fragment,{})}}}]);
+//# sourceMappingURL=900.cb7e87cb.chunk.js.map
