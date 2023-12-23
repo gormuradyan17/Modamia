@@ -21,8 +21,6 @@ const MainHead = ({
 
     const navigate = useNavigate()
 
-
-
     return (
         <div className="main-head">
             <HeadingUI text={text} color="#aa8a75" />
