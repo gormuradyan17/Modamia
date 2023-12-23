@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ChangeEvent, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { colorsVariants, setColorsVariantsData } from "redux/reducers/colorReducer";
+import { getUserId } from "redux/reducers/userReducer";
 import { getAvColorsVariants } from "services/colorService";
 import { addColorVariant } from "shared/api/dataApi";
 import InputUI from "shared/ui/InputUI/InputUI";
@@ -12,6 +13,7 @@ const NewColorVariant = () => {
     const [isVisible, setIsVisible] = useState<boolean>(false)
     const [newVariant, setNewVariant] = useState<string>('')
     const colorVarians = useSelector(colorsVariants)
+    const user_id = useSelector(getUserId)
 
     const dispatch = useDispatch()
     
@@ -28,7 +30,7 @@ const NewColorVariant = () => {
     const saveVariant = async () => {
         if (newVariant) {
             await addColorVariant({
-                name: newVariant
+                name: newVariant,
             }).then(res => {
                 dispatch(setColorsVariantsData([
                     ...colorVarians,

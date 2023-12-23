@@ -13,7 +13,16 @@ import UserModel from '../models/User'
 import UserDto from '../dtos/user-dto';
 import tokenService from './token-service';
 import ApiError from '../exceptions/api-error';
-import bcrypt from 'bcryptjs'
+import bcrypt from 'bcryptjs';
+import { ColorPaletteInterface } from '../models/ColorPalette';
+import { PrintPaletteInterface } from '../models/PrintPalette';
+import { ObjectId } from 'mongodb';
+import PrintVariantModel from '../models/PrintVariant'
+import { createPrintsDirsIfNotExists, getFileOriginalMimeType } from '../helpers/helper'
+import mongoose from 'mongoose';
+import { v4 as uuidv4 } from 'uuid';
+import path from 'path'
+import fs from 'fs'
 
 class PublicService {
 
@@ -93,22 +102,217 @@ class PublicService {
         }
     }
 
-    async getColors() {
-        const colors = await ColorModel.find({})
+
+    // Colors 
+
+    async addColor(req: any) {
+        try {
+            const { refreshToken = '' } = req.cookies;
+            const userData = await tokenService.findUserByToken(refreshToken);
+            const { _id = '' } = userData;
+            const { name, hexcode, pantonecode, tags, colorPalettes = [] } = req.body;
+            const color = await ColorModel.create({
+                name,
+                hexcode,
+                pantonecode,
+                tags,
+                ...( _id && { user_id: _id } )
+            })
+            const { id } = color;
+            colorPalettes?.length && id && colorPalettes.forEach((color: string) => {
+                const obj = {
+                    color_id: id,
+                    variant_id: color
+                }
+                this.addColorPalette(obj)
+            });
+            return color;
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async editColor(req: Record<string, any>) {
+        try {
+            const { refreshToken = '' } = req.cookies;
+            const userData = await tokenService.findUserByToken(refreshToken);
+            const { _id = '' } = userData;
+            const query = { '_id': req.body._id, ...( _id && { user_id: _id } ) };
+            await ColorModel.findOneAndUpdate(query, req.body, { upsert: true });
+            const colors = await ColorModel.find({ ...( _id && { user_id: _id } ) })
+            return colors
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async addColorVariant(req: Record<string, any>) {
+        try {
+            const { refreshToken = '' } = req.cookies;
+            const userData = await tokenService.findUserByToken(refreshToken);
+            const { _id = '' } = userData;
+            const { name } = req.body
+            const colorVariant = await ColorVariantModel.create({
+                name,
+                ...( _id && { user_id: _id } )
+            })
+            return colorVariant;
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async addColorPalette(req: Record<string, any>) {
+        try {
+            const { refreshToken = '' } = req.cookies;
+            const userData = await tokenService.findUserByToken(refreshToken);
+            const { _id = '' } = userData;
+            const { color_id, variant_id } = req.body
+            const count = await ColorPaletteModel.find({
+                variant_id: new ObjectId(variant_id),
+                ...( _id && { user_id: _id } )
+            }).count()
+            const colorPalette = await ColorPaletteModel.create({
+                color_id,
+                variant_id,
+                order: count + 1,
+                ...( _id && { user_id: _id } )
+            })
+            return colorPalette;
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async removeColorPalette(req: any) {
+        try {
+            const { refreshToken = '' } = req.cookies;
+            const userData = await tokenService.findUserByToken(refreshToken);
+            const { _id: user_id = '' } = userData;
+
+            const { _id = '' } = req.body
+            if (!mongoose.Types.ObjectId.isValid(_id)) {
+                throw new Error('Invalid palette_id');
+            }
+            const query = { '_id': _id, ...( user_id && { user_id } ) };
+            const queryPalette = { 'variant_id': _id, ...( user_id && { user_id } ) };
+            await ColorVariantModel.deleteOne(query);
+            return await ColorPaletteModel.deleteMany(queryPalette)
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async orderPaletteColors(req: any) {
+        try {
+            const { refreshToken = '' } = req.cookies;
+            const userData = await tokenService.findUserByToken(refreshToken);
+            const { _id: user_id = '' } = userData;
+
+            const { fromElement = {}, toElement = {} } = req.body
+            const { _id = '', order = undefined } = fromElement;
+            const { _id: id_to = '', order: order_to = undefined } = toElement;
+            if (_id && order && id_to && order_to) {
+                const queryFrom = {
+                    _id,
+                    order,
+                    ...( user_id && { user_id } )
+                }
+                await ColorPaletteModel.findOneAndUpdate(queryFrom, {
+                    order: order_to,
+                }, { upsert: true });
+
+                const queryTo = {
+                    _id: id_to,
+                    order: order_to,
+                    ...( user_id && { user_id } )
+                }
+
+                await ColorPaletteModel.findOneAndUpdate(queryTo, {
+                    order,
+                }, { upsert: true });
+            }
+            const colorsPalettes = await ColorPaletteModel.aggregate([
+                { $sort: { order: 1 } },
+                {
+                    $match: {
+                        ...( user_id && { user_id }),
+                    }
+                },
+                {
+                    $group: {
+                        _id: {
+                            variant_id: "$variant_id",
+                        },
+                        grouped: {
+                            $push: {
+                                color_id: "$color_id",
+                                _id: "$_id",
+                                order: "$order",
+                                createdAt: "$createdAt",
+                            }
+                        }
+                    }
+                },
+            ])
+
+            return colorsPalettes;
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async removeColor(req: any) {
+        try {
+            const { refreshToken = '' } = req.cookies;
+            const userData = await tokenService.findUserByToken(refreshToken);
+            const { _id: user_id = '' } = userData;
+
+            const { _id = '' } = req.body
+            if (!mongoose.Types.ObjectId.isValid(_id)) {
+                throw new Error('Invalid palette_id');
+            }
+
+            const query = { '_id': _id, ...(user_id && { user_id }) };
+            const queryPalette = { 'color_id': _id, ...(user_id && { user_id }) };
+            await ColorModel.deleteOne(query);
+            await ColorPaletteModel.deleteMany(queryPalette)
+            const colors = ColorModel.find({ ...(user_id && { user_id }) })
+            return colors;
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async getColors(user_id: string = '') {
+        const colors = await ColorModel.find({ 
+            ...(user_id && { user_id }),
+            ...(!user_id && { 'user_id': { $exists: false } }),
+        })
         return colors;
     }
 
-    async getColorsVariants() {
-        const colorsVariants = await ColorVariantModel.find({}).sort({ createdAt: 1 });
+    async getColorsVariants(user_id: string = '') {
+        const colorsVariants = await ColorVariantModel.find({ 
+            ...(user_id && { user_id }),
+            ...(!user_id && { 'user_id': { $exists: false } }), 
+        }).sort({ createdAt: 1 });
         return colorsVariants;
     }
 
-    async getColorsPalettes(color_id: string = '', variant_id: string = '') {
+    async getColorsPalettes(color_id: string = '', variant_id: string = '', user_id: string = '') {
         const colorsPalettes = await ColorPaletteModel.aggregate([
             {
                 $match: {
                     ...(color_id && { color_id }),
-                    ...(variant_id && { variant_id })
+                    ...(variant_id && { variant_id }),
+                    ...(user_id && { user_id }),
+                    ...(!user_id && { 'user_id': { $exists: false } }), 
                 }
             },
             {
@@ -150,24 +354,279 @@ class PublicService {
         return colorsPalettes;
     }
 
-    async getPrints(variant: string = '') {
+    // Prints
+
+    async addPrint(req: any) {
+        try {
+
+            const { refreshToken = '' } = req.cookies;
+            const userData = await tokenService.findUserByToken(refreshToken);
+            const { _id: user_id = '' } = userData;
+
+            const { name, price, tags, printsPalettes = '[]' } = req.body
+            const parsedPrints = JSON.parse(printsPalettes);
+            const { highresurl = '', previewurl = '' } = req.files || {}
+            let highImage = '', previewImage = '';
+            await createPrintsDirsIfNotExists()
+            if (highresurl) {
+                const newName = uuidv4()
+                const type = getFileOriginalMimeType(highresurl.data)
+                highImage = newName + type
+                const filePath = path.join(__dirname, '../../uploads/prints/highs', highImage);
+                fs.writeFileSync(filePath, highresurl.data);
+            }
+            if (previewurl) {
+                const newName = uuidv4()
+                const type = getFileOriginalMimeType(previewurl.data)
+                previewImage = newName + type
+                const filePath = path.join(__dirname, '../../uploads/prints/previews', previewImage);
+                fs.writeFileSync(filePath, previewurl.data);
+            }
+            const print = await PrintModel.create({
+                name,
+                price,
+                tags,
+                highresurl: highImage,
+                previewurl: previewImage,
+                ...( user_id && { user_id } )
+            })
+
+            const { id } = print;
+            parsedPrints?.length && id && parsedPrints.forEach((print: string) => {
+                const obj = {
+                    print_id: id,
+                    variant_id: print
+                }
+                this.addPrintPalette(obj)
+            });
+
+            return print;
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async editPrint(req: Record<string, any>) {
+        try {
+
+            const { refreshToken = '' } = req.cookies;
+            const userData = await tokenService.findUserByToken(refreshToken);
+            const { _id: user_id = '' } = userData;
+
+            const { name, price, tags, _id, printVariant = '' } = req.body
+            const { highresurl = '', previewurl = '' } = req.files || {}
+            let highImage = '', previewImage = '';
+            await createPrintsDirsIfNotExists()
+            if (highresurl) {
+                const newName = uuidv4()
+                const type = getFileOriginalMimeType(highresurl.data)
+                highImage = newName + type
+                const filePath = path.join(__dirname, '../../uploads/prints/highs', highImage);
+                fs.writeFileSync(filePath, highresurl.data);
+            }
+            if (previewurl) {
+                const newName = uuidv4()
+                const type = getFileOriginalMimeType(previewurl.data)
+                previewImage = newName + type
+                const filePath = path.join(__dirname, '../../uploads/prints/previews', previewImage);
+                fs.writeFileSync(filePath, previewurl.data);
+            }
+            const query = { '_id': _id, ...( user_id && { user_id } ) };
+            await PrintModel.findOneAndUpdate(query, {
+                name,
+                price,
+                tags,
+                printVariant,
+                ...(highImage && { highresurl: highImage }),
+                ...(previewImage && { previewurl: previewImage }),
+                ...( user_id && { user_id } )
+            }, { upsert: true });
+            const prints = await PrintModel.find({})
+            return prints;
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async addPrintVariant(req: Record<string, any>) {
+        try {
+
+            const { refreshToken = '' } = req.cookies;
+            const userData = await tokenService.findUserByToken(refreshToken);
+            const { _id: user_id = '' } = userData;
+
+            const { name } = req.body
+            const printVariant = await PrintVariantModel.create({
+                name,
+                ...( user_id && { user_id } )
+            })
+            return printVariant;
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async addPrintPalette(req: any) {
+        try {
+
+            const { refreshToken = '' } = req.cookies;
+            const userData = await tokenService.findUserByToken(refreshToken);
+            const { _id: user_id = '' } = userData;
+
+            const { print_id, variant_id } = req.body
+            const count = await PrintPaletteModel.find({
+                variant_id: new ObjectId(variant_id),
+                ...( user_id && { user_id } )
+            }).count()
+            const printPalette = await PrintPaletteModel.create({
+                print_id,
+                variant_id,
+                order: count + 1,
+                ...( user_id && { user_id } )
+            })
+            return printPalette;
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async removePrintPalette(req: any) {
+        try {
+
+            const { refreshToken = '' } = req.cookies;
+            const userData = await tokenService.findUserByToken(refreshToken);
+            const { _id: user_id = '' } = userData;
+
+            const { _id = '' } = req.body
+            if (!mongoose.Types.ObjectId.isValid(_id)) {
+                throw new Error('Invalid palette_id');
+            }
+
+            const query = { '_id': _id, ...( user_id && { user_id } ) };
+            const queryPalette = { 'variant_id': _id, ...( user_id && { user_id } ) };
+            await PrintVariantModel.deleteOne(query);
+            await PrintPaletteModel.deleteMany(queryPalette)
+            const palettes = await PrintPaletteModel.find({ ...( user_id && { user_id } ) })
+            return palettes
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async orderPalettePrints(req: any) {
+        try {
+
+            const { refreshToken = '' } = req.cookies;
+            const userData = await tokenService.findUserByToken(refreshToken);
+            const { _id: user_id = '' } = userData;
+
+            const { fromElement = {}, toElement = {} } = req.body
+            const { _id = '', order = undefined } = fromElement;
+            const { _id: id_to = '', order: order_to = undefined } = toElement;
+            if (_id && order && id_to && order_to) {
+                const queryFrom = {
+                    _id,
+                    order,
+                    ...( user_id && { user_id } )
+                }
+                await PrintPaletteModel.findOneAndUpdate(queryFrom, {
+                    order: order_to,
+                }, { upsert: true });
+
+                const queryTo = {
+                    _id: id_to,
+                    order: order_to,
+                    ...( user_id && { user_id } )
+                }
+
+                await PrintPaletteModel.findOneAndUpdate(queryTo, {
+                    order,
+                }, { upsert: true });
+            }
+            const printPalettes = await PrintPaletteModel.aggregate([
+                { $sort: { order: 1 } },
+                {
+                    $match: {
+                        ...( user_id && { user_id }),
+                    }
+                },
+                {
+                    $group: {
+                        _id: {
+                            variant_id: "$variant_id",
+                        },
+                        grouped: {
+                            $push: {
+                                print_id: "$print_id",
+                                _id: "$_id",
+                                order: "$order",
+                                createdAt: "$createdAt",
+                            }
+                        }
+                    }
+                },
+            ])
+
+            return printPalettes;
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async removePrint(req: any) {
+        try {
+
+            const { refreshToken = '' } = req.cookies;
+            const userData = await tokenService.findUserByToken(refreshToken);
+            const { _id: user_id = '' } = userData;
+
+            const { _id = '' } = req.body
+            if (!mongoose.Types.ObjectId.isValid(_id)) {
+                throw new Error('Invalid palette_id');
+            }
+
+            const query = { '_id': _id, ...( user_id && { user_id } ) };
+            const queryPalette = { 'print_id': _id, ...( user_id && { user_id } ) };
+            await PrintModel.deleteOne(query);
+            await PrintPaletteModel.deleteMany(queryPalette)
+            const prints = await PrintModel.find({ ...( user_id && { user_id } ) })
+            return prints;
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async getPrints(variant: string = '', user_id: string = '') {
         const prints = await PrintModel.find({
-            ...(variant && { printVariant: variant })
+            ...(variant && { printVariant: variant }),
+            ...(user_id && { user_id }),
+            ...(!user_id && { 'user_id': { $exists: false } }),
         })
         return prints;
     }
 
-    async getPrintsVariants() {
-        const prints = await PrintVariantMotel.find({});
+    async getPrintsVariants(user_id: string = '') {
+        const prints = await PrintVariantMotel.find({ 
+            ...(user_id && { user_id }),
+            ...(!user_id && { 'user_id': { $exists: false } }),
+        });
         return prints;
     }
 
-    async getPrintsPalettes(print_id: string = '', variant_id: string = '') {
+    async getPrintsPalettes(print_id: string = '', variant_id: string = '', user_id: string = '') {
         const printsPalettes = await PrintPaletteModel.aggregate([
             {
                 $match: {
                     ...(print_id && { print_id }),
-                    ...(variant_id && { variant_id })
+                    ...(variant_id && { variant_id }),
+                    ...(user_id && { user_id }),
+                    ...(!user_id && { 'user_id': { $exists: false } }),
                 }
             },
             {
@@ -279,6 +738,22 @@ class PublicService {
             const query = { '_id': cart_id}
             await ColorVariantModel.deleteOne(query);
             return true;
+        } catch (error) {
+            console.log(error)
+            return false;
+        }
+    }
+
+    async editCart(body: any, refreshToken: any) {
+        try {
+            const { details, _id } = body;
+            const userData = await tokenService.findUserByToken(refreshToken);
+            const query = { user_id: new ObjectId(userData?._id), _id }
+            const data = await CartModel.find(query)
+            if (data && data.length) {
+                return await CartModel.findOneAndUpdate(query, {details}, { upsert: true });
+            }
+            return false
         } catch (error) {
             console.log(error)
             return false;

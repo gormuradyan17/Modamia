@@ -28,6 +28,10 @@ const PrintPaletteSchema: PrintPaletteInterface = new mongoose.Schema(
     variant: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'prints_variants',
+    },
+    user_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
     }
   },
   { timestamps: true }

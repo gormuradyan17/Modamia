@@ -14,20 +14,22 @@ interface MannequinPrintInterface {
 }
 
 interface stateProps {
-    mannequins: ArrayType,
-    loading: boolean,
+	mannequins: ArrayType,
+	loading: boolean,
 	mannequinState: MannequinStateInterface,
 	activeMannequin: MannequinInterface,
 	activeColor: string,
 	activePrint: MannequinPrintInterface,
 	activeCategory: string,
-	url:'',
-	type:'',
-	position:string,
+	url: '',
+	type: '',
+	position: string,
 	mannequinWithSilhouettes: ObjectType,
-	price:number,
-	size:any,
-	testModelData: any,
+	price: number,
+	size: any,
+	detailsModelData: ObjectType,
+	detailsData: ObjectType,
+	detailsDataLoading: boolean,
 }
 
 export const defaultMannequinState: MannequinStateInterface = {
@@ -48,7 +50,7 @@ export const defaultMannequinState: MannequinStateInterface = {
 
 const initialState: stateProps = {
 	mannequins: [],
-    loading: false,
+	loading: false,
 	mannequinState: defaultMannequinState,
 	activeMannequin: {
 		fronturl: '',
@@ -60,16 +62,18 @@ const initialState: stateProps = {
 		previewurl: ''
 	},
 	activeCategory: 'silhouette',
-	url:'',
-	type:'',
-	position:'fronts',
+	url: '',
+	type: '',
+	position: 'fronts',
 	mannequinWithSilhouettes: {},
-	price:0,
-	size:{
-		width:"",
-		height:""
+	price: 0,
+	size: {
+		width: "",
+		height: ""
 	},
-	testModelData: {}
+	detailsModelData: {},
+	detailsData: {},
+	detailsDataLoading: true
 }
 
 export const mannequinSlice = createSlice({
@@ -80,7 +84,7 @@ export const mannequinSlice = createSlice({
 			state.mannequins = action.payload;
 		},
 		setMannequinState: (state, action) => {
-			const {name, value} = action.payload
+			const { name, value } = action.payload
 			state.mannequinState[name] = value;
 		},
 		resetMannequinState: (state) => {
@@ -105,7 +109,7 @@ export const mannequinSlice = createSlice({
 			state.url = action.payload;
 		},
 		setMannequinType: (state, action) => {
-		   state.type = action.payload;
+			state.type = action.payload;
 		},
 		setMannequinPrice: (state, action) => {
 			state.price = action.payload;
@@ -116,19 +120,24 @@ export const mannequinSlice = createSlice({
 		setMannequinWithSilhouettes: (state, action) => {
 			state.mannequinWithSilhouettes = action.payload;
 		},
-		setSize:(state,action)=>{
-			state.size=action.payload;
-			
+		setSize: (state, action) => {
+			state.size = action.payload;
 		},
-		setTestModelData: (state, action) => {
-			state.testModelData = action.payload
+		setDetailsModelData: (state, action) => {
+			state.detailsModelData = action.payload
+		},
+		setDetailsData: (state, action) => {
+			state.detailsData = action.payload;
+		},
+		setDetailsDataLoading: (state, action) => {
+			state.detailsDataLoading = action.payload
 		}
 	}
 });
 
-export const { 
+export const {
 	setMannequinData,
-	setMannequinState, 
+	setMannequinState,
 	resetMannequinState,
 	setActiveMannequin,
 	setActiveColor,
@@ -141,7 +150,9 @@ export const {
 	setMannequinWithSilhouettes,
 	setMannequinPrice,
 	setSize,
-	setTestModelData
+	setDetailsModelData,
+	setDetailsData,
+	setDetailsDataLoading,
 } = mannequinSlice.actions;
 
 export const availableMannequins = (state: ObjectType) => state.mannequinReducer.mannequins;
@@ -151,12 +162,14 @@ export const getMannequinActiveColor = (state: ObjectType) => state.mannequinRed
 export const getMannequinActivePrint = (state: ObjectType) => state.mannequinReducer.activePrint;
 export const getMannequinActiveCategory = (state: ObjectType) => state.mannequinReducer.activeCategory;
 export const getMannequinLoading = (state: ObjectType) => state.mannequinReducer.loading;
-export const getMannequinUrl= (state: ObjectType) => state.mannequinReducer.url;
-export const getMannequinType= (state: ObjectType) => state.mannequinReducer.type;
-export const getMannequinPosition= (state: ObjectType) => state.mannequinReducer.position;
+export const getMannequinUrl = (state: ObjectType) => state.mannequinReducer.url;
+export const getMannequinType = (state: ObjectType) => state.mannequinReducer.type;
+export const getMannequinPosition = (state: ObjectType) => state.mannequinReducer.position;
 export const getMannequinWithSilhouettesData = (state: ObjectType) => state.mannequinReducer.mannequinWithSilhouettes;
-export const getMannequinPrice= (state: ObjectType) => state.mannequinReducer?.price;
-export const getSize= (state: ObjectType) => state.mannequinReducer?.size;
-export const getTestModelData = (state: ObjectType) => state.mannequinReducer?.testModelData;
+export const getMannequinPrice = (state: ObjectType) => state.mannequinReducer?.price;
+export const getSize = (state: ObjectType) => state.mannequinReducer?.size;
+export const getDetailsModelData = (state: ObjectType) => state.mannequinReducer?.detailsModelData;
+export const getDetailsData = (state: ObjectType) => state.mannequinReducer?.detailsData;
+export const getDetailsDataLoading = (state: ObjectType) => state.mannequinReducer?.detailsDataLoading;
 
 export default mannequinSlice.reducer;

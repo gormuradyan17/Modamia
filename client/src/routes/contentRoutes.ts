@@ -6,7 +6,6 @@ const AUTH = {
 	SIGN_IN: lazy(() => import('pages/Signin/Signin')),
 	SIGN_UP:lazy(()=>import('pages/SignUp'))
 };
-
 const LANDING = {
 	DASHBOARD: lazy(() => import('pages/privatePages/Dashboard')),
 	CUSTOMIZATION: lazy(() => import('pages/Customization/Customization')),
@@ -76,7 +75,7 @@ export const privatePages = [
 			{
 				id: 'all-garments',
 				text: 'All Garments',
-				path: '/all-garments',
+				path: '/garments/all',
 				icon: faGlobe,
 				element: LANDING.ALLGARMENTS,
 				exact: true,
@@ -85,7 +84,7 @@ export const privatePages = [
 			{
 				id: 'my-garments',
 				text: 'My Garments',
-				path: '/my-garments',
+				path: '/garments/my',
 				icon: faUserTie,
 				element: LANDING.MYGARMENTS,
 				exact: true,

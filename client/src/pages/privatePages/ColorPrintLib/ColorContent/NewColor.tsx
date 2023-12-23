@@ -90,11 +90,11 @@ const NewColor = ({
                 />
                 <div className="new-color-variants">
                     <NewColorVariant />
-                    <DropdownCheckboxUI
+                    {colorVariants?.length ?<DropdownCheckboxUI
                         options={colorVariants}
                         onChange={(e: any, option: ObjectType) => handleDropdownChange(e, option)}
                         label="Color palettes"
-                    />
+                    /> : null }
                 </div>
             </div>
             <div className="new-color-actions">

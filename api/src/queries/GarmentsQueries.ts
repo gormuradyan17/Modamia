@@ -179,11 +179,23 @@ export const getGarmentsQuery = async (isAdmin: boolean = false, user_id: string
     ]);
 }
 
-export const getGarmentQuery = async (garment_id: string = '', isAdmin: boolean = false, isSearchable: boolean = false, user_id: string = '') => {
+export const getGarmentQuery = async (
+    garment_id: string = '',
+    isAdmin: boolean = false,
+    isSearchable: boolean = false,
+    user_id: string = '',
+) => {
+    const query = { '_id': new mongoose.Types.ObjectId(garment_id), ...(user_id && { user_id }), }
+    const cartItem = await CartModel.find(query)
+    let manipulatedId = ''
+    if (cartItem && Object.keys(cartItem).length) manipulatedId = cartItem?.[0]?.details?.garment_id || null
+    else manipulatedId = garment_id
+    if (!manipulatedId) return {}
+
     const topQuery = [
         {
             $match: {
-                ...(garment_id && { garment_id: new mongoose.Types.ObjectId(garment_id) }),
+                ...(manipulatedId && { garment_id: new mongoose.Types.ObjectId(manipulatedId) }),
             }
         },
         {
@@ -515,7 +527,7 @@ export const getGarmentQuery = async (garment_id: string = '', isAdmin: boolean 
     const palettes = await GarmentPalettesModel.aggregate([
         {
             $match: {
-                ...(garment_id && { garment_id: new mongoose.Types.ObjectId(garment_id) }),
+                ...(manipulatedId && { garment_id: new mongoose.Types.ObjectId(manipulatedId) }),
             }
         },
         {
@@ -563,20 +575,22 @@ export const getGarmentQuery = async (garment_id: string = '', isAdmin: boolean 
             }
         }
     ])
-
-    result[0].palettes = palettes?.[0]?.palettes || {
-        colors: [],
-        prints: []
+    
+    if (result?.length) {
+        result[0].palettes = palettes?.[0]?.palettes || {
+            colors: [],
+            prints: []
+        }
+    
+        if (user_id && cartItem && Object.keys(cartItem).length && cartItem?.length) {
+            const copyData = JSON.parse(JSON.stringify(cartItem[0]))
+            copyData.isCart = true
+            result[0].details = copyData
+        }
+    
+        return result?.[0] || {};
     }
-
-    if (user_id) {
-        const garment_id_object = new mongoose.Types.ObjectId(garment_id);
-        const garment_id_string = garment_id_object.toString();
-        const details = await CartModel.find({ user_id: new mongoose.Types.ObjectId(user_id), 'details.garment_id': garment_id_string })
-        result[0].details = details?.[0] || {}
-    }
-
-    return result?.[0] || {};
+    return {}
 }
 
 export const updateGarmentsQuery = async (garment_id: string, list: Array<Record<string, any>>, type: string, mannequin_id: string) => {
@@ -693,7 +707,7 @@ export const searchGarmentsQuery = async (criteria: string = '', isAdmin: boolea
     ]);
 
     const res = await Promise.all(data.map(async (item: Record<string, any>) => {
-        const garment = await getGarmentQuery(item?._id, isAdmin, true, user_id);
+        const garment = await getGarmentQuery(item?._id, isAdmin, true, user_id ? user_id : '');
         return garment;
     }));
 

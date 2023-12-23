@@ -4,7 +4,7 @@ function MenuItem() {
   return (
     <div className='main-menu'>
     <ul className='topmenu'>
-        <li><Link to="/">Shop</Link></li>
+        <li><Link to="/customization">Shop</Link></li>
     </ul>
     </div>
   )

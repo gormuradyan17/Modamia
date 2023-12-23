@@ -28,6 +28,10 @@ const ColorPaletteSchema: ColorPaletteInterface = new mongoose.Schema(
     variant: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'colors_variants',
+    },
+    user_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
     }
   },
   { timestamps: true }

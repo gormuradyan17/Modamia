@@ -2,9 +2,7 @@ import CustomizationGarments from "pages/CustomizationGarments/CustomizationGarm
 
 const AllGarments = () => {
   return (
-    <div>
-      <CustomizationGarments />
-    </div>
+    <CustomizationGarments title="All Garments" />
   )
 }
 

@@ -59,7 +59,7 @@ const Aside = () => {
                     </div>
                 </div>
             </aside >
-            <div><Outlet /></div>
+            <Outlet />
         </>
     );
 };

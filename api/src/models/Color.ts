@@ -27,6 +27,10 @@ const ColorSchema: ColorInterface = new mongoose.Schema(
       type: String,
       required: false,
     },
+    user_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    }
   },
   { timestamps: true }
 );

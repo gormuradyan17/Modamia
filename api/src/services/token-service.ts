@@ -93,7 +93,7 @@ class TokenService {
     }
 
     async findUserByToken(refreshToken: any) {
-        const UserData = await UserModel.findOne({ refreshToken });
+        const UserData = await UserModel.findOne({ refreshToken }) || {};
         return UserData;
     }
 

@@ -13,9 +13,7 @@ const AddToCart = () => {
     localStorage.setItem("basket", JSON.stringify(data))
   }
   return (
-    <div>
-      <button className="add_to_cart" onClick={addToLocalStorage}>Add to Cart</button>
-    </div>
+    <button className="add_to_cart" onClick={addToLocalStorage}>Add to Cart</button>
   )
 }
 

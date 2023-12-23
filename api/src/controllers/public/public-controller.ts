@@ -1,4 +1,4 @@
-import { validationResult } from 'express-validator';
+import { body, validationResult } from 'express-validator';
 import authService from '../../services/auth-service';
 import publicService from '../../services/public-service'
 import { REACT_BASE_URL } from '../../utils/constants/variables';
@@ -6,9 +6,75 @@ import ApiError from '../../exceptions/api-error';
 
 class PublicController {
 
+    // Colors
+
+    async addColor(req: any, res: any, next: any) {
+        try {
+            const color = await publicService.addColor(req);
+            return res.json(color);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async editColor(req: any, res: any, next: any) {
+        try {
+            const color = await publicService.editColor(req);
+            return res.json(color);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async addColorVariant(req: any, res: any, next: any) {
+        try {
+            const colorVariant = await publicService.addColorVariant(req);
+            return res.json(colorVariant);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async addColorPalette(req: any, res: any, next: any) {
+        try {
+            const colorPalette = await publicService.addColorPalette(req);
+            return res.json(colorPalette);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async removeColorPalette(req: any, res: any, next: any) {
+        try {
+            const colorPalette = await publicService.removeColorPalette(req);
+            return res.json(colorPalette);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async orderPaletteColors(req: any, res: any, next: any) {
+        try {
+            const colorPalette = await publicService.orderPaletteColors(req);
+            return res.json(colorPalette);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async removeColor(req: any, res: any, next: any) {
+        try {
+            const color = await publicService.removeColor(req);
+            return res.json(color);
+        } catch (error) {
+            next(error);
+        }
+    }
+
     async getColors(req: any, res: any, next: any) {
         try {
-            const colors = await publicService.getColors();
+            const { user_id = '' } = req.body
+            const colors = await publicService.getColors(user_id);
             return res.json(colors);
         } catch (error) {
             next(error);
@@ -17,7 +83,8 @@ class PublicController {
 
     async getColorsVariants(req: any, res: any, next: any) {
         try {
-            const variants = await publicService.getColorsVariants();
+            const { user_id = '' } = req.body
+            const variants = await publicService.getColorsVariants(user_id);
             return res.json(variants);
         } catch (error) {
             next(error);
@@ -26,9 +93,74 @@ class PublicController {
 
     async getColorsPalettes(req: any, res: any, next: any) {
         try {
-            const { color_id = '', variant_id = '' } = req.query
-            const palettes = await publicService.getColorsPalettes(color_id, variant_id);
+            const { color_id = '', variant_id = '', user_id = '' } = req.body
+            const palettes = await publicService.getColorsPalettes(color_id, variant_id, user_id);
             return res.json(palettes);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    // Prints
+
+    async addPrint(req: any, res: any, next: any) {
+        try {
+            const print = await publicService.addPrint(req);
+            return res.json(print);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async editPrint(req: any, res: any, next: any) {
+        try {
+            const print = await publicService.editPrint(req);
+            return res.json(print);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async addPrintVariant(req: any, res: any, next: any) {
+        try {
+            const print = await publicService.addPrintVariant(req);
+            return res.json(print);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async addPrintPalette(req: any, res: any, next: any) {
+        try {
+            const printPalette = await publicService.addPrintPalette(req);
+            return res.json(printPalette);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async removePrintPalette(req: any, res: any, next: any) {
+        try {
+            const printPalette = await publicService.removePrintPalette(req);
+            return res.json(printPalette);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async orderPalettePrints(req: any, res: any, next: any) {
+        try {
+            const printPalette = await publicService.orderPalettePrints(req);
+            return res.json(printPalette);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async removePrint(req: any, res: any, next: any) {
+        try {
+            const color = await publicService.removePrint(req);
+            return res.json(color);
         } catch (error) {
             next(error);
         }
@@ -36,8 +168,8 @@ class PublicController {
 
     async getPrints(req: any, res: any, next: any) {
         try {
-            const { variant = '' } = req.query
-            const prints = await publicService.getPrints(variant);
+            const { variant = '', user_id = '' } = req.body
+            const prints = await publicService.getPrints(variant, user_id);
             return res.json(prints);
         } catch (error) {
             next(error);
@@ -46,7 +178,8 @@ class PublicController {
 
     async getPrintsVariants(req: any, res: any, next: any) {
         try {
-            const prints = await publicService.getPrintsVariants();
+            const { user_id = '' } = req.body
+            const prints = await publicService.getPrintsVariants(user_id);
             return res.json(prints);
         } catch (error) {
             next(error);
@@ -55,8 +188,8 @@ class PublicController {
 
     async getPrintsPalettes(req: any, res: any, next: any) {
         try {
-            const { print_id = '', variant_id = '' } = req.query
-            const palettes = await publicService.getPrintsPalettes(print_id, variant_id);
+            const { print_id = '', variant_id = '', user_id = '' } = req.body
+            const palettes = await publicService.getPrintsPalettes(print_id, variant_id, user_id);
             return res.json(palettes);
         } catch (error) {
             next(error);
@@ -93,7 +226,7 @@ class PublicController {
 
     async getGarment(req: any, res: any, next: any) {
         try {
-            const { garment_id = '' } = req.body;
+            const { garment_id = ''} = req.body;
             const { refreshToken } = req.cookies;
             const garment = await publicService.getGarment(garment_id, refreshToken);
             return res.json(garment);
@@ -136,7 +269,7 @@ class PublicController {
         try {
             return res.redirect(await authService.signinShopify())
         } catch (err: any) {
-            console.log(err)            
+            console.log(err)
         }
     }
 
@@ -156,7 +289,7 @@ class PublicController {
             const user = await authService.getShopifyUser(token);
             return res.json(user?.[0] || null);
         } catch (err: any) {
-            console.log(err)            
+            console.log(err)
         }
     }
 
@@ -238,6 +371,16 @@ class PublicController {
     async removeCart(req: any, res: any, next: any) {
         try {
             const data = await publicService.removeCart(req.body)
+            return res.json(data);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async editCart(req: any, res: any, next: any) {
+        try {
+            const { refreshToken } = req.cookies;
+            const data = await publicService.editCart(req.body, refreshToken)
             return res.json(data);
         } catch (error) {
             next(error);

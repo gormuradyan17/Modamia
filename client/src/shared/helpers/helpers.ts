@@ -157,10 +157,9 @@ export async function updateArrWithElem(elem: any, arr: any[], frontBack: string
 
 export const convertDefaultValue=(modelData:any,silhouettes:any)=>{
 	const updatedModelData: any = {};
-
-    for (let key in modelData) {
-      const position1 = modelData[key][0].position;
-      const position2 = modelData[key][1].position;
+  for (let key in modelData) {
+      const position1 = modelData[key][0]?.position;
+      const position2 = modelData[key][1]?.position;
 
 
       updatedModelData[key] = [
@@ -203,5 +202,10 @@ export const getDropdownOptionsFromItemsVariants = (options: ArrayType) => {
 
 export const eraseCookie = (name: string) => {
   document.cookie = name + `=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
+}
+
+export const getIsGarmentSaveApproved = (newData: ObjectType, oldData: ObjectType) => {
+  if (!newData || !Object.keys(newData)?.length || !oldData || !Object.keys(oldData)?.length) return false;
+  return JSON.stringify(newData) !== JSON.stringify(oldData);
 }
 

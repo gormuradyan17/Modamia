@@ -1,10 +1,13 @@
 .profile_detail {
-    margin-top: 50px;
     padding: 50px;
+    width: 100%;
+    max-width: 400px;
+    margin: 50px auto;
 }
 
 .ButtonUI {
     margin: unset;
+    width: 100%;
 }
 .btn_content{
     display: flex;

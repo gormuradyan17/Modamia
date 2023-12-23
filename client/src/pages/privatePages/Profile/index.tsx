@@ -6,9 +6,10 @@ import HeadingUI from 'shared/ui/HeadingUI/HeadingUI'
 import InputUI from 'shared/ui/InputUI/InputUI'
 import "./style.scss"
 import { editUserData } from 'services/userService'
-import { ObjectType } from 'shared/helpers/helpers'
+import { ObjectType, appColor } from 'shared/helpers/helpers'
 import { Variant } from 'shared/ui/SnackbarUI/container/SnackbarContainer'
 import useSnackbar from 'utils/hooks/useSnackbar'
+import Container from 'layout/Container/Container'
 
 const Profile = () => {
   const [edit, setEdit] = useState(false)
@@ -46,43 +47,45 @@ const Profile = () => {
   }
 
   return (
-    <div className='profile_detail'>
-      <HeadingUI text="Account Details" />
-      <InputUI
-        type='text'
-        name="name"
-        callback={handleInputChange}
-        value={userState?.name}
-        disabled={!edit}
-        error={errors?.name}
-        placeholder='New Name'
-      />
-      <InputUI
-        type='email'
-        name="email"
-        callback={handleInputChange}
-        value={userState.email}
-        disabled={!edit}
-        placeholder={userData?.email}
-        error={errors?.email}
-      />
-      <InputUI
-        type='password'
-        name="password"
-        callback={handleInputChange}
-        value={userState?.password}
-        disabled={!edit}
-        placeholder='New Password'
-        error={errors?.password}
-      />
-      <div className='btn_content'>
-        <ButtonUI 
-          onClick={() => !edit ? setEdit(!edit) : editUserDetails()}
-        >{edit ? "Save" : "Edit"}</ButtonUI>
-        {edit && <ButtonUI onClick={() => setEdit(false)}>cancel</ButtonUI>}
-      </div>
+    <Container>
+      <div className='profile_detail'>
+        <HeadingUI text="Account Details" color={appColor} />
+        <InputUI
+          type='text'
+          name="name"
+          callback={handleInputChange}
+          value={userState?.name}
+          disabled={!edit}
+          error={errors?.name}
+          placeholder='New Name'
+        />
+        <InputUI
+          type='email'
+          name="email"
+          callback={handleInputChange}
+          value={userState.email}
+          disabled={!edit}
+          placeholder={userData?.email}
+          error={errors?.email}
+        />
+        <InputUI
+          type='password'
+          name="password"
+          callback={handleInputChange}
+          value={userState?.password}
+          disabled={!edit}
+          placeholder='New Password'
+          error={errors?.password}
+        />
+        <div className='btn_content'>
+          <ButtonUI 
+            onClick={() => !edit ? setEdit(!edit) : editUserDetails()}
+          >{edit ? "Save" : "Edit"}</ButtonUI>
+          {edit && <ButtonUI onClick={() => setEdit(false)}>cancel</ButtonUI>}
+        </div>
 
-    </div>
+      </div>
+    </Container>
   )
 }
 export default Profile

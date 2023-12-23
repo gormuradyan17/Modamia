@@ -39,6 +39,7 @@ export const { setIsLogged, setUserData, setUserState, setUserFullState } = user
 
 export const isLogged = (state: ObjectType) => state.userReducer.isLogged;
 export const getUserData = (state: ObjectType) => state.userReducer.userData;
+export const getUserId = (state: ObjectType) => state.userReducer.userData?.id || '';
 export const getUserState = (state: ObjectType) => state.userReducer.userState;
 
 export default userSlice.reducer;

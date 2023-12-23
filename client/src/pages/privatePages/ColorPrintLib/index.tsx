@@ -6,14 +6,8 @@ import PrintContent from './PrintContent'
 const ColorPrintLib = () => {
   return (
     <div className='color_print_lib'>
-      <div>
-        <HeadingUI text='color' />
-        <ColorContent />
-      </div>
-      <div>
-        <HeadingUI text="prints" />
-        <PrintContent />
-      </div>
+      <ColorContent />
+      <PrintContent />
     </div>
   )
 }

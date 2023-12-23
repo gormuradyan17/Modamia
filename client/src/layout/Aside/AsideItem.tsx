@@ -16,8 +16,8 @@ const AsideItem = ({
     const expanded = useSelector(isExpanded)
     const {location: {pathname}} = window
     const navigate  = useNavigate()
-    const isActive =(pathname.charAt(pathname.length-1) === '/'  )  ||  pathname.includes(child.path)
-          
+    const isActive = child.path === '/' || child.path !== '/' && pathname.includes(child.path)
+    
 
     return (
         <div key={child.id} className='user-aside__link'>

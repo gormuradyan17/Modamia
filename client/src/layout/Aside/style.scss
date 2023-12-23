@@ -8,7 +8,9 @@
     justify-content: flex-start;
     transition: .2s width;
     box-shadow: 5px 0 5px -2px rgba(0, 0, 0, .3);
+    z-index: 98;
     margin-top: 40px;
+    position: fixed;
     &._expanded {
         width: 300px;
     }

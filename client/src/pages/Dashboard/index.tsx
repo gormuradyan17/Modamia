@@ -1,12 +1,8 @@
 import DashboardContent from "components/Dashboard";
 
-
-
-const Dashboard=()=>{
-    return(
-        <div>
-            <DashboardContent/>
-        </div>
+const Dashboard = () => {
+    return (
+        <DashboardContent />
     )
 }
 

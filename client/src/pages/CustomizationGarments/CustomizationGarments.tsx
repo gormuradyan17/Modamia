@@ -11,13 +11,17 @@ import InputUI from 'shared/ui/InputUI/InputUI';
 import useDebounce from 'utils/hooks/useDebounce';
 import GarmentsMannequin from './GarmentsMannequin';
 import { BASE_UPLOADS_MANNEQUINS_FRONTS_URL } from 'shared/constants/genericApiRoutes';
+import CustomizationLoader from 'components/Customization/customizationLoader/CustomizationLoader';
+import CustomizationGarment from './CustomizationGarment';
 
 interface Props {
-    userId?: string
+    userId?: string,
+    title?: string,
 }
 
 const CustomizationGarments = ({
-    userId = ''
+    userId = '',
+    title = ''
 }: Props) => {
 
     const dispatch = useDispatch()
@@ -28,14 +32,12 @@ const CustomizationGarments = ({
 
     useEffect(() => {
         getAvGarments(dispatch, userId)
-    }, [])
+    }, [userId])
 
-    const handleGarmentClick = (garment: ObjectType) => {        
-        if (garment?._id) {
-            getSelectedGarment(dispatch,'65859dd860a9cfd4b8ac0a8a')
+    const handleGarmentClick = (garment: ObjectType, id: string) => {
+        if (id && garment?._id) {
             dispatch(setGarmentFullState(garment))
-            // navigate(`/customization/${garment?._id}`)
-            navigate(`/customization/65859dd860a9cfd4b8ac0a8a`)
+            navigate(`/customization/${id}`)
         }
     }
 
@@ -60,8 +62,9 @@ const CustomizationGarments = ({
     return (
         <div className="customization-mannequins">
             <Container>
-                <div className="customization-body">
-                    <HeadingUI size='22px' align='center' color={appColor} text='Select garment to continue customization' />
+                {title && <HeadingUI size='28px' align='center' color={appColor} text={title} /> }
+                <div className="customization-body customization-body-mannequins">
+                    <HeadingUI size='22px' align='center' {...(!title && {color: appColor})} text='Select garment to continue customization' />
                     <InputUI
                         classN='customization-search'
                         name="search"
@@ -70,20 +73,17 @@ const CustomizationGarments = ({
                         placeholder='Search Garment'
                     />
                     {!!garments?.length && <div className='customization-mannequins-list'>
-                        {garments.map((garment: ObjectType) => {
-                            const { mannequin = {}, garment: activeGarment, details} = garment;
-                      console.log(garment,"activeGarmentactiveGarmentactiveGarment");
-                      
-                       return <div key={garment?._id ||  mannequin?._id} className='customization-elem' onClick={() => handleGarmentClick(activeGarment)}>
-                             <HeadingUI text={activeGarment?.name} size='16px' color={appColor} align='center' />
-                         {details ?  <GarmentsMannequin data={details}/> :   <div className="customization-mannequin">
-                                 <img src={`${BASE_UPLOADS_MANNEQUINS_FRONTS_URL}${mannequin?.fronturl}`} alt={mannequin?.name} />
-                             </div>
+                        {garments.map((garment: ObjectType, idx: number) => {
+                            const { mannequin = {}, garment: activeGarment, _id = '', details } = garment;
+                            return <div key={idx} className='customization-elem' onClick={() => handleGarmentClick(activeGarment, _id || activeGarment?._id)}>
+                                <HeadingUI text={activeGarment?.name} size='16px' color={appColor} align='center' />
+                                {details ? <GarmentsMannequin data={details}/> : <CustomizationGarment 
+                                    url={`${BASE_UPLOADS_MANNEQUINS_FRONTS_URL}${mannequin?.fronturl}`}
+                                    name={mannequin?.name}
+                                />
                              } 
-                         </div>
-                            
-                        })
-                    }
+                            </div>
+                        })}
                     </div>}
                 </div>
             </Container>
