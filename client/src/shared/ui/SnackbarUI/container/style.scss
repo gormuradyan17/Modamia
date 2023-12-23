@@ -7,7 +7,7 @@
     transform: translateX(-50%);
     z-index: 10;
     animation: 1s forwards snackBarKeys;
-    // animate-snackBarAnimation 
+    z-index: 99999;
     @media (max-width: 768px) {
         width: 100%;
         max-width: 300px;

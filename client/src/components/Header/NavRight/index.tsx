@@ -41,12 +41,6 @@ function LoginSignBtn() {
               <span>My Account</span>
             </Link>
           </li>
-          <li className='user_cart'>
-            <Link to="/cart">
-              <FontAwesomeIcon icon={faShop} />
-              <span>0</span>
-            </Link>
-          </li>
           <li className='user_logout'>
             <button
               onClick={signout}
@@ -56,6 +50,12 @@ function LoginSignBtn() {
             </button>
           </li>
         </div>}
+        <li className='user_cart'>
+          <Link to="/shopcart">
+            <FontAwesomeIcon icon={faShop} />
+            <span>0</span>
+          </Link>
+        </li>
       </ul>
     </div>
   )
