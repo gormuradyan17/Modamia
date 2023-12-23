@@ -6,11 +6,14 @@ import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
 import EmptyBody from 'shared/ui/EmptyBodyUI/EmptyBodyUI';
 import { addCart } from 'services/userService';
 import CartProduct from './CartProduct';
+import useSnackbar from 'utils/hooks/useSnackbar';
+import { Variant } from 'shared/ui/SnackbarUI/container/SnackbarContainer';
 
 
 const ShopCart = () => {
   const [modelData, setModelData] = useState<any>([])
-
+  const { appendSnackbar } = useSnackbar()
+  
   const link = {
     url: '/customization',
     CTAText: 'Start Shopping'
@@ -38,6 +41,10 @@ const ShopCart = () => {
       localStorage.setItem("basket", JSON.stringify(newData))
       setModelData(newData)
     }
+    await appendSnackbar(Variant.success, {
+      autoHideDuration: 3000,
+      message: 'Product successfully removed from the basket!!'
+    })
   }
 
   return (

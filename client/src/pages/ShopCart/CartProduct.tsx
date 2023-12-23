@@ -49,7 +49,7 @@ const CartProduct = ({
             <div className="product_info_body">
                 <ShopCartContent modelData={data} />
                 <div className="product_info_body-actions">
-                    {isLoggedIn && <ButtonUI classN='product_info_body-action' version='gray' onClick={() => removeFromCart(data?.id)}><FontAwesomeIcon icon={faTrash} /></ButtonUI>}
+                    <ButtonUI classN='product_info_body-action' version='gray' onClick={() => removeFromCart(data?.id)}><FontAwesomeIcon icon={faTrash} /></ButtonUI>
                     <ButtonUI
                         classN='product_info_body-action'
                         onClick={handleCheckout}
