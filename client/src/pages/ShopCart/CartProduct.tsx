@@ -1,8 +1,9 @@
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ShopCartContent from 'components/ShopCart';
-import React, { useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getProductCount, setProductCount } from 'redux/reducers/addToCartReducer';
 import { isLogged } from 'redux/reducers/userReducer';
 import { canvasModelInit } from 'shared/helpers/canvasHelpers';
 import { ObjectType } from 'shared/helpers/helpers';
@@ -24,17 +25,17 @@ const CartProduct = ({
 }: Props) => {
 
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
-
+    const [quantity, setQuantity] = useState<number>(1)
     const isLoggedIn = useSelector(isLogged)
 
     const { appendSnackbar } = useSnackbar()
 
     useEffect(() => {
-        canvasModelInit(.3, data.modelData, 'fronts', canvasRef, data.activeMannequin, data.modelData, true)
+        canvasModelInit(1, data.modelData, 'fronts', canvasRef, data.activeMannequin, data.modelData, true,false)
     }, [data, canvasRef])
 
     const handleCheckout = async () => {
-        if (isLoggedIn) return checkoutItem(data)
+        if (isLoggedIn) return checkoutItem({...data,count:quantity})
         await appendSnackbar(Variant.error, {
             autoHideDuration: 8000,
             message: 'Please first sign in to your account to purchase the product'
@@ -47,7 +48,7 @@ const CartProduct = ({
                 <canvas ref={canvasRef}></canvas>
             </div>
             <div className="product_info_body">
-                <ShopCartContent modelData={data} />
+                <ShopCartContent modelData={data} setQuantity={setQuantity} quantity={quantity} />
                 <div className="product_info_body-actions">
                     <ButtonUI classN='product_info_body-action' version='gray' onClick={() => removeFromCart(data?.id)}><FontAwesomeIcon icon={faTrash} /></ButtonUI>
                     <ButtonUI

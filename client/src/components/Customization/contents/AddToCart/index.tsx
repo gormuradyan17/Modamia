@@ -7,7 +7,6 @@ import { Variant } from "shared/ui/SnackbarUI/container/SnackbarContainer"
 const AddToCart = () => {
   const productData = useSelector(getProduct)
   const { appendSnackbar } = useSnackbar()
-  
   const addToLocalStorage = async () => {
     const data = localStorage.hasOwnProperty("basket") ? JSON.parse(localStorage.getItem("basket") || '[]') : []
     const copyData = structuredClone(productData);

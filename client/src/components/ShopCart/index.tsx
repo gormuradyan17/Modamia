@@ -1,21 +1,24 @@
 import HeadingUI from "shared/ui/HeadingUI/HeadingUI"
 import './style.scss'
 import CounterUI from "shared/ui/CounterUI/CounterUI"
-import { useState } from "react"
 import { ObjectType, appColor } from "shared/helpers/helpers"
 
 interface Props {
-    modelData: ObjectType
+    modelData: ObjectType,
+    quantity:number,
+    setQuantity:any
 }
 
 const ShopCartContent = ({ 
-    modelData 
+    modelData,
+    quantity,
+    setQuantity
 }: Props) => {
-
     const { name = '', color = '', price = 0, size = '' } = modelData
-    const [quantity, setQuantity] = useState<number>(1)
     const total = price * quantity;
-
+    
+    
+    
     return (
         <div className="product_info_body-content">
             <HeadingUI text={name} size="22px" color={appColor} />
@@ -29,7 +32,7 @@ const ShopCartContent = ({
             </div>
             <div className="product_info_body-content-text">
                 <HeadingUI text='Quantity: ' size="16px" />
-                <CounterUI selected={1} onCountChange={(count: number) => setQuantity(count)} />
+                <CounterUI selected={quantity} onCountChange={(count: number) => setQuantity(count)} />
             </div>
             <div className="product_info_body-content-text">
                 <HeadingUI text='Total: ' size="16px" />
