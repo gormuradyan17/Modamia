@@ -1,7 +1,7 @@
 const router = require("express").Router();
 import publicController from '../../controllers/public/public-controller'
 import { authMiddleware } from '../../middlewares/auth';
-import { editValidators, signinValidators, signupValidators } from '../../utils/validators/validators';
+import { editValidators, forgotValidators, signinValidators, signupValidators, recoveryValidators } from '../../utils/validators/validators';
 
 
 // Auth 
@@ -12,7 +12,10 @@ router.post('/shopify/getUser', publicController.getShopifyUser)
 
 router.post('/signin', signinValidators, publicController.signin)
 router.post('/signup', signupValidators, publicController.signup)
-
+router.post('/forgot', forgotValidators, publicController.forgot)
+router.get('/activate/:link', publicController.activate)
+router.get('/recovery/:link', publicController.recovery)
+router.post('/recovery', recoveryValidators, publicController.recoveryPassword)
 // router.use(authMiddleware);
 
 router.post('/refresh', publicController.refresh)

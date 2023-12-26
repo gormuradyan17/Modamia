@@ -134,4 +134,9 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+    .ButtonUI {
+        svg {
+            margin: 0;
+        }
+    }
 }

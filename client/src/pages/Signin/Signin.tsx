@@ -4,7 +4,7 @@ import HeadingUI from 'shared/ui/HeadingUI/HeadingUI';
 import "./style.scss"
 import { useDispatch, useSelector } from "react-redux";
 import { getUserState, isLogged, setIsLogged, setUserState } from "redux/reducers/userReducer";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import InputUI from "shared/ui/InputUI/InputUI";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { ObjectType, setCookie } from "shared/helpers/helpers";
@@ -45,6 +45,7 @@ const Signin = () => {
                         error={errors?.password} />
                     <ButtonUI type="submit">Sign in</ButtonUI>
                 </form>
+                <Link className="forgot-password" to='/forgot'>Cant Remember password?</Link>
             </div>
         </div>
 

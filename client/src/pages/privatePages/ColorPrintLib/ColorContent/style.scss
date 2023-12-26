@@ -23,7 +23,7 @@ $colorFill: var(--colorFill);
     position: relative;
     &-color {
         display: flex;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: center;
         margin: 10px 20px 10px 0;
         flex-direction: column;
@@ -48,6 +48,9 @@ $colorFill: var(--colorFill);
 .color-button {
     padding: 10px 15px !important;
     min-height: 15px !important;
+    svg {
+        margin: 0;
+    }
 }
 
 .new-color-btn {

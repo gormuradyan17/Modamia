@@ -27,6 +27,13 @@ const UserSchema = new mongoose.Schema(
     refreshToken: {
       type: String,
     },
+    verified: {
+      type: Boolean,
+      default: false
+    },
+    code: {
+      type: String,
+    }
   },
   { timestamps: true }
 );

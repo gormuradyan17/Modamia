@@ -25,12 +25,10 @@ const ColorContent = () => {
     const userData = useSelector(getUserData)
 
     useEffect(() => {
-        if (userData && userData?.id) {
-            getAvColors(dispatch, '', userData?.id)
-            getAvColorsVariants(dispatch, userData?.id)
-            getAvColorsPalettes(dispatch, userData?.id)
-        }
-    }, [userData])
+        getAvColors(dispatch, '')
+        getAvColorsVariants(dispatch)
+        getAvColorsPalettes(dispatch)
+    }, [])
 
     const addNewColor = async (e: HTMLFormElement) => {
         e.preventDefault()

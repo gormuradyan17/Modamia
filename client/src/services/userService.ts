@@ -1,5 +1,5 @@
 import { setIsLogged, setUserData } from "redux/reducers/userReducer"
-import { addToCart, checkUser, editCart, editUser, getShopifyUser, removeFromCart, signInUser, signUpUser, signoutUser } from "shared/api/dataApi"
+import { addToCart, checkUser, editCart, editUser, forgotPassword, getShopifyUser, recoveryPassword, removeFromCart, signInUser, signUpUser, signoutUser } from "shared/api/dataApi"
 import { ObjectType } from "shared/helpers/helpers"
 import { CallbackSkeletonType } from "shared/objectModels/GenericModel"
 
@@ -82,4 +82,32 @@ export const removeCart = async (body: ObjectType) => {
 
 export const editExistedCart = async (body: ObjectType) => {
 	return await editCart(body)
+};
+
+export const sendForgotPassword = async (body: ObjectType, setErrors: any) => {
+	return await forgotPassword(body).then(res => {
+        if (res?.errors) {
+            const emailError = res?.errors?.find((err: ObjectType) => err?.path === 'email')?.msg || ''
+            return setErrors({
+                email: emailError,
+            })
+        }
+        return res
+    })
+};
+
+export const recPassword = async (body: ObjectType, setErrors: any) => {
+	return await recoveryPassword(body).then(res => {
+        if (res?.errors) {
+            const passError = res?.errors?.find((err: ObjectType) => err?.path === 'password')?.msg || ''
+            const confirmError = res?.errors?.find((err: ObjectType) => err?.path === 'confirm')?.msg || ''
+            const codeError = res?.errors?.find((err: ObjectType) => err?.path === 'code')?.msg || ''
+            return setErrors({
+                password: passError,
+                confirm: confirmError,
+                code: codeError,
+            })
+        }
+        return res
+    })
 };

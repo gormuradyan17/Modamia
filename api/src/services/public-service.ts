@@ -23,6 +23,8 @@ import mongoose from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import path from 'path'
 import fs from 'fs'
+import { forgotMail, signupMail } from './mail-service'
+import { NODE_BASE_URL } from '../utils/constants/variables'
 
 class PublicService {
 
@@ -46,16 +48,18 @@ class PublicService {
     async signup(body: any) {
         try {
             const { email, password, name } = body;
+            const activationLink = uuidv4();
             const hashPassword = await bcrypt.hash(password, 10)
-            const user = await UserModel.create({email, name, password: hashPassword})
-            
+            const user = await UserModel.create({ email, name, password: hashPassword, code: activationLink })
+
             // const userDto = new UserDto(user);
             // const tokens = tokenService.generateTokens({...userDto});
             // await tokenService.saveToken(userDto.id, false, tokens.refreshToken);
-            
+
             // return {...tokens,user: userDto}
 
-            return user;
+            await signupMail(email, `${NODE_BASE_URL}/api/activate/${activationLink}`)
+            return true;
         } catch (error) {
             console.log(error)
         }
@@ -89,11 +93,59 @@ class PublicService {
         return true;
     }
 
+    async activate(activationLink: string) {
+        const user = await UserModel.findOne({ code: activationLink })
+        if (!user) {
+            throw ApiError.BadRequest('Incorrect activation link')
+        }
+        user.verified = true;
+        user.code = ''
+        await user.save();
+
+        return true;
+    }
+
+    async forgot(email: string) {
+        const user = await UserModel.findOne({ email })
+        if (!user) {
+            throw ApiError.BadRequest('Incorrect activation link')
+        }
+        const activationLink = uuidv4();
+        user.code = activationLink;
+        await user.save();
+        await forgotMail(email, `${NODE_BASE_URL}/api/recovery/${activationLink}`)
+        return true;
+    }
+
+    async recovery(activationLink: string) {
+        const user = await UserModel.findOne({ code: activationLink })
+        if (!user) {
+            throw ApiError.BadRequest('Incorrect recovery link')
+        }
+        return true;
+    }
+
+    async recoveryPassword(req: any) {
+        const { password = '', code = '' } = req;
+        if (!password || !code) throw ApiError.BadRequest('Incorrect recovery link')
+
+        const hashPassword = await bcrypt.hash(password, 10)
+        const query = { code };
+
+        await UserModel.findOneAndUpdate(query, {
+            code: '',
+            password: hashPassword
+        }, { upsert: true });
+
+        return true;
+    }
+
+
     async edit(req: any) {
         try {
             const { refreshToken } = req.cookies;
             const userData = await tokenService.findUserByToken(refreshToken);
-            const query = { _id: userData?._id};
+            const query = { _id: userData?._id };
             await UserModel.findOneAndUpdate(query, req.body, { upsert: true });
             const data = await UserModel.find({})
             return data
@@ -116,7 +168,7 @@ class PublicService {
                 hexcode,
                 pantonecode,
                 tags,
-                ...( _id && { user_id: _id } )
+                ...(_id && { user_id: _id })
             })
             const { id } = color;
             colorPalettes?.length && id && colorPalettes.forEach((color: string) => {
@@ -138,9 +190,9 @@ class PublicService {
             const { refreshToken = '' } = req.cookies;
             const userData = await tokenService.findUserByToken(refreshToken);
             const { _id = '' } = userData;
-            const query = { '_id': req.body._id, ...( _id && { user_id: _id } ) };
+            const query = { '_id': req.body._id, ...(_id && { user_id: _id }) };
             await ColorModel.findOneAndUpdate(query, req.body, { upsert: true });
-            const colors = await ColorModel.find({ ...( _id && { user_id: _id } ) })
+            const colors = await ColorModel.find({ ...(_id && { user_id: _id }) })
             return colors
         } catch (error) {
             console.log(error)
@@ -155,7 +207,7 @@ class PublicService {
             const { name } = req.body
             const colorVariant = await ColorVariantModel.create({
                 name,
-                ...( _id && { user_id: _id } )
+                ...(_id && { user_id: _id })
             })
             return colorVariant;
 
@@ -172,13 +224,13 @@ class PublicService {
             const { color_id, variant_id } = req.body
             const count = await ColorPaletteModel.find({
                 variant_id: new ObjectId(variant_id),
-                ...( _id && { user_id: _id } )
+                ...(_id && { user_id: _id })
             }).count()
             const colorPalette = await ColorPaletteModel.create({
                 color_id,
                 variant_id,
                 order: count + 1,
-                ...( _id && { user_id: _id } )
+                ...(_id && { user_id: _id })
             })
             return colorPalette;
 
@@ -197,8 +249,8 @@ class PublicService {
             if (!mongoose.Types.ObjectId.isValid(_id)) {
                 throw new Error('Invalid palette_id');
             }
-            const query = { '_id': _id, ...( user_id && { user_id } ) };
-            const queryPalette = { 'variant_id': _id, ...( user_id && { user_id } ) };
+            const query = { '_id': _id, ...(user_id && { user_id }) };
+            const queryPalette = { 'variant_id': _id, ...(user_id && { user_id }) };
             await ColorVariantModel.deleteOne(query);
             return await ColorPaletteModel.deleteMany(queryPalette)
 
@@ -220,7 +272,7 @@ class PublicService {
                 const queryFrom = {
                     _id,
                     order,
-                    ...( user_id && { user_id } )
+                    ...(user_id && { user_id })
                 }
                 await ColorPaletteModel.findOneAndUpdate(queryFrom, {
                     order: order_to,
@@ -229,7 +281,7 @@ class PublicService {
                 const queryTo = {
                     _id: id_to,
                     order: order_to,
-                    ...( user_id && { user_id } )
+                    ...(user_id && { user_id })
                 }
 
                 await ColorPaletteModel.findOneAndUpdate(queryTo, {
@@ -240,7 +292,7 @@ class PublicService {
                 { $sort: { order: 1 } },
                 {
                     $match: {
-                        ...( user_id && { user_id }),
+                        ...(user_id && { user_id }),
                     }
                 },
                 {
@@ -289,30 +341,45 @@ class PublicService {
         }
     }
 
-    async getColors(user_id: string = '') {
-        const colors = await ColorModel.find({ 
-            ...(user_id && { user_id }),
-            ...(!user_id && { 'user_id': { $exists: false } }),
+    async getColors(refreshToken: any = '') {
+
+        const userData = await tokenService.findUserByToken(refreshToken);
+
+        const colors = await ColorModel.find({
+            $or: [
+                { user_id: userData?._id },
+                { user_id: { $exists: false } }
+            ]
         })
         return colors;
     }
 
-    async getColorsVariants(user_id: string = '') {
-        const colorsVariants = await ColorVariantModel.find({ 
-            ...(user_id && { user_id }),
-            ...(!user_id && { 'user_id': { $exists: false } }), 
+    async getColorsVariants(refreshToken: any = '') {
+
+        const userData = await tokenService.findUserByToken(refreshToken);
+
+        const colorsVariants = await ColorVariantModel.find({
+            $or: [
+                { user_id: userData?._id },
+                { user_id: { $exists: false } }
+            ]
         }).sort({ createdAt: 1 });
         return colorsVariants;
     }
 
-    async getColorsPalettes(color_id: string = '', variant_id: string = '', user_id: string = '') {
+    async getColorsPalettes(color_id: string = '', variant_id: string = '', refreshToken: any = '') {
+
+        const userData = await tokenService.findUserByToken(refreshToken);
+
         const colorsPalettes = await ColorPaletteModel.aggregate([
             {
                 $match: {
                     ...(color_id && { color_id }),
                     ...(variant_id && { variant_id }),
-                    ...(user_id && { user_id }),
-                    ...(!user_id && { 'user_id': { $exists: false } }), 
+                    $or: [
+                        { user_id: userData?._id },
+                        { user_id: { $exists: false } }
+                    ]
                 }
             },
             {
@@ -358,7 +425,6 @@ class PublicService {
 
     async addPrint(req: any) {
         try {
-
             const { refreshToken = '' } = req.cookies;
             const userData = await tokenService.findUserByToken(refreshToken);
             const { _id: user_id = '' } = userData;
@@ -388,7 +454,7 @@ class PublicService {
                 tags,
                 highresurl: highImage,
                 previewurl: previewImage,
-                ...( user_id && { user_id } )
+                ...(user_id && { user_id })
             })
 
             const { id } = print;
@@ -432,7 +498,7 @@ class PublicService {
                 const filePath = path.join(__dirname, '../../uploads/prints/previews', previewImage);
                 fs.writeFileSync(filePath, previewurl.data);
             }
-            const query = { '_id': _id, ...( user_id && { user_id } ) };
+            const query = { '_id': _id, ...(user_id && { user_id }) };
             await PrintModel.findOneAndUpdate(query, {
                 name,
                 price,
@@ -440,7 +506,7 @@ class PublicService {
                 printVariant,
                 ...(highImage && { highresurl: highImage }),
                 ...(previewImage && { previewurl: previewImage }),
-                ...( user_id && { user_id } )
+                ...(user_id && { user_id })
             }, { upsert: true });
             const prints = await PrintModel.find({})
             return prints;
@@ -460,7 +526,7 @@ class PublicService {
             const { name } = req.body
             const printVariant = await PrintVariantModel.create({
                 name,
-                ...( user_id && { user_id } )
+                ...(user_id && { user_id })
             })
             return printVariant;
         } catch (error) {
@@ -478,13 +544,13 @@ class PublicService {
             const { print_id, variant_id } = req.body
             const count = await PrintPaletteModel.find({
                 variant_id: new ObjectId(variant_id),
-                ...( user_id && { user_id } )
+                ...(user_id && { user_id })
             }).count()
             const printPalette = await PrintPaletteModel.create({
                 print_id,
                 variant_id,
                 order: count + 1,
-                ...( user_id && { user_id } )
+                ...(user_id && { user_id })
             })
             return printPalette;
 
@@ -505,11 +571,11 @@ class PublicService {
                 throw new Error('Invalid palette_id');
             }
 
-            const query = { '_id': _id, ...( user_id && { user_id } ) };
-            const queryPalette = { 'variant_id': _id, ...( user_id && { user_id } ) };
+            const query = { '_id': _id, ...(user_id && { user_id }) };
+            const queryPalette = { 'variant_id': _id, ...(user_id && { user_id }) };
             await PrintVariantModel.deleteOne(query);
             await PrintPaletteModel.deleteMany(queryPalette)
-            const palettes = await PrintPaletteModel.find({ ...( user_id && { user_id } ) })
+            const palettes = await PrintPaletteModel.find({ ...(user_id && { user_id }) })
             return palettes
 
         } catch (error) {
@@ -531,7 +597,7 @@ class PublicService {
                 const queryFrom = {
                     _id,
                     order,
-                    ...( user_id && { user_id } )
+                    ...(user_id && { user_id })
                 }
                 await PrintPaletteModel.findOneAndUpdate(queryFrom, {
                     order: order_to,
@@ -540,7 +606,7 @@ class PublicService {
                 const queryTo = {
                     _id: id_to,
                     order: order_to,
-                    ...( user_id && { user_id } )
+                    ...(user_id && { user_id })
                 }
 
                 await PrintPaletteModel.findOneAndUpdate(queryTo, {
@@ -551,7 +617,7 @@ class PublicService {
                 { $sort: { order: 1 } },
                 {
                     $match: {
-                        ...( user_id && { user_id }),
+                        ...(user_id && { user_id }),
                     }
                 },
                 {
@@ -590,11 +656,11 @@ class PublicService {
                 throw new Error('Invalid palette_id');
             }
 
-            const query = { '_id': _id, ...( user_id && { user_id } ) };
-            const queryPalette = { 'print_id': _id, ...( user_id && { user_id } ) };
+            const query = { '_id': _id, ...(user_id && { user_id }) };
+            const queryPalette = { 'print_id': _id, ...(user_id && { user_id }) };
             await PrintModel.deleteOne(query);
             await PrintPaletteModel.deleteMany(queryPalette)
-            const prints = await PrintModel.find({ ...( user_id && { user_id } ) })
+            const prints = await PrintModel.find({ ...(user_id && { user_id }) })
             return prints;
 
         } catch (error) {
@@ -602,31 +668,45 @@ class PublicService {
         }
     }
 
-    async getPrints(variant: string = '', user_id: string = '') {
+    async getPrints(variant: string = '', refreshToken: any = '') {
+
+        const userData = await tokenService.findUserByToken(refreshToken);
+
         const prints = await PrintModel.find({
             ...(variant && { printVariant: variant }),
-            ...(user_id && { user_id }),
-            ...(!user_id && { 'user_id': { $exists: false } }),
+            $or: [
+                { user_id: userData?._id },
+                { user_id: { $exists: false } }
+            ]
         })
         return prints;
     }
 
-    async getPrintsVariants(user_id: string = '') {
-        const prints = await PrintVariantMotel.find({ 
-            ...(user_id && { user_id }),
-            ...(!user_id && { 'user_id': { $exists: false } }),
+    async getPrintsVariants(refreshToken: any = '') {
+
+        const userData = await tokenService.findUserByToken(refreshToken);
+
+        const prints = await PrintVariantMotel.find({
+            $or: [
+                { user_id: userData?._id },
+                { user_id: { $exists: false } }
+            ]
         });
         return prints;
     }
 
-    async getPrintsPalettes(print_id: string = '', variant_id: string = '', user_id: string = '') {
+    async getPrintsPalettes(print_id: string = '', variant_id: string = '', refreshToken: any = '') {
+
+        const userData = await tokenService.findUserByToken(refreshToken);
         const printsPalettes = await PrintPaletteModel.aggregate([
             {
                 $match: {
                     ...(print_id && { print_id }),
                     ...(variant_id && { variant_id }),
-                    ...(user_id && { user_id }),
-                    ...(!user_id && { 'user_id': { $exists: false } }),
+                    $or: [
+                        { user_id: userData?._id },
+                        { user_id: { $exists: false } }
+                    ]
                 }
             },
             {
@@ -685,13 +765,13 @@ class PublicService {
         }
         return await getGarmentsQuery(false)
     }
-    
+
     async getGarment(garment_id: string = '', refreshToken: any) {
         const userData = await tokenService.findUserByToken(refreshToken);
         const garment = await getGarmentQuery(garment_id, false, false, userData?._id)
         return garment
     }
-    
+
     async searchGarments(criteria: string, user_id: string) {
         const garments = await searchGarmentsQuery(criteria, false, user_id)
         return garments
@@ -724,7 +804,7 @@ class PublicService {
         try {
             const { details } = body;
             const userData = await tokenService.findUserByToken(refreshToken);
-            const data = await CartModel.create({ user_id: userData?._id , details })
+            const data = await CartModel.create({ user_id: userData?._id, details })
             return data
         } catch (error) {
             console.log(error)
@@ -735,7 +815,7 @@ class PublicService {
     async removeCart(body: any) {
         try {
             const { cart_id } = body;
-            const query = { '_id': cart_id}
+            const query = { '_id': cart_id }
             await ColorVariantModel.deleteOne(query);
             return true;
         } catch (error) {
@@ -751,7 +831,7 @@ class PublicService {
             const query = { user_id: new ObjectId(userData?._id), _id }
             const data = await CartModel.find(query)
             if (data && data.length) {
-                return await CartModel.findOneAndUpdate(query, {details}, { upsert: true });
+                return await CartModel.findOneAndUpdate(query, { details }, { upsert: true });
             }
             return false
         } catch (error) {

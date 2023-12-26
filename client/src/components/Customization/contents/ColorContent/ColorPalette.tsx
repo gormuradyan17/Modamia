@@ -5,6 +5,7 @@ import './style.scss'
 import { ObjectType, getConvertedDropdownOptionsFromVariantsMatched, getManipulatedDataFromPalettes } from "shared/helpers/helpers";
 import { useEffect, useMemo } from "react";
 import { garmentDetails } from "redux/reducers/garmentReducer";
+import { getUserData } from "redux/reducers/userReducer";
 
 const ColorPalette = () => {
 
@@ -13,11 +14,11 @@ const ColorPalette = () => {
   const activePalette = useSelector(activePaletteItem)
   const variants = useSelector(colorsVariants)
   const activeGarment = useSelector(garmentDetails)
-  
+  const userData = useSelector(getUserData)
   const matchedColorPalettes = useMemo(() => {
     const { palettes: { colors = [] } = {} } = activeGarment || {}
-    return getConvertedDropdownOptionsFromVariantsMatched(variants, colors)
-  },[activeGarment])
+    return getConvertedDropdownOptionsFromVariantsMatched(variants, colors, userData?.id)
+  },[activeGarment, userData])
 
   const handlePaletteDispatchChange = (name: string) => {
     const group = getManipulatedDataFromPalettes(palettes, name, 'colors')
