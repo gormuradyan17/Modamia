@@ -9,7 +9,8 @@ interface stateProps {
     customSize: {},
     garment_id: string,
     modelData: ObjectType,
-    activeMannequin: ObjectType
+    activeMannequin: ObjectType,
+    count:number
   };
 }
 
@@ -25,7 +26,8 @@ const initialState: stateProps = {
     },
     size: "",
     customSize: {},
-    activeMannequin: {}
+    activeMannequin: {},
+    count:1
   },
 };
 export const addToCartReducer = createSlice({
@@ -61,11 +63,14 @@ export const addToCartReducer = createSlice({
     },
     setProductFullState: (state, action) => {
       state.dataInfo = action.payload;
+    },
+    setProductCount: (state, action) => {
+      state.dataInfo.count = action.payload;
     }
   }
 });
 
-export const { setProductFullState, setProductGarment, setProductName, setProductPrice, setProductSize, setActiveMannequinProduct, setProductFront, setProductBack, setProductSleeve, setProductCustomSize } = addToCartReducer.actions;
+export const { setProductFullState,setProductCount, setProductGarment, setProductName, setProductPrice, setProductSize, setActiveMannequinProduct, setProductFront, setProductBack, setProductSleeve, setProductCustomSize } = addToCartReducer.actions;
 
 export const getProduct = (state: ObjectType) => state.addToCartReducer.dataInfo;
 export const getProductName = (state: ObjectType) => state.addToCartReducer.dataInfo.name;
@@ -76,5 +81,6 @@ export const getProductBack = (state: ObjectType) => state.addToCartReducer.data
 export const getProductSleeve = (state: ObjectType) => state.addToCartReducer.dataInfo.sleeve;
 export const getProductCustomSize = (state: ObjectType) => state.addToCartReducer.dataInfo.customSize;
 export const getActiveMannequin = (state: ObjectType) => state.addToCartReducer.dataInfo.activeMannequin;
+export const getProductCount = (state: ObjectType) => state.addToCartReducer.dataInfo.count;
 
 export default addToCartReducer.reducer;

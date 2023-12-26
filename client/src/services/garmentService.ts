@@ -16,7 +16,7 @@ export const getSelectedGarment =  async (dispatch: any, id: string) => {
         if (details?.details && Object.keys(details?.details).length) {
             await dispatch(setDetailsModelData(details?.details?.modelData))
             await dispatch(setDetailsData(details))
-            await dispatch(setProductFullState(details?.details))
+            await dispatch(setProductFullState({...details?.details}))
             await dispatch(setDetailsDataLoading(false))
         }
         await dispatch(setDetailsDataLoading(false))

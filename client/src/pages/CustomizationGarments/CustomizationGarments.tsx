@@ -6,12 +6,11 @@ import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { availableGarments, setGarmentFullState } from 'redux/reducers/garmentReducer';
-import { getAvGarments, getAvSearchedGarments, getSelectedGarment } from 'services/garmentService';
+import { getAvGarments, getAvSearchedGarments } from 'services/garmentService';
 import InputUI from 'shared/ui/InputUI/InputUI';
 import useDebounce from 'utils/hooks/useDebounce';
 import GarmentsMannequin from './GarmentsMannequin';
 import { BASE_UPLOADS_MANNEQUINS_FRONTS_URL } from 'shared/constants/genericApiRoutes';
-import CustomizationLoader from 'components/Customization/customizationLoader/CustomizationLoader';
 import CustomizationGarment from './CustomizationGarment';
 
 interface Props {
@@ -37,7 +36,7 @@ const CustomizationGarments = ({
     const handleGarmentClick = (garment: ObjectType, id: string) => {
         if (id && garment?._id) {
             dispatch(setGarmentFullState(garment))
-            navigate(`/customization/${id}`)
+            navigate(`/customization/${id}`,{ state: { fromCart: true } })
         }
     }
 
@@ -75,6 +74,8 @@ const CustomizationGarments = ({
                     {!!garments?.length && <div className='customization-mannequins-list'>
                         {garments.map((garment: ObjectType, idx: number) => {
                             const { mannequin = {}, garment: activeGarment, _id = '', details } = garment;
+                            console.log(details,"detailsdetails");
+                            
                             return <div key={idx} className='customization-elem' onClick={() => handleGarmentClick(activeGarment, _id || activeGarment?._id)}>
                                 <HeadingUI text={activeGarment?.name} size='16px' color={appColor} align='center' />
                                 {details ? <GarmentsMannequin data={details}/> : <CustomizationGarment 

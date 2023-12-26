@@ -128,33 +128,32 @@ export const getCanvasDefaultImages = (
   } else if (positionSilhouette === 'backs') {    
     return positionClothes === 'top' ? getPositionInfo('backs', 'tops') : getPositionInfo('backs', 'bottoms');
   }
-
 };
 
-export async function updateArrWithElem(elem: any, arr: any[], frontBack: string) {
-  if (elem) {    
-    if (arr.length < 2 || (frontBack === "sleeves" && arr.length <= 2)) {
-      arr.push(elem);
-    } else {
-      const frontSleeves = arr.findIndex((el) => el?.frontBack === "sleeves");
-      const frontTop = arr.findIndex(
-        (el) => (el?.frontBack === "fronts" || el?.frontBack === "backs") && el?.position === "top"
-      );
-      const frontBottom = arr.findIndex(
-        (el) => (el?.frontBack === "fronts" || el?.frontBack === "backs") && el?.position === "bottom"
-      );
-
-      if (elem?.position === "top" && (elem.frontBack === "fronts" || elem.frontBack === "backs")) {
+export async function updateArrWithElem(elem: any, arr: any[], frontBack: string,fromBasket:boolean) {    
+ 
+  if (elem) {   
+    
+    const frontSleeves = arr.findIndex((el) => el?.frontBack === "sleeves");
+    const frontTop = arr.findIndex(
+      (el) => (el?.frontBack === "fronts" || el?.frontBack === "backs") && el?.position === "top"
+    );
+    const frontBottom = arr.findIndex(
+      (el) => (el?.frontBack === "fronts" || el?.frontBack === "backs") && el?.position === "bottom"
+    );
+    if (arr.length < 2 || ((elem?.frontBack === "sleeves" || frontBack=== "sleeves" ) && arr.length <= 2) ) {
+        arr.push(elem);        
+    } else {      
+      if (elem?.position === "top" && (elem.frontBack === "fronts" || elem.frontBack === "backs")) {        
         arr.splice(frontTop, 1, elem);
       } else if (elem?.position === "bottom" && (elem.frontBack === "fronts" || elem.frontBack === "backs")) {
         arr.splice(frontBottom, 1, elem);
-      } else if (elem?.frontBack === "sleeves") {
-        arr.splice(frontSleeves, 1, elem);
+      } else if (elem?.frontBack === "sleeves" ) {
+        arr.splice(frontSleeves, 1, elem); 
       }
+      
     }
   }
-
-
 }
 
 export const convertDefaultValue=(modelData:any,silhouettes:any)=>{
@@ -211,3 +210,19 @@ export const getIsGarmentSaveApproved = (newData: ObjectType, oldData: ObjectTyp
   return JSON.stringify(newData) !== JSON.stringify(oldData);
 }
 
+export const dataWithValues=(data:any,model:any)=>{
+  const combineObject:ObjectType={};
+  for(const key in data){
+    if(data[key] !==""){
+      if(!(key in combineObject)){
+        combineObject[key]=data[key] 
+      }
+    }
+  }
+  for(const key in model){
+    if(model[key]!=="" && !(key in combineObject)){
+      combineObject[key]=combineObject[key]!==undefined ? combineObject[key]+model[key] : model[key]
+    }
+  }
+  return combineObject
+}

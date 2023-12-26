@@ -11,7 +11,7 @@ const GarmentsMannequin = ({ data }: Props) => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false)
 
   const drawManequin = async () => {
-    await canvasModelInit(.3, data.modelData, 'fronts', canvasRef, data.activeMannequin, data.modelData, true, 2.5)
+    await canvasModelInit(0.3, data.modelData, 'fronts', canvasRef, data.activeMannequin, data.modelData, true, false,2.5)
     await setIsLoaded(true)
   }
 
