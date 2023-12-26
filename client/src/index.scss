@@ -17,6 +17,8 @@ code {
 
 .main-content {
   display: flex;
+  width:calc(100% - 600px);
+  margin: auto;
 }
 
 ._ellipsis {

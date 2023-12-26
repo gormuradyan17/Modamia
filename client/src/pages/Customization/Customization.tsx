@@ -28,12 +28,11 @@ import CustomizationLoader from "components/Customization/customizationLoader/Cu
 import SilhouettePositionBtn from "components/Customization/contents/SilhouetteContent/SilhouettePositionBtn";
 import ChangeSize from "components/Customization/contents/ChangeSize";
 import AddToCart from "components/Customization/contents/AddToCart";
-import { getProductName, getProductPrice, setActiveMannequinProduct, setProductBack, setProductFront, setProductGarment, setProductName, setProductPrice, setProductSleeve } from "redux/reducers/addToCartReducer";
-import { useParams } from "react-router-dom";
+import { getProductCount, getProductName, getProductPrice, setActiveMannequinProduct, setProductBack, setProductFront, setProductGarment, setProductName, setProductPrice,setProductSleeve } from "redux/reducers/addToCartReducer";
+import { useLocation, useParams } from "react-router-dom";
 import { getSelectedGarment } from "services/garmentService";
 import { garmentDetails } from "redux/reducers/garmentReducer";
-import { ObjectType, convertDefaultValue } from "shared/helpers/helpers";
-import { getModelData } from "services/modelDataService";
+import { ObjectType, convertDefaultValue, dataWithValues } from "shared/helpers/helpers";
 import EditGarment from "components/Customization/contents/EditGarment/EditGarment";
 
 const Customization = () => {
@@ -45,6 +44,7 @@ const Customization = () => {
   const activeType = useSelector(getMannequinType)
   const frontBack = useSelector(getMannequinPosition)
   const name = useSelector(getProductName)
+  const count = useSelector(getProductCount)
   const price = useSelector(getMannequinPrice)
   const activeGarment = useSelector(garmentDetails)
   const totalPrice = useSelector(getProductPrice)
@@ -54,6 +54,7 @@ const Customization = () => {
   const detailsData = useSelector(getDetailsData)
   const detailsDataLoading = useSelector(getDetailsDataLoading)
   const { mannequin = {} } = activeGarment;
+  let {fromCart} = useLocation().state;
 
   let priceCount = 0;
 
@@ -61,16 +62,16 @@ const Customization = () => {
   
   const [modelData, setModelData] = useState<any>({
     fronts: [
-      { position: "bottom", src: "", color: "", printImageURL: "", activeCategory, price: 200, width: "", height: "", order: "" },
       { position: "top", src: "", color: "", printImageURL: "", activeCategory, price: 300, width: "", height: "", order: "" },
+      { position: "bottom", src: "", color: "", printImageURL: "", activeCategory, price: 200, width: "", height: "", order: "" },
     ],
     backs: [
-      { position: "bottom", src: "", color: "", printImageURL: "", activeCategory, price: 0, width: "", height: "", order: "" },
       { position: "top", src: "", color: "", printImageURL: "", activeCategory, price: 0, width: "", height: "", order: "" },
+      { position: "bottom", src: "", color: "", printImageURL: "", activeCategory, price: 0, width: "", height: "", order: "" },
     ],
     sleeves: [
-      { position: "top", src: "", color: "", printImageURL: "", activeCategory, price: 0, width: "", height: "", order: "" },
-      { position: "bottom", src: "", color: "", printImageURL: "", activeCategory, price: 0, width: "", height: "", order: "" }
+      { position: "bottom", src: "", color: "", printImageURL: "", activeCategory, price: 0, width: "", height: "", order: "" },
+      { position: "top", src: "", color: "", printImageURL: "", activeCategory, price: 0, width: "", height: "", order: "" }
     ]
   })
 
@@ -93,13 +94,12 @@ const Customization = () => {
 
     }
     const model = convertDefaultValue(data, silhouettes)
-
     if (Object.keys(data).length) {
       dispatch(setProductName(activeGarment?.garment?.name));
       dispatch(setProductGarment(activeGarment?.garment?._id));
-      dispatch(setProductFront([data.fronts[1].src ? { ...data.fronts[1] } : { ...model.fronts[1] }, data.fronts[0].src ? { ...data.fronts[0] } : { ...model.fronts[0] }]));
-      dispatch(setProductBack([data.backs[1].src ? { ...data.backs[1] } : { ...model.backs[1] }, data.backs[0].src ? { ...data.backs[0] } : { ...model.backs[0] }]));
-      dispatch(setProductSleeve([data.sleeves[0].src ? { ...data.sleeves[0] } : { ...model.sleeves[0] }]));
+      dispatch(setProductFront([dataWithValues(data.fronts[0],model.fronts[0] ),dataWithValues(data.fronts[1],model.fronts[1] )]));
+      dispatch(setProductBack([dataWithValues(data.backs[0],model.backs[0] ),dataWithValues(data.backs[1],model.backs[1] )]));
+      dispatch(setProductSleeve([dataWithValues(data.sleeves[0],model.sleeves[0] )]));
     }
   }
 
@@ -111,17 +111,17 @@ const Customization = () => {
       copyData[frontBack][0].activeCategory = activeCategory;
       switch (activeType) {
         case "tops":
-          copyData[frontBack][1].src = activeImgUrl;
-          copyData[frontBack][1].price = price;
-          copyData[frontBack][1].width = sizes.width
-          copyData[frontBack][1].height = sizes.height
+          copyData[frontBack][0].src = activeImgUrl;
+          copyData[frontBack][0].price = price;
+          copyData[frontBack][0].width = sizes.width
+          copyData[frontBack][0].height = sizes.height
           break;
         case "bottoms":
-          copyData.fronts[0].src = activeImgUrl;
-          copyData.backs[0].src = activeImgUrl;
-          copyData.fronts[0].price = price;
-          copyData.fronts[0].width = sizes.width
-          copyData.fronts[0].height = sizes.height
+          copyData.fronts[1].src = activeImgUrl;
+          copyData.backs[1].src = activeImgUrl;
+          copyData.fronts[1].price = price;
+          copyData.fronts[1].width = sizes.width
+          copyData.fronts[1].height = sizes.height
           break;
         case "all":
           if (activeColor) {
@@ -145,25 +145,25 @@ const Customization = () => {
           copyData.sleeves[0].height = sizes.height
           break;
         case "top":
-          copyData[frontBack][1].color = activeColor
+          copyData[frontBack][0].color = activeColor
           if (frontBack === "sleeves") {
-            copyData.fronts[1].color = activeColor
+            copyData.fronts[0].color = activeColor
             copyData.sleeves[0].color = activeColor
             copyData.fronts[1].printImageURL = activePrint?.highresurl
           }
           if (activePrint) {
             copyData.sleeves[0].printImageURL = activePrint?.highresurl
-            copyData[frontBack][1].printImageURL = activePrint?.highresurl;
+            copyData[frontBack][0].printImageURL = activePrint?.highresurl;
           }
           break;
         case "bottom":
           if (activePrint) {
-            copyData[frontBack][0].printImageURL = activePrint?.highresurl;
+            copyData[frontBack][1].printImageURL = activePrint?.highresurl;
           }
           if (frontBack === "sleeves") {
-            copyData.fronts[0].color = activeColor
+            copyData.fronts[1].color = activeColor
           } else {
-            copyData[frontBack][0].color = activeColor;
+            copyData[frontBack][1].color = activeColor;
           }
           break;
         default:
@@ -172,7 +172,7 @@ const Customization = () => {
       }
 
     });
-    await canvasModelInit(rangeValue, copyData, frontBack, canvasRef, mannequin, Object.keys(detailsModelData).length ? detailsModelData : convertValue, false);
+    await canvasModelInit(rangeValue, copyData, frontBack, canvasRef, mannequin, Object.keys(detailsModelData).length ? detailsModelData : convertValue, false,fromCart ? fromCart : false);
     await setModelData({ ...copyData });
   };
 
@@ -193,13 +193,13 @@ const Customization = () => {
 
   useEffect(() => {
     dispatchFields(modelData)
-  }, [modelData])
+  }, [dispatchFields])
 
 
   useEffect(() => {
-    if (activeGarment?.mannequin?._id && !detailsDataLoading) drawManequin(modelData);
+    if (activeGarment?.mannequin?._id && !detailsDataLoading) drawManequin(modelData)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [detailsDataLoading, activeGarment, id, activeColor, activePrint, activeCategory, activeImgUrl, activeType, frontBack, silhouettes, rangeValue]);
+  }, [detailsDataLoading,detailsData, activeGarment, id, activeColor, activePrint, activeCategory, activeImgUrl, activeType, frontBack, silhouettes, rangeValue]);
 
   useEffect(() => {
     return () => {
@@ -209,16 +209,16 @@ const Customization = () => {
       dispatch(setDetailsData({}))
       setModelData({
         fronts: [
-          { position: "bottom", src: "", color: "", printImageURL: "", activeCategory, price: 200, width: "", height: "", order: "" },
-          { position: "top", src: "", color: "", printImageURL: "", activeCategory, price: 300, width: "", height: "", order: "" },
+          { position: "top", src: "", color: "", printImageURL: "", activeCategory, price: 300, width: "", height: "", order: "",frontBack:"fronts" },
+          { position: "bottom", src: "", color: "", printImageURL: "", activeCategory, price: 200, width: "", height: "", order: "",frontBack:"fronts" },
         ],
         backs: [
-          { position: "bottom", src: "", color: "", printImageURL: "", activeCategory, price: 0, width: "", height: "", order: "" },
-          { position: "top", src: "", color: "", printImageURL: "", activeCategory, price: 0, width: "", height: "", order: "" },
+          { position: "top", src: "", color: "", printImageURL: "", activeCategory, price: 0, width: "", height: "", order: "",frontBack:"backs"  },
+          { position: "bottom", src: "", color: "", printImageURL: "", activeCategory, price: 0, width: "", height: "", order: "",frontBack:"backs"  },
         ],
         sleeves: [
-          { position: "top", src: "", color: "", printImageURL: "", activeCategory, price: 0, width: "", height: "", order: "" },
-          { position: "bottom", src: "", color: "", printImageURL: "", activeCategory, price: 0, width: "", height: "", order: "" }
+          { position: "top", src: "", color: "", printImageURL: "", activeCategory, price: 0, width: "", height: "", order: "",frontBack:"sleeves"  },
+          { position: "bottom", src: "", color: "", printImageURL: "", activeCategory, price: 0, width: "", height: "", order: "",frontBack:"sleeves"  }
         ]
       })
     }
@@ -233,7 +233,7 @@ const Customization = () => {
           <canvas className="canvas" id="canvas" ref={canvasRef}></canvas>
         </div>
         <div className="customization-body customization-body-info">
-          <CustomizationInfo infoData={{ name, price: totalPrice }} />
+          <CustomizationInfo infoData={{ name, price: totalPrice,count }} />
           <CustomizationFeatures range={rangeValue} setRange={setRangeValue} />
           <div className="customization-body-actions">
             <ChangeSize />

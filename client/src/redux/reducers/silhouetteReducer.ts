@@ -27,7 +27,7 @@ export const silhouetteSlice = createSlice({
 	name: 'silhouetteReducer',
 	initialState,
 	reducers: {
-		setSilhouetteData: (state, action) => {
+		setSilhouetteData: (state, action) => {			
 			state.silhouettes = action.payload;
 		},
 		setSilhouetteState: (state, action) => {
