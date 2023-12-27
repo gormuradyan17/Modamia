@@ -43,10 +43,10 @@ const EmptyBody = ({
                     align='center'
                     color={appColor}
                 />
-            </div>
             <ButtonUI
                 onClick={() => redirectTo(link.url)}
             >{link.CTAText}</ButtonUI>
+            </div>
         </div>
     );
 };

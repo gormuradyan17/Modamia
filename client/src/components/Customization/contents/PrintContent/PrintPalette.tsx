@@ -5,6 +5,7 @@ import { ObjectType, getConvertedDropdownOptionsFromVariants, getConvertedDropdo
 import { useEffect, useMemo } from "react";
 import { activePaletteItem, printsPalettes, printsVariants, setActivePaletteItem } from "redux/reducers/printReducer";
 import { garmentDetails } from "redux/reducers/garmentReducer";
+import { getUserData } from "redux/reducers/userReducer";
 
 const PrintPalette = () => {
 
@@ -13,11 +14,12 @@ const PrintPalette = () => {
   const activePalette = useSelector(activePaletteItem)
   const variants = useSelector(printsVariants)
   const activeGarment = useSelector(garmentDetails)
+  const userData = useSelector(getUserData)
   
   const matchedPrintPalettes = useMemo(() => {
     const { palettes: { prints = [] } = {} } = activeGarment || {}
-    return getConvertedDropdownOptionsFromVariantsMatched(variants, prints)
-  },[activeGarment])
+    return getConvertedDropdownOptionsFromVariantsMatched(variants, prints, userData?.id)
+  },[activeGarment, userData])
 
   const handlePaletteDispatchChange = (name: string) => {
     if (name === 'All') {

@@ -74,7 +74,6 @@ const CustomizationGarments = ({
                     {!!garments?.length && <div className='customization-mannequins-list'>
                         {garments.map((garment: ObjectType, idx: number) => {
                             const { mannequin = {}, garment: activeGarment, _id = '', details } = garment;
-                            console.log(details,"detailsdetails");
                             
                             return <div key={idx} className='customization-elem' onClick={() => handleGarmentClick(activeGarment, _id || activeGarment?._id)}>
                                 <HeadingUI text={activeGarment?.name} size='16px' color={appColor} align='center' />

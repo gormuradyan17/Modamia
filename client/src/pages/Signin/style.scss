@@ -1,3 +1,5 @@
+@use 'variables';
+
 .signin {
 
     &_container {
@@ -28,10 +30,17 @@
         align-items: center;
         justify-content: center;
         gap: 10px;
-
+        form {
+            margin: 0 20px;
+        }
         button {
             margin: unset;
             width: 100%;
         }
     }
+
+}
+.forgot-password {
+    text-decoration: none;
+    color: variables.$appColor;
 }

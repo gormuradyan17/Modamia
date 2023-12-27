@@ -6,4 +6,12 @@
     &-name {
         text-transform: capitalize;
     }
+    &-detais {
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        .headingUI {
+            margin-right: 20px;
+        }
+    }
 }

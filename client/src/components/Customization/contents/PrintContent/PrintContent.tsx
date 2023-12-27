@@ -45,6 +45,7 @@ const PrintContent = () => {
             type:"bottom"
         },
     ]
+    
     useEffect(() => {        
         dispatch(setMannequinType(activeType))
       // eslint-disable-next-line react-hooks/exhaustive-deps

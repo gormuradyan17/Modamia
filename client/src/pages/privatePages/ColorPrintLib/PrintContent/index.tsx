@@ -11,6 +11,7 @@ import { getAvPrints, getAvPrintsPalettes, getAvPrintsVariants } from "services/
 import { availablePrints, resetPrintState } from "redux/reducers/printReducer";
 import PrintsList from "./PrintsList";
 import { getUserData } from "redux/reducers/userReducer";
+import { ObjectType, sortItemsByUserId } from "shared/helpers/helpers";
 
 const PrintContent = () => {
 
@@ -25,12 +26,10 @@ const PrintContent = () => {
     }
 
     useEffect(() => {
-        if (userData && userData?.id) {
-            getAvPrints(dispatch, '', userData?.id)
-            getAvPrintsVariants(dispatch, userData?.id)
-            getAvPrintsPalettes(dispatch, userData?.id)
-        }
-    }, [userData])
+        getAvPrints(dispatch, '')
+        getAvPrintsVariants(dispatch)
+        getAvPrintsPalettes(dispatch)
+    }, [])
 
     return (
         <div>
@@ -39,7 +38,7 @@ const PrintContent = () => {
             <MainBody>
                 <div className="prints-pallette-list">
                     {prints?.length ? <HeadingUI text="Print List" size="22px" /> : null}
-                    {prints?.length ? <PrintsList prints={prints} /> : null}
+                    {prints?.length ? <PrintsList prints={sortItemsByUserId(prints)} /> : null}
                 </div>
                 {isVisible && <PopupUI callback={closePopup}>
                     <NewPrint 

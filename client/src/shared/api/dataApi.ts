@@ -1,4 +1,4 @@
-import { COLORS_URL, PRINTS_URL, MANNEQUINS_URL, SILHOUETTES_URL, ADD_SILHOUETTE_URL, EDIT_SILHOUETTE_URL, COLORS_VARIANTS_URL, PRINTS_VARIANTS_URL, ADD_PRINT_URL, ADD_PRINT_VARIANT_URL, EDIT_PRINT_URL, SILHOUETTES_TYPES_URL, COLORS_PALETTES_URL, PRINTS_PALETTES_URL, SIZE_URL, ADD_SIZE_URL, EDIT_SIZE_URL, MANNEQUIN_WITH_SILHOUETTES_URL, GARMENTS_URL, GARMENT_URL, SEARCH_GARMENT_URL, SIGNIN_SHOPIFY_URL, GET_SHOPIFY_USER_URL, ADD_COLOR_URL, ADD_COLOR_VARIANT_URL, ADD_COLOR_PALETTE_URL, REMOVE_COLOR_URL, REMOVE_COLOR_PALETTE_URL, EDIT_COLOR_URL, ADD_PRINT_PALETTE_URL, REMOVE_PRINT_PALETTE_URL, REMOVE_PRINT_URL, SIGNIN_USER, SIGNUP_USER, USER_REFRESH_URL, USER_SIGNOUT_URL, USER_EDIT_URL, ADD_TO_CART_URL, REMOVE_FROM_CART_URL, EDIT_CART_URL } from "shared/constants/genericApiRoutes";
+import { COLORS_URL, PRINTS_URL, MANNEQUINS_URL, SILHOUETTES_URL, ADD_SILHOUETTE_URL, EDIT_SILHOUETTE_URL, COLORS_VARIANTS_URL, PRINTS_VARIANTS_URL, ADD_PRINT_URL, ADD_PRINT_VARIANT_URL, EDIT_PRINT_URL, SILHOUETTES_TYPES_URL, COLORS_PALETTES_URL, PRINTS_PALETTES_URL, SIZE_URL, ADD_SIZE_URL, EDIT_SIZE_URL, MANNEQUIN_WITH_SILHOUETTES_URL, GARMENTS_URL, GARMENT_URL, SEARCH_GARMENT_URL, SIGNIN_SHOPIFY_URL, GET_SHOPIFY_USER_URL, ADD_COLOR_URL, ADD_COLOR_VARIANT_URL, ADD_COLOR_PALETTE_URL, REMOVE_COLOR_URL, REMOVE_COLOR_PALETTE_URL, EDIT_COLOR_URL, ADD_PRINT_PALETTE_URL, REMOVE_PRINT_PALETTE_URL, REMOVE_PRINT_URL, SIGNIN_USER, SIGNUP_USER, USER_REFRESH_URL, USER_SIGNOUT_URL, USER_EDIT_URL, ADD_TO_CART_URL, REMOVE_FROM_CART_URL, EDIT_CART_URL, FORGOT_PASSWORD_URL, RECOVERY_PASSWORD_URL } from "shared/constants/genericApiRoutes";
 import { BaseApi } from "./baseApi";
 
 export const getColors = (body: Record<string, any> = {}) => {
@@ -63,7 +63,7 @@ export const getPrintsPalettes = (body: Record<string, any> = {}) => {
 export const addPrint = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');
 	http.removeDefaultHeader()
-	return http.post(ADD_PRINT_URL, body, undefined)
+	return http.post(ADD_PRINT_URL, body, undefined, true)
 }
 
 export const addPrintVariant = (body: Record<string, any> = {}) => {
@@ -205,4 +205,14 @@ export const removeFromCart = (body: Record<string, any> = {}) => {
 export const editCart = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');
 	return http.post(EDIT_CART_URL, body)
+}
+
+export const forgotPassword = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(FORGOT_PASSWORD_URL, body)
+}
+
+export const recoveryPassword = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(RECOVERY_PASSWORD_URL, body)
 }

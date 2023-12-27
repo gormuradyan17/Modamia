@@ -12,7 +12,7 @@ import { ButtonUI } from "shared/ui/ButtonUI/ButtonUI";
 import ColorsList from "./ColorsList";
 import { colorFormOptions } from "utils/validators/validatorOptions";
 import { formValidator } from "utils/validators/validator";
-import { ObjectType } from "shared/helpers/helpers";
+import { ArrayType, ObjectType, sortItemsByUserId } from "shared/helpers/helpers";
 import { getUserData } from "redux/reducers/userReducer";
 
 const ColorContent = () => {
@@ -25,18 +25,16 @@ const ColorContent = () => {
     const userData = useSelector(getUserData)
 
     useEffect(() => {
-        if (userData && userData?.id) {
-            getAvColors(dispatch, '', userData?.id)
-            getAvColorsVariants(dispatch, userData?.id)
-            getAvColorsPalettes(dispatch, userData?.id)
-        }
-    }, [userData])
+        getAvColors(dispatch, '')
+        getAvColorsVariants(dispatch)
+        getAvColorsPalettes(dispatch)
+    }, [])
 
     const addNewColor = async (e: HTMLFormElement) => {
         e.preventDefault()
         const errors = formValidator(cDetails, colorFormOptions);
-        if (errors) {return setErrors(errors)};
-        if (Object.keys(errors).length) {setErrors({})};
+        if (errors) { return setErrors(errors) };
+        if (Object.keys(errors).length) { setErrors({}) };
         await addColor(cDetails).then(res => {
             dispatch(setColorData([
                 ...colors,
@@ -58,8 +56,8 @@ const ColorContent = () => {
             <ButtonUI classN="add-button" onClick={() => setIsVisible(true)} type="button">New Color</ButtonUI>
             <MainBody>
                 <div className="colors-pallette-list">
-                    {colors?.length ? <HeadingUI text="Colors List" size="22px" /> : null }
-                    {colors?.length ? <ColorsList colors={colors} /> : null}
+                    {colors?.length ? <HeadingUI text="Colors List" size="22px" /> : null}
+                    {colors?.length ? <ColorsList colors={sortItemsByUserId(colors)} /> : null}
                 </div>
                 {isVisible && <PopupUI callback={closePopup}>
                     <NewColor

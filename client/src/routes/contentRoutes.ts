@@ -4,7 +4,9 @@ import { lazy } from 'react';
 const AUTH = {
 	DASHBOARD: lazy(() => import('pages/Dashboard')),
 	SIGN_IN: lazy(() => import('pages/Signin/Signin')),
-	SIGN_UP:lazy(()=>import('pages/SignUp'))
+	SIGN_UP:lazy(()=>import('pages/SignUp')),
+	FORGOT:lazy(()=>import('pages/Forgot/Forgot')),
+	RECOVERY:lazy(()=>import('pages/Recovery/Recovery'))
 };
 const LANDING = {
 	DASHBOARD: lazy(() => import('pages/privatePages/Dashboard')),
@@ -129,6 +131,22 @@ export const publicPages = [
 		element: AUTH.DASHBOARD,
 		exact: true,
 		isPrivate: false,
+	},
+	{
+		id: 'forgot',
+		text: 'Forgot',
+		path: 'forgot',
+		icon: '',
+		element: AUTH.FORGOT,
+		exact: true,
+	},
+	{
+		id: 'recovery',
+		text: 'Recovery',
+		path: 'recovery/:code',
+		icon: '',
+		element: AUTH.RECOVERY,
+		exact: true,
 	},
 ];
 

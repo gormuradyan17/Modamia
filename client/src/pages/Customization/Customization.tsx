@@ -233,7 +233,7 @@ const Customization = () => {
           <canvas className="canvas" id="canvas" ref={canvasRef}></canvas>
         </div>
         <div className="customization-body customization-body-info">
-          <CustomizationInfo infoData={{ name, price: totalPrice,count }} />
+          <CustomizationInfo />
           <CustomizationFeatures range={rangeValue} setRange={setRangeValue} />
           <div className="customization-body-actions">
             <ChangeSize />

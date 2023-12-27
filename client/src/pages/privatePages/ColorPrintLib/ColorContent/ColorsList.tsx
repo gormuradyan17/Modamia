@@ -14,6 +14,7 @@ import PalettesList from "./PalettesList";
 import { colorsPalettes, colorsVariants, setColorData, setColorsPalettesData } from "redux/reducers/colorReducer";
 import useClickOutSide from "utils/hooks/useClickOutside";
 import RemoveSome from "pages/privatePages/removeSome/RemoveSome";
+import { getUserData } from "redux/reducers/userReducer";
 
 interface Props {
     colors: ArrayType
@@ -36,6 +37,8 @@ const ColorsList = ({
     const [colorInfo, setColorInfo] = useState<ObjectType>({})
     const [errors, setErrors] = useState<ObjectType>({})
     const paletteRef = useRef<HTMLDivElement>(null)
+
+    const userData = useSelector(getUserData)
 
     const [isVisibleRemove, setIsVisibleRemove] = useState<boolean>(false)
     const [removableItem, setRemovableItem] = useState<ObjectType>({})
@@ -122,7 +125,6 @@ const ColorsList = ({
         setIsVisibleRemove(false)
         setRemovableItem({})
     }
-
     return (
         <div className="colors-list">
             {colors.map((color: ObjectType) => {
@@ -133,18 +135,20 @@ const ColorsList = ({
                     <HeadingUI classN="color-text _ellipsis" text={color.name} size="16px" />
                     <span className="color-span" style={style}></span>
                     <div className="colors-list-buttons">
-                        <ButtonUI classN="color-button" onClick={() => editColor(color)}>Edit</ButtonUI>
-                        <div {...(color?._id === editableColor?._id) && { ref: paletteRef }}>
-                            <ButtonUI classN="color-button" onClick={() => togglePalettes(color)}><FontAwesomeIcon icon={faPalette} /></ButtonUI>
-                            {isVisiblePalettes && color?._id === editableColor?._id &&
-                                <PalettesList
-                                    activeColor={editableColor}
-                                    onChange={(e: any, foundItem: any, option: any) => manipulateColorWithPalette(e, foundItem, option)}
-                                    options={colorVariants}
-                                />
-                            }
-                            <ButtonUI classN="color-button" onClick={() => prepareToRemoveItem(color)}><FontAwesomeIcon icon={faTrash} /></ButtonUI>
-                        </div>
+                        {color?.user_id === userData?.id && <>
+                            <ButtonUI classN="color-button" onClick={() => editColor(color)}>Edit</ButtonUI>
+                            <div {...(color?._id === editableColor?._id) && { ref: paletteRef }}>
+                                <ButtonUI classN="color-button" onClick={() => togglePalettes(color)}><FontAwesomeIcon icon={faPalette} /></ButtonUI>
+                                {isVisiblePalettes && color?._id === editableColor?._id &&
+                                    <PalettesList
+                                        activeColor={editableColor}
+                                        onChange={(e: any, foundItem: any, option: any) => manipulateColorWithPalette(e, foundItem, option)}
+                                        options={colorVariants}
+                                    />
+                                }
+                                <ButtonUI classN="color-button" onClick={() => prepareToRemoveItem(color)}><FontAwesomeIcon icon={faTrash} /></ButtonUI>
+                            </div>
+                        </>}
                     </div>
                 </div>
             })}

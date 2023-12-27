@@ -55,6 +55,9 @@ export const signinValidators = [
                 if (!user) {
                     return Promise.reject('Incorrect email(username) or password')
                 }
+                if (!user.verified) {
+                    return Promise.reject('Account not confirmed.')
+                }
             } catch (error) {
                 console.log(error);
             }
@@ -138,4 +141,44 @@ export const editValidators = [
         .optional()
         .isLength({ min: 3 }).withMessage('Name field has been a min 3 symbols')
         .trim()
+]
+
+export const forgotValidators = [
+    body('email')
+        .custom(async (value, { req }) => {
+            try {
+                const user = await User.findOne({ email: value })
+                if (!user) {
+                    return Promise.reject('Incorrect email(username)')
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        })
+        .normalizeEmail(),
+]
+
+export const recoveryValidators = [
+    body('password', 'Password has been min 6 symbols')
+        .isLength({ min: 6, max: 56 })
+        .isAlphanumeric()
+        .trim(),
+    body('confirm')
+        .custom((value, { req }) => {
+            if (value !== req.body.password) {
+                return Promise.reject('Confirm password must been a same with password')
+            } else { return true }
+        })
+        .trim(),
+    body('code')
+        .custom(async (value, { req }) => {
+            try {
+                const user = await User.findOne({ code: req.body.code })
+                if (!user) {
+                    return Promise.reject('Incorrect recovery code')
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        })
 ]

@@ -17,6 +17,8 @@
         z-index: 101;
         padding: 20px;
         min-width: 500px;
+        max-height: calc(100vh - 100px);
+        overflow-y: auto;
     }
 
     &__icon {

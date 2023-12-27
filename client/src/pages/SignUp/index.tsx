@@ -43,7 +43,7 @@ const SignUp = () => {
           autoHideDuration: 5000,
           message: 'You are registered successfully'
         })
-         navigate('/signin');
+        navigate('/signin');
 
       }
     } else {

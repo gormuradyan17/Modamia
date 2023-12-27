@@ -73,8 +73,9 @@ class PublicController {
 
     async getColors(req: any, res: any, next: any) {
         try {
-            const { user_id = '' } = req.body
-            const colors = await publicService.getColors(user_id);
+            // const { user_id = '' } = req.body;
+            const { refreshToken } = req.cookies;
+            const colors = await publicService.getColors(refreshToken);
             return res.json(colors);
         } catch (error) {
             next(error);
@@ -83,8 +84,9 @@ class PublicController {
 
     async getColorsVariants(req: any, res: any, next: any) {
         try {
-            const { user_id = '' } = req.body
-            const variants = await publicService.getColorsVariants(user_id);
+            // const { user_id = '' } = req.body
+            const { refreshToken } = req.cookies;
+            const variants = await publicService.getColorsVariants(refreshToken);
             return res.json(variants);
         } catch (error) {
             next(error);
@@ -93,8 +95,9 @@ class PublicController {
 
     async getColorsPalettes(req: any, res: any, next: any) {
         try {
-            const { color_id = '', variant_id = '', user_id = '' } = req.body
-            const palettes = await publicService.getColorsPalettes(color_id, variant_id, user_id);
+            const { color_id = '', variant_id = '', user_id = '' } = req.body;
+            const { refreshToken } = req.cookies;
+            const palettes = await publicService.getColorsPalettes(color_id, variant_id, refreshToken);
             return res.json(palettes);
         } catch (error) {
             next(error);
@@ -169,7 +172,8 @@ class PublicController {
     async getPrints(req: any, res: any, next: any) {
         try {
             const { variant = '', user_id = '' } = req.body
-            const prints = await publicService.getPrints(variant, user_id);
+            const { refreshToken } = req.cookies;
+            const prints = await publicService.getPrints(variant, refreshToken);
             return res.json(prints);
         } catch (error) {
             next(error);
@@ -178,8 +182,9 @@ class PublicController {
 
     async getPrintsVariants(req: any, res: any, next: any) {
         try {
-            const { user_id = '' } = req.body
-            const prints = await publicService.getPrintsVariants(user_id);
+            // const { user_id = '' } = req.body
+            const { refreshToken } = req.cookies;
+            const prints = await publicService.getPrintsVariants(refreshToken);
             return res.json(prints);
         } catch (error) {
             next(error);
@@ -189,7 +194,8 @@ class PublicController {
     async getPrintsPalettes(req: any, res: any, next: any) {
         try {
             const { print_id = '', variant_id = '', user_id = '' } = req.body
-            const palettes = await publicService.getPrintsPalettes(print_id, variant_id, user_id);
+            const { refreshToken } = req.cookies;
+            const palettes = await publicService.getPrintsPalettes(print_id, variant_id, refreshToken);
             return res.json(palettes);
         } catch (error) {
             next(error);
@@ -226,7 +232,7 @@ class PublicController {
 
     async getGarment(req: any, res: any, next: any) {
         try {
-            const { garment_id = ''} = req.body;
+            const { garment_id = '' } = req.body;
             const { refreshToken } = req.cookies;
             const garment = await publicService.getGarment(garment_id, refreshToken);
             return res.json(garment);
@@ -297,7 +303,7 @@ class PublicController {
         try {
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
-                res.status(400).json({ msg: 'Validation error', errors: errors.array() });
+                return res.status(400).json({ msg: 'Validation error', errors: errors.array() });
             }
             const data = await publicService.signin(req.body);
             res.cookie('refreshToken', data?.refreshToken, {
@@ -315,7 +321,7 @@ class PublicController {
         try {
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
-                res.status(400).json({ msg: 'Validation error', errors: errors.array() });
+                return res.status(400).json({ msg: 'Validation error', errors: errors.array() });
             }
             const userData = await publicService.signup(req.body);
             return res.json(userData);
@@ -340,6 +346,55 @@ class PublicController {
             const token = await publicService.signout(refreshToken)
             res.clearCookie('refreshToken');
             return res.json(token);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async activate(req: any, res: any, next: any) {
+        try {
+            const activationLink = req.params.link;
+            await publicService.activate(activationLink);
+            return res.redirect(`${REACT_BASE_URL}/signin`)
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async forgot(req: any, res: any, next: any) {
+        try {
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ msg: 'Validation error', errors: errors.array() });
+            }
+            const { email } = req.body;
+            await publicService.forgot(email);
+            return res.json(true);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async recovery(req: any, res: any, next: any) {
+        try {
+            const activationLink = req.params.link;
+            const data = await publicService.recovery(activationLink);
+            return data
+                ? res.redirect(`${REACT_BASE_URL}/recovery/${activationLink}`)
+                : res.redirect(`${REACT_BASE_URL}/signin`)
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async recoveryPassword(req: any, res: any, next: any) {
+        try {
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ msg: 'Validation error', errors: errors.array() });
+            }
+            await publicService.recoveryPassword(req.body);
+            return res.json(true);
         } catch (error) {
             next(error);
         }

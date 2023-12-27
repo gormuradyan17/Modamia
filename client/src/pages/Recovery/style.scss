@@ -1,4 +1,4 @@
-.signup{
+.signin {
 
     &_container {
         width: 50%;
@@ -36,4 +36,8 @@
             width: 100%;
         }
     }
+}
+
+.recovery-text {
+    padding: 0 20px;
 }

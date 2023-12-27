@@ -1,4 +1,4 @@
-.signup{
+.signin {
 
     &_container {
         width: 50%;
@@ -28,6 +28,7 @@
         align-items: center;
         justify-content: center;
         gap: 10px;
+        position: relative;
         form {
             margin: 0 20px;
         }
@@ -36,4 +37,12 @@
             width: 100%;
         }
     }
+}
+
+.recovery-text {
+    padding: 0 20px;
+}
+.forgot-loader {
+    width: 100% !important;
+    backdrop-filter: blur(5px) !important;
 }
