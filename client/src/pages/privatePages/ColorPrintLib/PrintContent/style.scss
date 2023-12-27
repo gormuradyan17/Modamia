@@ -133,8 +133,11 @@
 .print-list-action-buttons {
     display: flex;
     align-items: center;
+    flex-direction: column;
     flex-wrap: wrap;
     .ButtonUI {
+        padding: 10px 15px !important;
+        min-height: 15px !important;
         svg {
             margin: 0;
         }

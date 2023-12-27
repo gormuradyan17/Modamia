@@ -1,4 +1,4 @@
-import signinBG from "../../assets/images/singin.gif"
+import signinBG from "assets/images/singin.gif"
 import { ButtonUI } from 'shared/ui/ButtonUI/ButtonUI';
 import HeadingUI from 'shared/ui/HeadingUI/HeadingUI';
 import "./style.scss"

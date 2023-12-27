@@ -816,7 +816,7 @@ class PublicService {
         try {
             const { cart_id } = body;
             const query = { '_id': cart_id }
-            await ColorVariantModel.deleteOne(query);
+            await CartModel.deleteOne(query);
             return true;
         } catch (error) {
             console.log(error)

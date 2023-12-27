@@ -125,7 +125,6 @@ const ColorsList = ({
         setIsVisibleRemove(false)
         setRemovableItem({})
     }
-
     return (
         <div className="colors-list">
             {colors.map((color: ObjectType) => {

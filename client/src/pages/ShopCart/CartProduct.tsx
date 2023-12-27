@@ -25,7 +25,7 @@ const CartProduct = ({
 }: Props) => {
 
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
-    const [quantity, setQuantity] = useState<number>(1)
+    const [quantity, setQuantity] = useState<number>(data?.count || 1)
     const isLoggedIn = useSelector(isLogged)
 
     const { appendSnackbar } = useSnackbar()
@@ -35,7 +35,7 @@ const CartProduct = ({
     }, [data, canvasRef])
 
     const handleCheckout = async () => {
-        if (isLoggedIn) return checkoutItem({...data,count:quantity})
+        if (isLoggedIn) return checkoutItem(data)
         await appendSnackbar(Variant.error, {
             autoHideDuration: 8000,
             message: 'Please first sign in to your account to purchase the product'

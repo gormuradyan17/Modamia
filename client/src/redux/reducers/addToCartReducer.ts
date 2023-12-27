@@ -70,7 +70,19 @@ export const addToCartReducer = createSlice({
   }
 });
 
-export const { setProductFullState,setProductCount, setProductGarment, setProductName, setProductPrice, setProductSize, setActiveMannequinProduct, setProductFront, setProductBack, setProductSleeve, setProductCustomSize } = addToCartReducer.actions;
+export const { 
+  setProductFullState,
+  setProductCount, 
+  setProductGarment, 
+  setProductName, 
+  setProductPrice, 
+  setProductSize, 
+  setActiveMannequinProduct, 
+  setProductFront, 
+  setProductBack, 
+  setProductSleeve, 
+  setProductCustomSize 
+} = addToCartReducer.actions;
 
 export const getProduct = (state: ObjectType) => state.addToCartReducer.dataInfo;
 export const getProductName = (state: ObjectType) => state.addToCartReducer.dataInfo.name;

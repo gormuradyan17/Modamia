@@ -14,10 +14,10 @@ const ShopCartContent = ({
     quantity,
     setQuantity
 }: Props) => {
+
     const { name = '', color = '', price = 0, size = '' } = modelData
+    
     const total = price * quantity;
-    
-    
     
     return (
         <div className="product_info_body-content">

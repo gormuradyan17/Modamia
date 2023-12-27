@@ -29,6 +29,9 @@
         justify-content: center;
         gap: 10px;
         position: relative;
+        form {
+            margin: 0 20px;
+        }
         button {
             margin: unset;
             width: 100%;

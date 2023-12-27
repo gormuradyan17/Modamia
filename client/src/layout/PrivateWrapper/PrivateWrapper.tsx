@@ -6,8 +6,8 @@ const PrivateWrapper = ({
     children
 }: any) => {
     
-    // const logged = useSelector(isLogged);
-    // if (!logged) return <Navigate to='/login' />
+    const logged = useSelector(isLogged);
+    if (!logged) return <Navigate to='/signin' />
 
     return children
 
