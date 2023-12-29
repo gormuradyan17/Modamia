@@ -31,7 +31,9 @@ const CartProduct = ({
     const { appendSnackbar } = useSnackbar()
 
     useEffect(() => {
-        canvasModelInit(1, data.modelData, 'fronts', canvasRef, data.activeMannequin, data.modelData, true,false)
+        if( data.modelData){
+            canvasModelInit(1, data.modelData, 'fronts', canvasRef, data.activeMannequin, data.modelData, true,false)
+        }
     }, [data, canvasRef])
 
     const handleCheckout = async () => {

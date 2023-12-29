@@ -167,8 +167,6 @@ const Customization = () => {
           }
           break;
         default:
-        // modelData[frontBack][i].color = activeColor;
-        // modelData[frontBack][i].printImageURL = activePrint?.highresurl;
       }
 
     });
@@ -233,7 +231,7 @@ const Customization = () => {
           <canvas className="canvas" id="canvas" ref={canvasRef}></canvas>
         </div>
         <div className="customization-body customization-body-info">
-          <CustomizationInfo />
+          <CustomizationInfo  />
           <CustomizationFeatures range={rangeValue} setRange={setRangeValue} />
           <div className="customization-body-actions">
             <ChangeSize />

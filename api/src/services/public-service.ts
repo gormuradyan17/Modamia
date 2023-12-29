@@ -812,10 +812,11 @@ class PublicService {
         }
     }
 
-    async removeCart(body: any) {
+    async removeCart(body: any, refreshToken: any) {
         try {
             const { cart_id } = body;
-            const query = { '_id': cart_id }
+            const userData = await tokenService.findUserByToken(refreshToken);
+            const query = { 'details.id': cart_id, user_id: userData.id }
             await CartModel.deleteOne(query);
             return true;
         } catch (error) {

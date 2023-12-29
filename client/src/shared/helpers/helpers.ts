@@ -130,8 +130,7 @@ export const getCanvasDefaultImages = (
 
 export async function updateArrWithElem(elem: any, arr: any[], frontBack: string, fromBasket: boolean) {
 
-  if (elem) {
-
+  if (elem) {    
     const frontSleeves = arr.findIndex((el) => el?.frontBack === "sleeves");
     const frontTop = arr.findIndex(
       (el) => (el?.frontBack === "fronts" || el?.frontBack === "backs") && el?.position === "top"
