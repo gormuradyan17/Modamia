@@ -5,16 +5,15 @@ import { updateArrWithElem } from "./helpers";
 export async function addModel(elem: any, width: number, height: number, frontBack: string, updateElem: any, fromBasket: boolean, scaleCanvas: number = 1) {
 	
 	const src = elem?.src || updateElem?.src || "";
-	let color = elem?.color || updateElem?.color || "";
+	const color = elem?.color || updateElem?.color || "";
 	const position = elem?.position || updateElem?.position || "";
 	const order = elem?.order || updateElem?.order || "";
 	const widthImg = fromBasket ? elem?.width / 5 * scaleCanvas : elem?.width || updateElem?.width || "";
 	const heightImg = fromBasket ? elem?.height / 5 * scaleCanvas : elem?.height || updateElem?.height || "";
 	const printImageURL=elem?.printImageURL || updateElem?.printImageURL || ""
-	if(printImageURL){
-		color=""
-	}
+	
 	const id = elem?.id || updateElem?.id || ""
+	
 	if (!src) return;
 	const img: HTMLImageElement = new Image();
 	img.src = await colorImage(src, color, width, height);
@@ -93,22 +92,21 @@ export async function addImageProcess(printImageURL: string, imageSrc: string, c
 
 	if (!context) return context.drawImage(image, 0, 0, width, height);
 	if (!printImageURL) {
-		context.drawImage(image, 0, position === 'bottom' ? height - heightImage : 0, widthImage, heightImage);
+		context.drawImage(image, 0, position === 'bottom' ? height : 0, widthImage, heightImage);
 
 	}
+	
 	const cnv = document.createElement('canvas')
 	const ctx = cnv.getContext('2d');
 	if (!ctx) return context.drawImage(image, 0, 0, width, height);
 	ctx.canvas.width = width;
-	ctx.canvas.height = height;
+	ctx.canvas.height = height;	
 	// ctx.save();
 	ctx.clearRect(0, 0, width, height);
-	ctx.drawImage(image, 0, 0, fromBasket ? width / 5 * scaleCanvas : width, fromBasket ? height / 5 * scaleCanvas : height);
+	ctx.drawImage(image, 0, 0, width, height);
 	const imageData = ctx.getImageData(0, 0, width, height);
 	const data = imageData.data;
-
 	let img = new Image()
-
 	img.src = printImageURL;
 	img.crossOrigin = "*";
 	await new Promise(res => {
@@ -118,11 +116,11 @@ export async function addImageProcess(printImageURL: string, imageSrc: string, c
 	if (!ctxBg) return context.drawImage(image, 0, 0, width, height);
 	ctxBg.canvas.width = width;
 	ctxBg.canvas.height = height;
-
+	
 	ctxBg.globalAlpha = 1;
 	ctxBg.globalCompositeOperation = 'multiply';
 	ctxBg.clearRect(0, 0, width, height);
-	ctxBg.drawImage(image, 0, 0, fromBasket ? width / 5 * scaleCanvas : width, fromBasket ? height / 5 * scaleCanvas : height);
+	ctxBg.drawImage(image, 0, 0, fromBasket ? width * scaleCanvas : width, fromBasket ? height * scaleCanvas : height);
 	for (let i = 0; i * img.width * rangeValue < width; i++) {
 		for (let j = 0; j * height * rangeValue < height; j++) {
 			ctxBg.drawImage(img, 0, 0, img.width, img.height, i * width * rangeValue, j * height * rangeValue, width * rangeValue, height * rangeValue);
@@ -137,13 +135,13 @@ export async function addImageProcess(printImageURL: string, imageSrc: string, c
 	const x = new Image();
 	x.src = ctxBg.canvas.toDataURL("image/png");
 	await new Promise(res => x.onload = res);
-	return context.drawImage(x, 0, position.includes('bottom') ? height - (fromBasket ? heightImage / 5 * scaleCanvas : heightImage) : 0, widthImage, heightImage);
+	return context.drawImage(x, 0, 0, width, height);
 
 }
 
 let elem: { img: HTMLImageElement; position: string; widthImg: string; heightImg: any; order: number; id: string, frontBack: string } | undefined;
 export const canvasModelInit = (num: number, modData: any, frontBack: string = "fronts", canvasRef: any, mannequin: any, updatedModelData: any, fromBasket: boolean, fromCart: boolean,scaleCanvas: number = 1) => {
-	const arr: ({ img: HTMLImageElement; position: string; widthImg: string; heightImg: any; order: number; id: string, frontBack: string } | undefined)[] = []
+	const arr: ({ img: HTMLImageElement; position: string; widthImg: string; heightImg: any; order: number; id: string, frontBack: string } | undefined)[] = []	
 	if (!canvasRef.current || !mannequin?._id) return;
 	const canvas = canvasRef.current;
 	let ctx = canvas?.getContext("2d");
@@ -174,18 +172,22 @@ export const canvasModelInit = (num: number, modData: any, frontBack: string = "
 		for (let i = 0; i < modData[frontBack].length; i++) {
 			if (modData[frontBack][i].activeCategory === 'color') {
 				elem = await addModel(modData[frontBack][i], canvasWidth, canvasHeight, frontBack, updatedModelData[frontBack][i], fromBasket, scaleCanvas);
-				updateArrWithElem(elem, arr, frontBack,fromBasket)
+				await updateArrWithElem(elem, arr, frontBack,fromBasket)
 				if (frontBack === "sleeves") {
 					elem = await addModel(modData.fronts[i], canvasWidth, canvasHeight, "fronts", updatedModelData.fronts[i], fromBasket, scaleCanvas);
 					updateArrWithElem(elem, arr, frontBack,fromBasket)
 				}
 			}
 			else if (modData[frontBack][i].activeCategory === 'print') {
-				elem = await addModel(modData[frontBack]?.[i], canvasWidth, canvasHeight, frontBack, updatedModelData[frontBack][i], fromBasket, scaleCanvas);
-				updateArrWithElem(elem, arr, frontBack,fromBasket)
-				addImageProcess(modData[frontBack][i].printImageURL ? modData[frontBack][i].printImageURL : updatedModelData[frontBack][i].printImageURL, modData[frontBack]?.[i]?.src ? modData[frontBack]?.[i]?.src : updatedModelData[frontBack]?.[i]?.src, ctx, canvasWidth, canvasHeight, num, modData[frontBack][i].position ? modData[frontBack][i].position : updatedModelData[frontBack][i].position, modData[frontBack]?.[i]?.width ? modData[frontBack]?.[i]?.width : updatedModelData[frontBack]?.[i]?.width, modData[frontBack]?.[i]?.height ? modData[frontBack]?.[i]?.height : updatedModelData[frontBack]?.[i]?.height, scaleCanvas, fromBasket);
-				if (frontBack === "sleeves") {
-					addImageProcess(modData[frontBack][i].printImageURL ? modData[frontBack][i].printImageURL : updatedModelData[frontBack][i].printImageURL, modData.fronts?.[i]?.src ? modData.fronts?.[i]?.src : updatedModelData.fronts?.[i]?.src, ctx, canvasWidth, canvasHeight, num, modData.fronts[i].position, modData.fronts?.[i]?.width ? modData.fronts?.[i]?.width : updatedModelData.fronts?.[i]?.width, modData.fronts?.[i]?.height ? modData.fronts?.[i]?.height : updatedModelData.fronts?.[i]?.height, scaleCanvas, fromBasket);
+				       elem = await addModel(modData[frontBack]?.[i], canvasWidth, canvasHeight, frontBack, updatedModelData[frontBack][i], fromBasket, scaleCanvas);
+				       updateArrWithElem(elem, arr, frontBack,fromBasket)	
+					   setTimeout(addImageProcess,100,modData[frontBack][i].printImageURL ? modData[frontBack][i].printImageURL : updatedModelData[frontBack][i].printImageURL, modData[frontBack]?.[i]?.src ? modData[frontBack]?.[i]?.src : updatedModelData[frontBack]?.[i]?.src, ctx, canvasWidth, canvasHeight, num, modData[frontBack][i].position ? modData[frontBack][i].position : updatedModelData[frontBack][i].position, modData[frontBack]?.[i]?.width ? modData[frontBack]?.[i]?.width : updatedModelData[frontBack]?.[i]?.width, modData[frontBack]?.[i]?.height ? modData[frontBack]?.[i]?.height : updatedModelData[frontBack]?.[i]?.height, scaleCanvas, fromBasket)
+					//    await new Promise((resolve:any) => {
+				   //       await addImageProcess(modData[frontBack][i].printImageURL ? modData[frontBack][i].printImageURL : updatedModelData[frontBack][i].printImageURL, modData[frontBack]?.[i]?.src ? modData[frontBack]?.[i]?.src : updatedModelData[frontBack]?.[i]?.src, ctx, canvasWidth, canvasHeight, num, modData[frontBack][i].position ? modData[frontBack][i].position : updatedModelData[frontBack][i].position, modData[frontBack]?.[i]?.width ? modData[frontBack]?.[i]?.width : updatedModelData[frontBack]?.[i]?.width, modData[frontBack]?.[i]?.height ? modData[frontBack]?.[i]?.height : updatedModelData[frontBack]?.[i]?.height, scaleCanvas, fromBasket);
+					//    resolve();
+					//   });
+					if (frontBack === "sleeves") {
+					await addImageProcess(modData[frontBack][i].printImageURL ? modData[frontBack][i].printImageURL : updatedModelData[frontBack][i].printImageURL, modData.fronts?.[i]?.src ? modData.fronts?.[i]?.src : updatedModelData.fronts?.[i]?.src, ctx, canvasWidth, canvasHeight, num, modData.fronts[i].position, modData.fronts?.[i]?.width ? modData.fronts?.[i]?.width : updatedModelData.fronts?.[i]?.width, modData.fronts?.[i]?.height ? modData.fronts?.[i]?.height : updatedModelData.fronts?.[i]?.height, scaleCanvas, fromBasket);
 				}
 			}
 			else {
@@ -193,21 +195,24 @@ export const canvasModelInit = (num: number, modData: any, frontBack: string = "
 	 				elem = await addModel(modData.fronts?.[i], canvasWidth, canvasHeight, "fronts", updatedModelData["fronts"][i], fromBasket, scaleCanvas);
 						updateArrWithElem(elem, arr, "fronts",fromBasket)
 				}
-				if(fromBasket || fromCart){			
+				elem = await addModel(modData[frontBack]?.[i], canvasWidth, canvasHeight, frontBack, updatedModelData[frontBack][i], fromBasket, scaleCanvas);
+				updateArrWithElem(elem, arr, frontBack,fromBasket) 
+				if(fromBasket || fromCart){		
+					if((modData.fronts[0].printImageURL || updatedModelData.fronts[0].printImageURL ) && (modData.fronts[1].printImageURL || updatedModelData.fronts[1].printImageURL ) ){
+						addImageProcess(modData.fronts[i].printImageURL ? modData.fronts[i].printImageURL : updatedModelData.fronts[i].printImageURL, modData.fronts?.[i]?.src ? modData.fronts?.[i]?.src : updatedModelData.fronts?.[i]?.src, ctx, canvasWidth, canvasHeight, num, modData.fronts[i].position, modData.fronts?.[i]?.width ? modData.fronts?.[i]?.width : updatedModelData.fronts?.[i]?.width, modData.fronts?.[i]?.height ? modData.fronts?.[i]?.height : updatedModelData.fronts?.[i]?.height, scaleCanvas, fromBasket);
+					}else if(modData.fronts[0].printImageURL || updatedModelData.fronts[0].printImageURL ){
+						addImageProcess(modData.fronts[0].printImageURL ? modData.fronts[0].printImageURL : updatedModelData.fronts[0].printImageURL, modData.fronts?.[0]?.src ? modData.fronts?.[0]?.src : updatedModelData.fronts?.[0]?.src, ctx, canvasWidth, canvasHeight, num, modData.fronts[0].position, modData.fronts?.[0]?.width ? modData.fronts?.[0]?.width : updatedModelData.fronts?.[0]?.width, modData.fronts?.[0]?.height ? modData.fronts?.[0]?.height : updatedModelData.fronts?.[0]?.height, scaleCanvas, fromBasket);
+
+					}else if(modData.fronts[1].printImageURL || updatedModelData.fronts[1].printImageURL){
+						addImageProcess(modData.fronts[1].printImageURL ? modData.fronts[1].printImageURL : updatedModelData.fronts[1].printImageURL, modData.fronts?.[1]?.src ? modData.fronts?.[1]?.src : updatedModelData.fronts?.[1]?.src, ctx, canvasWidth, canvasHeight, num, modData.fronts[1].position, modData.fronts?.[1]?.width ? modData.fronts?.[1]?.width : updatedModelData.fronts?.[1]?.width, modData.fronts?.[1]?.height ? modData.fronts?.[1]?.height : updatedModelData.fronts?.[1]?.height, scaleCanvas, fromBasket);
+					}	
  					elem = await addModel(modData["sleeves"]?.[0], canvasWidth, canvasHeight, "sleeves", updatedModelData["sleeves"]?.[0], fromBasket, scaleCanvas);				 
 					if(elem){
 					updateArrWithElem(elem, arr, "sleeves",fromBasket)
 			     	}
+					
 				}
-				elem = await addModel(modData[frontBack]?.[i], canvasWidth, canvasHeight, frontBack, updatedModelData[frontBack][i], fromBasket, scaleCanvas);
-				updateArrWithElem(elem, arr, frontBack,fromBasket)
-				 if(fromCart){
-					addImageProcess(modData.fronts[0].printImageURL ? modData.fronts[0].printImageURL : updatedModelData.fronts[0].printImageURL, modData.fronts?.[0]?.src ? modData.fronts?.[0]?.src : updatedModelData.fronts?.[0]?.src, ctx, canvasWidth, canvasHeight, num, modData.fronts[0].position, modData.fronts?.[0]?.width ? modData.fronts?.[0]?.width : updatedModelData.fronts?.[0]?.width, modData.fronts?.[0]?.height ? modData.fronts?.[0]?.height : updatedModelData.fronts?.[0]?.height, scaleCanvas, fromBasket);
-					addImageProcess(modData.fronts[1].printImageURL ? modData.fronts[1].printImageURL : updatedModelData.fronts[1].printImageURL, modData.fronts?.[1]?.src ? modData.fronts?.[1]?.src : updatedModelData.fronts?.[1]?.src, ctx, canvasWidth, canvasHeight, num, modData.fronts[1].position, modData.fronts?.[1]?.width ? modData.fronts?.[1]?.width : updatedModelData.fronts?.[1]?.width, modData.fronts?.[1]?.height ? modData.fronts?.[1]?.height : updatedModelData.fronts?.[1]?.height, scaleCanvas, fromBasket);
-
-				 }
-
-
+		
 			}
 		}		
 		await drawImagesInOrder(arr, ctx);
@@ -215,5 +220,4 @@ export const canvasModelInit = (num: number, modData: any, frontBack: string = "
 
 
 };
-
 

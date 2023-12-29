@@ -425,7 +425,8 @@ class PublicController {
 
     async removeCart(req: any, res: any, next: any) {
         try {
-            const data = await publicService.removeCart(req.body)
+            const { refreshToken } = req.cookies
+            const data = await publicService.removeCart(req.body, refreshToken)
             return res.json(data);
         } catch (error) {
             next(error);

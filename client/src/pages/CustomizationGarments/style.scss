@@ -57,3 +57,17 @@
         padding: 5px 10px;
     }
 }
+
+.remove-my-garment {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    margin: 0 !important;
+    width: 30px !important;
+    height: 30px;
+    min-width: initial;
+    max-height: 30px;
+    svg {
+        margin: 0;
+    }
+}

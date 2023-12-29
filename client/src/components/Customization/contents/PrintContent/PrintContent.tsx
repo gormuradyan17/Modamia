@@ -27,7 +27,6 @@ const PrintContent = () => {
         }
         dispatch(setActivePrint(obj))
     }
-    
     const btns = [
         {
             id: 1,

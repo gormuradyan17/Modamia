@@ -25,6 +25,7 @@ const CustomizationInfo = () => {
         <HeadingUI text={`$ ${total}`} size="18px" color="#c37489" />
         <CounterUI selected={count || 1} onCountChange={(count: number) => setQuantity(count)} />
       </div>
+      {/* <HeadingUI text={`Count ${infoData.count}`} size="18px" color="#a57867" /> */}
     </div>
   );
 };
