@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkmodamia_app=self.webpackChunkmodamia_app||[]).push([[98,422],{2545:(a,e,s)=>{s.r(e),s.d(e,{default:()=>p});var t=s(117),l=s(184);const p=()=>(0,l.jsx)(t.default,{title:"All Garments"})}}]);
-//# sourceMappingURL=98.04643474.chunk.js.map
