@@ -77,12 +77,12 @@ const Profile = () => {
           placeholder='New Password'
           error={errors?.password}
         />
-        <div className='btn_content'>
+        {!userData?.shopify_id && <div className='btn_content'>
           <ButtonUI 
             onClick={() => !edit ? setEdit(!edit) : editUserDetails()}
           >{edit ? "Save" : "Edit"}</ButtonUI>
-          {edit && <ButtonUI onClick={() => setEdit(false)}>cancel</ButtonUI>}
-        </div>
+          {edit && <ButtonUI disabled={!userData?.shopify_id} onClick={() => setEdit(false)}>cancel</ButtonUI>}
+        </div>}
 
       </div>
     </Container>
