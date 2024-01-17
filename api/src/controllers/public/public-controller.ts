@@ -3,6 +3,7 @@ import authService from '../../services/auth-service';
 import publicService from '../../services/public-service'
 import { REACT_BASE_URL } from '../../utils/constants/variables';
 import ApiError from '../../exceptions/api-error';
+import url from 'url'
 
 class PublicController {
 
@@ -281,11 +282,13 @@ class PublicController {
 
     async redirectShopify(req: any, res: any, next: any) {
         const user = await authService.fetchShopifyUser(req.query.code)
-        if (user && user?.token) {
-            res.cookie('shopifyToken', user?.token, {
-                maxAge: 30 * 24 * 60 * 60 * 1000,
-            })
-        }
+        res.cookie('refreshToken', user?.refreshToken, {
+            maxAge: 30 * 24 * 60 * 60 * 1000,
+            httpOnly: true
+        })
+        res.cookie('accessToken', user?.accessToken, {
+            maxAge: 30 * 24 * 60 * 60 * 1000,
+        })
         return res.redirect(REACT_BASE_URL)
     }
 
@@ -296,6 +299,16 @@ class PublicController {
             return res.json(user?.[0] || null);
         } catch (err: any) {
             console.log(err)
+        }
+    }
+
+    async getShopifyUserOrders(req: any, res: any, next: any) {
+        try {
+            const { refreshToken } = req.cookies;
+            const orders = await authService.getShopifyUserOrders(refreshToken)
+            return res.json(orders);
+        } catch (error) {
+            next(error);
         }
     }
 

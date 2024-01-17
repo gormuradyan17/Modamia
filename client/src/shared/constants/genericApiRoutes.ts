@@ -69,6 +69,7 @@ export const SEARCH_GARMENT_URL = API_URL + 'search-garment'
 
 export const SIGNIN_SHOPIFY_URL = BASE_URL + '/api/shopify/authorize'
 export const GET_SHOPIFY_USER_URL = API_URL + '/shopify/getUser'
+export const GET_SHOPIFY_USER_ORDERS_URL = API_URL + '/shopify/getUserOrders'
 export const SIGNUP_USER = API_URL + '/signup';
 export const SIGNIN_USER = API_URL + 'signin';
 export const FORGOT_PASSWORD_URL = API_URL + 'forgot';

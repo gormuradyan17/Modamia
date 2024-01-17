@@ -34,6 +34,13 @@ const InchOptions = ({
                 callback={callback}
                 type="number"
             />
+            <InputUI
+                value={size?.height_in}
+                label="Height (in)"
+                name="height_in"
+                callback={callback}
+                type="number"
+            />
         </div>
     );
 };

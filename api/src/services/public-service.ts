@@ -34,7 +34,7 @@ class PublicService {
         try {
             const { email } = req
 
-            var user = await UserModel.findOne({ email })
+            const user = await UserModel.findOne({ email })
             const userDto = new UserDto(user);
             const tokens = tokenService.generateTokens({ ...userDto });
             await tokenService.saveTokenUser(userDto.id, tokens.refreshToken);

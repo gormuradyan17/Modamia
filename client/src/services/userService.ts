@@ -1,5 +1,5 @@
-import { setIsLogged, setUserData } from "redux/reducers/userReducer"
-import { addToCart, checkUser, editCart, editUser, forgotPassword, getShopifyUser, recoveryPassword, removeFromCart, signInUser, signUpUser, signoutUser } from "shared/api/dataApi"
+import { setIsLogged, setUserData, setUserOrders, setUserOrdersLoading } from "redux/reducers/userReducer"
+import { addToCart, checkUser, editCart, editUser, forgotPassword, getShopifyUser, getShopifyUserOrders, recoveryPassword, removeFromCart, signInUser, signUpUser, signoutUser } from "shared/api/dataApi"
 import { ObjectType } from "shared/helpers/helpers"
 import { CallbackSkeletonType } from "shared/objectModels/GenericModel"
 
@@ -20,6 +20,16 @@ export const getUserShopify = (dispatch: any, token: string) => {
         console.log(err)
         dispatch(setUserData({}))
         dispatch(setIsLogged(false))
+    })
+}
+
+export const getUserShopifyOrders = (dispatch: any) => {    
+    getShopifyUserOrders().then(res => {
+        dispatch(setUserOrdersLoading(false))
+        if (res) return dispatch(setUserOrders(res))
+    }).catch(err => {
+        dispatch(setUserOrdersLoading(false))
+        console.log(err)
     })
 }
 

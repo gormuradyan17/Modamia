@@ -7,9 +7,7 @@ import ModamiaPromise from "./ModamiaPromise";
 import Wardrobe from "./Wardrobe";
 import "./style.scss"
 
-
 const DashboardContent = () => {
-    
     return (
         <section className="dashboard">
             <CaptionContent />
