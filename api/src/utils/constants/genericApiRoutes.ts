@@ -7,3 +7,6 @@ export const SHOPIFY_OUATH_URL = (code: string) => {
 } 
 
 export const SHOPIFY_USER_URL = `https://${SHOPIFY_SHOP}.myshopify.com/admin/api/2023-10/shop.json`;
+export const SHOPIFY_USER_ORDERS_URL = (userId: string) => {
+    return `https://${SHOPIFY_SHOP}.myshopify.com/admin/api/2023-10/orders.json`;
+} 

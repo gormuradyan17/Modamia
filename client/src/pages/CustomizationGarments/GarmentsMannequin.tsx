@@ -22,8 +22,6 @@ const GarmentsMannequin = ({ data }: Props) => {
   }
 
   useEffect(() => {
-    console.log(data,"data");
-    
     if (data) drawManequin()
   }, [data, canvasRef])
 

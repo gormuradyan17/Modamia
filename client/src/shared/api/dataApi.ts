@@ -1,4 +1,4 @@
-import { COLORS_URL, PRINTS_URL, MANNEQUINS_URL, SILHOUETTES_URL, ADD_SILHOUETTE_URL, EDIT_SILHOUETTE_URL, COLORS_VARIANTS_URL, PRINTS_VARIANTS_URL, ADD_PRINT_URL, ADD_PRINT_VARIANT_URL, EDIT_PRINT_URL, SILHOUETTES_TYPES_URL, COLORS_PALETTES_URL, PRINTS_PALETTES_URL, SIZE_URL, ADD_SIZE_URL, EDIT_SIZE_URL, MANNEQUIN_WITH_SILHOUETTES_URL, GARMENTS_URL, GARMENT_URL, SEARCH_GARMENT_URL, SIGNIN_SHOPIFY_URL, GET_SHOPIFY_USER_URL, ADD_COLOR_URL, ADD_COLOR_VARIANT_URL, ADD_COLOR_PALETTE_URL, REMOVE_COLOR_URL, REMOVE_COLOR_PALETTE_URL, EDIT_COLOR_URL, ADD_PRINT_PALETTE_URL, REMOVE_PRINT_PALETTE_URL, REMOVE_PRINT_URL, SIGNIN_USER, SIGNUP_USER, USER_REFRESH_URL, USER_SIGNOUT_URL, USER_EDIT_URL, ADD_TO_CART_URL, REMOVE_FROM_CART_URL, EDIT_CART_URL, FORGOT_PASSWORD_URL, RECOVERY_PASSWORD_URL } from "shared/constants/genericApiRoutes";
+import { COLORS_URL, PRINTS_URL, MANNEQUINS_URL, SILHOUETTES_URL, ADD_SILHOUETTE_URL, EDIT_SILHOUETTE_URL, COLORS_VARIANTS_URL, PRINTS_VARIANTS_URL, ADD_PRINT_URL, ADD_PRINT_VARIANT_URL, EDIT_PRINT_URL, SILHOUETTES_TYPES_URL, COLORS_PALETTES_URL, PRINTS_PALETTES_URL, SIZE_URL, ADD_SIZE_URL, EDIT_SIZE_URL, MANNEQUIN_WITH_SILHOUETTES_URL, GARMENTS_URL, GARMENT_URL, SEARCH_GARMENT_URL, SIGNIN_SHOPIFY_URL, GET_SHOPIFY_USER_URL, ADD_COLOR_URL, ADD_COLOR_VARIANT_URL, ADD_COLOR_PALETTE_URL, REMOVE_COLOR_URL, REMOVE_COLOR_PALETTE_URL, EDIT_COLOR_URL, ADD_PRINT_PALETTE_URL, REMOVE_PRINT_PALETTE_URL, REMOVE_PRINT_URL, SIGNIN_USER, SIGNUP_USER, USER_REFRESH_URL, USER_SIGNOUT_URL, USER_EDIT_URL, ADD_TO_CART_URL, REMOVE_FROM_CART_URL, EDIT_CART_URL, FORGOT_PASSWORD_URL, RECOVERY_PASSWORD_URL, GET_SHOPIFY_USER_ORDERS_URL } from "shared/constants/genericApiRoutes";
 import { BaseApi } from "./baseApi";
 
 export const getColors = (body: Record<string, any> = {}) => {
@@ -160,7 +160,7 @@ export const searchGarment = (body: Record<string, any> = {}) => {
 // Auth
 
 export const signinShopify = () => {
-	const http = new BaseApi('/api');
+	const http = new BaseApi('');
 	return http.get(SIGNIN_SHOPIFY_URL)
 }
 
@@ -169,14 +169,19 @@ export const getShopifyUser = (body: Record<string, any> = {}) => {
 	return http.post(GET_SHOPIFY_USER_URL, body)
 }
 
-export const signInUser=(body: Record<string, any> = {})=>{
-	const http=new BaseApi('/api');
-	return http.post(SIGNIN_USER,body)
+export const getShopifyUserOrders = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(GET_SHOPIFY_USER_ORDERS_URL, body)
 }
 
-export const signUpUser=(body: Record<string, any> = {})=>{
-	const http=new BaseApi('/api');
-	return http.post(SIGNUP_USER,body)
+export const signInUser = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(SIGNIN_USER, body)
+}
+
+export const signUpUser = (body: Record<string, any> = {}) => {
+	const http = new BaseApi('/api');
+	return http.post(SIGNUP_USER, body)
 }
 
 export const checkUser = (body: Record<string, any> = {}) => {

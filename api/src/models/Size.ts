@@ -24,6 +24,10 @@ const SizeSchema: SizeInterface = new mongoose.Schema(
       type: String,
       required: false,
     },
+    height_cm: {
+      type: String,
+      required: false,
+    },
     bust_in: {
       type: String,
       required: false,
@@ -33,6 +37,10 @@ const SizeSchema: SizeInterface = new mongoose.Schema(
       required: false,
     },
     hips_in: {
+      type: String,
+      required: false,
+    },
+    height_in: {
       type: String,
       required: false,
     },

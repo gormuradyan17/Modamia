@@ -2,7 +2,7 @@ import { faMagnifyingGlass, faShop, faSignOutAlt, faUser } from '@fortawesome/fr
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
-import { isLogged, setIsLogged } from 'redux/reducers/userReducer'
+import { isLogged, setIsLogged, setUserData } from 'redux/reducers/userReducer'
 import { userSignout } from 'services/userService'
 import { eraseCookie } from 'shared/helpers/helpers'
 
@@ -17,6 +17,7 @@ function LoginSignBtn() {
         eraseCookie('accessToken')
         dispatch(setIsLogged(false));
         navigate('/signin');
+        dispatch(setUserData({}))
       }
     } catch (error) {
       console.log(error);

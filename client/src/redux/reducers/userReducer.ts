@@ -5,14 +5,18 @@ interface stateProps {
 	isLogged: boolean,
 	userData: Record<string, any>,
 	userState: Record<string, any>,
-	isPageLoading: boolean
+	isPageLoading: boolean,
+	userOrders: Record<string, any>[],
+	userOrdersLoading: boolean,
 }
 
 const initialState: stateProps = {
 	isLogged: false,
 	userData: {},
 	userState: {},
-	isPageLoading: true
+	isPageLoading: true,
+	userOrders: [],
+	userOrdersLoading: true,
 }
 
 export const userSlice = createSlice({
@@ -36,6 +40,12 @@ export const userSlice = createSlice({
 		},
 		setIsPageLoading: (state, action) => {
 			state.isPageLoading = action.payload
+		},
+		setUserOrders: (state, action) => {
+			state.userOrders = action.payload
+		},
+		setUserOrdersLoading: (state, action) => {
+			state.userOrdersLoading = action.payload
 		}
 	},
 });
@@ -45,7 +55,9 @@ export const {
 	setUserData, 
 	setUserState, 
 	setUserFullState,
-	setIsPageLoading
+	setIsPageLoading,
+	setUserOrders,
+	setUserOrdersLoading
 } = userSlice.actions;
 
 export const isLogged = (state: ObjectType) => state.userReducer.isLogged;
@@ -53,5 +65,7 @@ export const getUserData = (state: ObjectType) => state.userReducer.userData;
 export const getUserId = (state: ObjectType) => state.userReducer.userData?.id || '';
 export const getUserState = (state: ObjectType) => state.userReducer.userState;
 export const getIsPageLoading = (state: ObjectType) => state.userReducer.isPageLoading;
+export const getUserOrders = (state: ObjectType) => state.userReducer.userOrders;
+export const getUserOrdersLoading = (state: ObjectType) => state.userReducer.userOrdersLoading;
 
 export default userSlice.reducer;

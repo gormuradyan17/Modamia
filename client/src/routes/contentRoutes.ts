@@ -1,4 +1,4 @@
-import { faBasketShopping, faDiceD20, faGlobe, faHome, faPalette, faShirt, faUser, faUserTie } from '@fortawesome/free-solid-svg-icons';
+import { faBasketShopping, faDiceD20, faGlobe, faHome, faList, faPalette, faShirt, faUser, faUserTie } from '@fortawesome/free-solid-svg-icons';
 import { lazy } from 'react';
 
 const AUTH = {
@@ -13,6 +13,7 @@ const LANDING = {
 	CUSTOMIZATION: lazy(() => import('pages/Customization/Customization')),
 	CUSTOMIZATION_GARMENTS: lazy(() => import('pages/CustomizationGarments/CustomizationGarments')),
 	SHOPCART: lazy(() => import('pages/ShopCart')),
+	ORDERS: lazy(() => import('pages/Orders')),
 	PROFILE: lazy(() => import("pages/privatePages/Profile")),
 	PRODUCTS: lazy(() => import("pages/privatePages/Products")),
 	GARMENTS: lazy(() => import("pages/privatePages/Garments")),
@@ -38,7 +39,6 @@ export const privatePages = [
 		path: '/customization',
 		icon: faDiceD20,
 		element: LANDING.CUSTOMIZATION_GARMENTS,
-		isPrivate: true,
 	},
 	{
 		id: 'Customization Page',
@@ -55,7 +55,14 @@ export const privatePages = [
 		element: LANDING.SHOPCART,
 		isPrivate: true,
 	},
-
+	{
+		id: 'Orders',
+		text: 'Orders',
+		path: '/orders',
+		icon: faList,
+		element: LANDING.ORDERS,
+		isPrivate: true,
+	},
 	{
 		id: 'Profile',
 		text: 'Profile',

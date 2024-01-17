@@ -240,3 +240,10 @@ export const sortItemsByUserId = (items: ArrayType) => {
     }
   })
 }
+
+export const getConvertedOrderData = (date: any) => {
+  return new Intl.DateTimeFormat('en-GB', {
+    dateStyle: 'full',
+    timeStyle: 'medium',
+}).format(new Date(date))
+}

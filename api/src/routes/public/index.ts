@@ -9,6 +9,7 @@ import { editValidators, forgotValidators, signinValidators, signupValidators, r
 router.get('/shopify/authorize', publicController.signinShopify)
 router.get('/shopify/redirect', publicController.redirectShopify)
 router.post('/shopify/getUser', publicController.getShopifyUser)
+router.post('/shopify/getUserOrders', publicController.getShopifyUserOrders)
 
 router.post('/signin', signinValidators, publicController.signin)
 router.post('/signup', signupValidators, publicController.signup)

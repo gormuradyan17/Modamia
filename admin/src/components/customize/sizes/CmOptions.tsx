@@ -34,6 +34,13 @@ const CmOptions = ({
                 callback={callback}
                 type="number"
             />
+            <InputUI
+                value={size?.height_cm}
+                label="Height (cm)"
+                name="height_cm"
+                callback={callback}
+                type="number"
+            />
         </div>
     );
 };

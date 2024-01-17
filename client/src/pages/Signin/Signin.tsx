@@ -9,6 +9,7 @@ import InputUI from "shared/ui/InputUI/InputUI";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { ObjectType, setCookie } from "shared/helpers/helpers";
 import { authUserSignin } from "services/userService";
+import { SIGNIN_SHOPIFY_URL } from "shared/constants/genericApiRoutes";
 const Signin = () => {
     const dispatch = useDispatch()
     const isAuth = useSelector(isLogged)
@@ -34,6 +35,10 @@ const Signin = () => {
         }
     }
 
+    const signinViaShopify = () => {
+        window.open(SIGNIN_SHOPIFY_URL)
+    }
+
     return (
         <div className='signin_container'>
             <img src={signinBG} alt="" />
@@ -45,6 +50,10 @@ const Signin = () => {
                         error={errors?.password} />
                     <ButtonUI type="submit">Sign in</ButtonUI>
                 </form>
+                <div className="signin_container-shopify">
+                    <HeadingUI text='or' size='18px' color="gray" align="center" />
+                    <ButtonUI version="gray" onClick={signinViaShopify}>SignIn Via Shopify</ButtonUI>
+                </div>
                 <Link className="forgot-password" to='/forgot'>Cant Remember password?</Link>
             </div>
         </div>
