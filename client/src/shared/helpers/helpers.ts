@@ -1,6 +1,6 @@
 import { AnimationObject } from "shared/objectModels/AnimationModel";
 import NoSleeve from 'assets/images/no-sleeve.png'
-import { BASE_UPLOADS_SILHOUETTES_URL } from "shared/constants/genericApiRoutes";
+import { BASE_UPLOADS_GARMENTS_URL, BASE_UPLOADS_SILHOUETTES_URL } from "shared/constants/genericApiRoutes";
 
 export type ArrayType = Array<Record<string, any>>
 export type ObjectType = Record<string, any>
@@ -246,4 +246,11 @@ export const getConvertedOrderData = (date: any) => {
     dateStyle: 'full',
     timeStyle: 'medium',
 }).format(new Date(date))
+}
+
+export const getGarmentBackgroundURL = (background: string) => {
+  const types = ['png', 'jpeg', 'jpg', 'gif', 'webp']
+  const containsFileType = types.some(type => background.includes(type));
+  console.log(background, types, containsFileType)
+  return containsFileType ? `url(${BASE_UPLOADS_GARMENTS_URL}${background})` : background
 }

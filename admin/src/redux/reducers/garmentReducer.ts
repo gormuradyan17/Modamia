@@ -19,6 +19,7 @@ export const defaultGarmentState = {
 		colors: [],
 		prints: []
 	},
+	background: ''
 }
 
 const initialState: stateProps = {

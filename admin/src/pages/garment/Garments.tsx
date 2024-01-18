@@ -44,9 +44,10 @@ const Garments = () => {
                     <HeadingUI text="Garments List" size="22px" />
                     <InputUI
                         classN="garment-content-input"
-                        name="search"
+                        name="search-element"
                         callback={handleInputChange}
                         value={criteria}
+                        autoComplete="off"
                     />
                     <GarmentsList />
                 </div>

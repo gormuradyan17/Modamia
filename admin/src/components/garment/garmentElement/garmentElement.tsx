@@ -4,13 +4,13 @@ import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAvSilhouettes } from "services/silhouetteService";
 import { getAvMannequins } from "services/mannequinService";
-import { defaultGarmentState, garmentDetails, resetGarmentState, setGarmentFullState } from "redux/reducers/garmentReducer";
+import { garmentDetails, resetGarmentState, setGarmentFullState } from "redux/reducers/garmentReducer";
 import { ButtonUI } from "shared/ui/ButtonUI/ButtonUI";
 import { editGarment } from "shared/api/dataApi";
 import InputUI from "shared/ui/InputUI/InputUI";
 import { BASE_UPLOADS_SILHOUETTES_BOTTOMS_URL, BASE_UPLOADS_SILHOUETTES_SLEEVES_URL, BASE_UPLOADS_SILHOUETTES_TOPS_URL } from "shared/constants/genericApiRoutes";
 import { availableSilhouettes } from "redux/reducers/silhouetteReducer";
-import { ObjectType, getDropdownOptionsFromItemsPalettes, getIsEditGarmentApproved } from "shared/helpers/helpers";
+import { ArrayType, ObjectType, appColor, getDropdownOptionsFromItemsPalettes, getIsEditGarmentApproved } from "shared/helpers/helpers";
 import GarmentsSilhouettesListWrapper from "../newGarment/GarmentsSilhouettesListWrapper";
 import GarmentsMannequinsList from "../newGarment/GarmentsMannequinsList";
 import { getAvGarments, getSelectedGarment } from "services/garmentService";
@@ -23,6 +23,10 @@ import { getAvColorsPalettes } from "services/colorService";
 import GarmentDropdownCheckbox from "../garmentDropdownCheckbox/GarmentDropdownCheckbox";
 import { printsPalettes } from "redux/reducers/printReducer";
 import { getAvPrintsPalettes } from "services/printService";
+import DropzoneUI from "shared/ui/DropzoneUI/DropzoneUI";
+import { formValidator } from "utils/validators/validator";
+import { garmentFilesOptions } from "utils/validators/validatorOptions";
+import HeadingUI from "shared/ui/HeadingUI/HeadingUI";
 
 const GarmentElement = () => {
 
@@ -31,6 +35,7 @@ const GarmentElement = () => {
     const params = useParams()
     const { id = '' } = params;
     const [copyDetails, setCopyDetails] = useState<ObjectType>({})
+    const [file, setFile] = useState<any>(null)
     useEffect(() => {
         getAvGarments(dispatch)
         getAvSilhouettes(dispatch)
@@ -53,6 +58,7 @@ const GarmentElement = () => {
     }, [details])
 
     const silhouettes = useSelector(availableSilhouettes)
+    const [fileErrors, setFileErrors] = useState<ObjectType>({})
 
     const topSilhouettes = useMemo(() => {
         return silhouettes.filter((silhouette: ObjectType) => silhouette.type === 'Top')
@@ -74,8 +80,15 @@ const GarmentElement = () => {
     
     const saveGarment = async () => {
         if (isApproved) {
-            const data = { ...copyDetails, id }
-            await editGarment(data)
+            const formData = new FormData()
+            const jsonItems = ['tops','bottoms','sleeves','palettes']
+            Object.keys(copyDetails).forEach((key) => {
+                if (jsonItems.includes(key)) formData.append(key, JSON.stringify(copyDetails[key])); 
+                else formData.append(key, copyDetails[key]);
+            });
+            formData.append('id', id);
+            formData.append('background', file);
+            await editGarment(formData)
             await appendSnackbar(Variant.success, {
                 autoHideDuration: 3000,
                 message: 'Garment successfully updated!'
@@ -136,7 +149,7 @@ const GarmentElement = () => {
         }
     }
 
-    const isApproved = getIsEditGarmentApproved(details, copyDetails)
+    const isApproved = true
 
     const handleDropdownChange = (event: ChangeEvent<HTMLInputElement>, option: ObjectType, type: string) => {
         const { target: { checked } } = event
@@ -156,6 +169,26 @@ const GarmentElement = () => {
         }
     }
 
+    const validateFiles = (files: ArrayType, field: string) => {
+        let err = {}
+        files?.map(file => {
+            const obj = {
+                [field]: file?.name
+            }
+            err = formValidator(obj, garmentFilesOptions);
+        })
+        if (Object.keys(err).length) {
+            setFileErrors(err)
+            return false
+        }
+        if (Object.keys(fileErrors).length) { setFileErrors({}) };
+        return true
+    }
+
+    const addImage = (files: ArrayType) => {
+        setFile(files[0])
+    }
+
     return (
         <div>
             <MainHead text="Edit Garment" />
@@ -167,13 +200,26 @@ const GarmentElement = () => {
                         type="button"
                         disabled={!isApproved}
                     >Save Garment</ButtonUI>
-                    <InputUI
-                        classN='add-garment-input'
-                        callback={handleInputChange}
-                        value={copyDetails?.name}
-                        name='name'
-                        label="Name*"
-                    />
+                    <div className="garments-list-content-top">
+                        <InputUI
+                            classN='add-garment-input'
+                            callback={handleInputChange}
+                            value={copyDetails?.name}
+                            name='name'
+                            label="Name*"
+                        />
+                        <div className="garments-list-content-top-background">
+                            <HeadingUI text='Background' color={appColor} size="18px" />
+                            <DropzoneUI
+                                width="300px"
+                                height="160px"
+                                name="highresurl"
+                                validationCallback={(files) => validateFiles(files, 'background')}
+                                error={fileErrors?.highresurl?.message || ''}
+                                onChange={(files: ArrayType) => addImage(files)}
+                            />
+                        </div>
+                    </div>
                     <div className="garments-list-top">
                         <GarmentsMannequinsList
                             details={copyDetails}

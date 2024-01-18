@@ -63,7 +63,7 @@ const InputUI = ({
                 type={type}
                 onChange={(event) => !disabled && callback(event)}
                 {...(type === 'checkbox' ? {checked: defaultChecked} : {value})}
-                {...(autoComplete) && {autoComplete}}
+                autoComplete={autoComplete}
                 {...(placeholder && {placeholder})}
             />
         </div>

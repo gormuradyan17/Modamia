@@ -285,12 +285,14 @@ export const getGarmentAdmin = (body: Record<string, any> = {}) => {
 
 export const addGarment = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');
-	return http.post(ADD_GARMENT_URL, body)
+	http.removeDefaultHeader()
+	return http.post(ADD_GARMENT_URL, body, undefined, true)
 }
 
 export const editGarment = (body: Record<string, any> = {}) => {
 	const http = new BaseApi('/api');
-	return http.post(EDIT_GARMENT_URL, body)
+	http.removeDefaultHeader()
+	return http.post(EDIT_GARMENT_URL, body, undefined, true)
 }
 
 export const removeGarment = (body: Record<string, any> = {}) => {
