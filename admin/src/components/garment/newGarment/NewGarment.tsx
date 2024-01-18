@@ -1,6 +1,6 @@
 import MainBody from "layout/MainBody/MainBody";
 import MainHead from "layout/MainHead/MainHead";
-import { ChangeEvent, useEffect, useMemo } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAvSilhouettes } from "services/silhouetteService";
 import './style.scss'
@@ -13,20 +13,24 @@ import InputUI from "shared/ui/InputUI/InputUI";
 import GarmentsSilhouettesListWrapper from "./GarmentsSilhouettesListWrapper";
 import { BASE_UPLOADS_SILHOUETTES_BOTTOMS_URL, BASE_UPLOADS_SILHOUETTES_SLEEVES_URL, BASE_UPLOADS_SILHOUETTES_TOPS_URL } from "shared/constants/genericApiRoutes";
 import { availableSilhouettes } from "redux/reducers/silhouetteReducer";
-import { ObjectType, getDropdownOptionsFromItemsPalettes, getIsNewGarmentApproved } from "shared/helpers/helpers";
+import { ArrayType, ObjectType, appColor, getDropdownOptionsFromItemsPalettes, getIsNewGarmentApproved } from "shared/helpers/helpers";
 import { useNavigate } from "react-router-dom";
 import GarmentDropdownCheckbox from "../garmentDropdownCheckbox/GarmentDropdownCheckbox";
 import { colorsPalettes } from "redux/reducers/colorReducer";
 import { printsPalettes } from "redux/reducers/printReducer";
 import { getAvColorsPalettes } from "services/colorService";
 import { getAvPrintsPalettes } from "services/printService";
+import HeadingUI from "shared/ui/HeadingUI/HeadingUI";
+import DropzoneUI from "shared/ui/DropzoneUI/DropzoneUI";
+import { formValidator } from "utils/validators/validator";
+import { garmentFilesOptions } from "utils/validators/validatorOptions";
 
 const NewGarment = () => {
 
     const dispatch = useDispatch()
     const details = useSelector(garmentDetails)
     const navigate = useNavigate()
-
+    const [file, setFile] = useState<any>(null)
     useEffect(() => {
         getAvSilhouettes(dispatch)
         getAvMannequins(dispatch)
@@ -38,7 +42,7 @@ const NewGarment = () => {
     }, [])
 
     const silhouettes = useSelector(availableSilhouettes)
-
+    const [fileErrors, setFileErrors] = useState<ObjectType>({})
     const topSilhouettes = useMemo(() => {
         return silhouettes.filter((silhouette: ObjectType) => silhouette.type === 'Top')
     }, [silhouettes])
@@ -56,10 +60,17 @@ const NewGarment = () => {
 
     const printPalettes = useSelector(printsPalettes)
     const printVariants = getDropdownOptionsFromItemsPalettes(printPalettes) || [{}]
-    
+
     const addNewGarment = async () => {
         if (details?.mannequin_id && details?.name) {
-            await addGarment(details)
+            const formData = new FormData()
+            const jsonItems = ['tops','bottoms','sleeves','palettes']
+            Object.keys(details).forEach((key) => {
+                if (jsonItems.includes(key)) formData.append(key, JSON.stringify(details[key])); 
+                else formData.append(key, details[key]);
+            });
+            formData.append('background', file);
+            await addGarment(formData)
             dispatch(resetGarmentState())
             navigate('/garments')
         }
@@ -120,6 +131,26 @@ const NewGarment = () => {
         }
     }
 
+    const validateFiles = (files: ArrayType, field: string) => {
+        let err = {}
+        files?.map(file => {
+            const obj = {
+                [field]: file?.name
+            }
+            err = formValidator(obj, garmentFilesOptions);
+        })
+        if (Object.keys(err).length) {
+            setFileErrors(err)
+            return false
+        }
+        if (Object.keys(fileErrors).length) { setFileErrors({}) };
+        return true
+    }
+
+    const addImage = (files: ArrayType) => {
+        setFile(files[0])
+    }
+
     const isApproved = getIsNewGarmentApproved(details)
 
     return (
@@ -133,13 +164,26 @@ const NewGarment = () => {
                         type="button"
                         disabled={!isApproved}
                     >Add Garment</ButtonUI>
-                    <InputUI
-                        classN='add-garment-input'
-                        callback={handleInputChange}
-                        value={details?.name}
-                        name='name'
-                        label="Name*"
-                    />
+                    <div className="garments-list-content-top">
+                        <InputUI
+                            classN='add-garment-input'
+                            callback={handleInputChange}
+                            value={details?.name}
+                            name='name'
+                            label="Name*"
+                        />
+                        <div className="garments-list-content-top-background">
+                            <HeadingUI text='Background' color={appColor} size="18px" />
+                            <DropzoneUI
+                                width="300px"
+                                height="160px"
+                                name="highresurl"
+                                validationCallback={(files) => validateFiles(files, 'background')}
+                                error={fileErrors?.highresurl?.message || ''}
+                                onChange={(files: ArrayType) => addImage(files)}
+                            />
+                        </div>
+                    </div>
                     <div className="garments-list-top">
                         <GarmentsMannequinsList
                             details={details}

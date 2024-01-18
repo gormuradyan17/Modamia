@@ -124,6 +124,17 @@
 .mannequin-list-text {
     max-width: 200px;
 }
+.garments-list-content {
+    &-top {
+        display: flex;
+        align-items: flex-start;
+        &-background {
+            display: flex;
+            flex-direction: column;
+            margin: 10px 0 10px 30px;
+        }
+    }
+}
 .garments-list-top {
     width: 100%;
     display: flex;

@@ -96,3 +96,9 @@ export const superAdminFormOptions = {
         {rule: { required : true }, error: {message: 'Password is required'} },
     ]
 }
+
+export const garmentFilesOptions = {
+    background: [
+        {rule: { test: /^$|\.jpe?g$|\.png$|\.webp$|\.bmp$/i }, error: {message: 'Incorrect format for Front Url'} }
+    ],
+}

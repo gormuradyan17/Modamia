@@ -31,6 +31,10 @@ export const createSilhouettesDirsIfNotExists = async () => {
     if (!fs.existsSync(path.join(__dirname, '../../uploads/silhouettes/sleeves'))) await fs.mkdirSync(path.join(__dirname, '../../uploads/silhouettes/sleeves'), { recursive: true });
 }
 
+export const createGarmentsDirsIfNotExists = async () => {
+    if (!fs.existsSync(path.join(__dirname, '../../uploads/garments'))) await fs.mkdirSync(path.join(__dirname, '../../uploads/garments'), { recursive: true });
+}
+
 export const getCookieValue = (cookie: string, key: string) => {
     const matches = cookie.match(new RegExp(`${key}=(.*?)(;|$)`));
     return matches ? matches[1] : null;

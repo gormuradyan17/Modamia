@@ -178,7 +178,7 @@ class AdminController {
 
     async addGarment(req: any, res: any, next: any) {
         try {
-            const garment = await adminService.addGarment(req.body);
+            const garment = await adminService.addGarment(req);
             return res.json(garment);
         } catch (error) {
             next(error);
@@ -206,7 +206,7 @@ class AdminController {
 
     async editGarment(req: any, res: any, next: any) {
         try {
-            const garment = await adminService.editGarment(req.body);
+            const garment = await adminService.editGarment(req);
             return res.json(garment);
         } catch (error) {
             next(error);

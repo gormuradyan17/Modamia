@@ -1,5 +1,6 @@
 import { BASE_UPLOADS_MANNEQUINS_BACKS_URL, BASE_UPLOADS_MANNEQUINS_FRONTS_URL } from "shared/constants/genericApiRoutes";
 import { updateArrWithElem } from "./helpers";
+import { url } from "inspector";
 
 
 export async function addModel(elem: any, width: number, height: number, frontBack: string, updateElem: any, fromBasket: boolean, scaleCanvas: number = 1) {

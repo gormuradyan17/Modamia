@@ -28,11 +28,11 @@ import CustomizationLoader from "components/Customization/customizationLoader/Cu
 import SilhouettePositionBtn from "components/Customization/contents/SilhouetteContent/SilhouettePositionBtn";
 import ChangeSize from "components/Customization/contents/ChangeSize";
 import AddToCart from "components/Customization/contents/AddToCart";
-import { getProductCount, getProductName, getProductPrice, setActiveMannequinProduct, setProductBack, setProductFront, setProductGarment, setProductName, setProductPrice,setProductSleeve } from "redux/reducers/addToCartReducer";
+import { setActiveMannequinProduct, setProductBack, setProductFront, setProductGarment, setProductName, setProductPrice,setProductSleeve } from "redux/reducers/addToCartReducer";
 import { useLocation, useParams } from "react-router-dom";
 import { getSelectedGarment } from "services/garmentService";
 import { garmentDetails } from "redux/reducers/garmentReducer";
-import { ObjectType, convertDefaultValue, dataWithValues } from "shared/helpers/helpers";
+import { ObjectType, convertDefaultValue, dataWithValues, getGarmentBackgroundURL } from "shared/helpers/helpers";
 import EditGarment from "components/Customization/contents/EditGarment/EditGarment";
 
 const Customization = () => {
@@ -43,11 +43,8 @@ const Customization = () => {
   const activeImgUrl = useSelector(getMannequinUrl)
   const activeType = useSelector(getMannequinType)
   const frontBack = useSelector(getMannequinPosition)
-  const name = useSelector(getProductName)
-  const count = useSelector(getProductCount)
   const price = useSelector(getMannequinPrice)
   const activeGarment = useSelector(garmentDetails)
-  const totalPrice = useSelector(getProductPrice)
   const sizes = useSelector(getSize)
 
   const detailsModelData = useSelector(getDetailsModelData)
@@ -228,7 +225,9 @@ const Customization = () => {
         <SilhouettePositionBtn />
         <div className="customization-body">
           {isLoading && <CustomizationLoader />}
-          <canvas className="canvas" id="canvas" ref={canvasRef}></canvas>
+          <canvas className="canvas"
+            {...(activeGarment?.garment?.background && {style: {marginRight: '30px',background: getGarmentBackgroundURL(activeGarment?.garment?.background)}})}
+          id="canvas" ref={canvasRef}></canvas>
         </div>
         <div className="customization-body customization-body-info">
           <CustomizationInfo  />

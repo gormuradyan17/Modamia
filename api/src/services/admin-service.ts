@@ -1,5 +1,5 @@
 import path from 'path';
-import { getFileOriginalMimeType, createMannequinsDirsIfNotExists, createSilhouettesDirsIfNotExists } from '../helpers/helper';
+import { getFileOriginalMimeType, createMannequinsDirsIfNotExists, createSilhouettesDirsIfNotExists, createGarmentsDirsIfNotExists } from '../helpers/helper';
 import { ColorInterface } from '../models/Color'
 import MannequinModel from '../models/Mannequin'
 import SilhouetteModel from '../models/Silhouette'
@@ -368,16 +368,36 @@ class AdminService {
 
     async addGarment(req: any) {
         try {
-            const { bottoms = [], name = '', mannequin_id = '', sleeves = [], tops = [], palettes = {} } = req || {}
+            const { bottoms = [], name = '', mannequin_id = '', sleeves = [], tops = [], palettes = {} } = req.body || {}
+            
+            const { background = '' } = req.files || {};
             if (mannequin_id) {
                 const garment = await GarmentModel.create({
                     name,
                     mannequin_id
                 })
+                const query = { _id: garment?.id}
+                if (background) {
+                    if (typeof background === 'string') {
+                        await GarmentModel.findOneAndUpdate(query, {
+                            background: background,
+                        }, { upsert: true })
+                    } else {
+                        await createGarmentsDirsIfNotExists()
+                        const newName = uuidv4()
+                        const fileType = getFileOriginalMimeType(background.data)
+                        const garmentImage = newName + fileType
+                        const filePath = path.join(__dirname, `../../uploads/garments`, garmentImage);
+                        fs.writeFileSync(filePath, background.data);
+                        await GarmentModel.findOneAndUpdate(query, {
+                            background: garmentImage,
+                        }, { upsert: true })
+                    }
+                }
                 if (garment?._id) {
                     const queryMannequin = { _id: mannequin_id}
                     const mannequin = await MannequinModel.find(queryMannequin)
-                    tops?.map(async (top: Record<string, any>) => {
+                    JSON.parse(tops)?.map(async (top: Record<string, any>) => {
                         await GarmentSilhouettesModel.create({
                             silhouette_id: top?.id,
                             garment_id: garment?._id,
@@ -391,7 +411,7 @@ class AdminService {
                         }, { upsert: true });
                     })
 
-                    bottoms?.map(async (bottom: Record<string, any>) => {
+                    JSON.parse(bottoms)?.map(async (bottom: Record<string, any>) => {
                         await GarmentSilhouettesModel.create({
                             silhouette_id: bottom?.id,
                             garment_id: garment?._id,
@@ -405,7 +425,7 @@ class AdminService {
                         }, { upsert: true });
                     })
 
-                    sleeves?.map(async (sleeve: Record<string, any>) => {
+                    JSON.parse(sleeves)?.map(async (sleeve: Record<string, any>) => {
                         await GarmentSilhouettesModel.create({
                             silhouette_id: sleeve?.id,
                             garment_id: garment?._id,
@@ -419,8 +439,8 @@ class AdminService {
                         }, { upsert: true });
                     })
 
-                    if(Object.keys(palettes)?.length) {
-                        const { colors = [], prints = []} = palettes;
+                    if(Object.keys(JSON.parse(palettes))?.length) {
+                        const { colors = [], prints = []} = JSON.parse(palettes);
                         
                         colors?.map(async (palette_id: string) => {
                             await GarmentPalettesModel.create({
@@ -460,20 +480,38 @@ class AdminService {
 
     async editGarment(req: Record<string, any>) {
         try {
-            const { bottoms = [], name = '', mannequin_id = '', sleeves = [], tops = [], id = '', palettes = {} } = req || {}
+            const { bottoms = [], name = '', mannequin_id = '', sleeves = [], tops = [], id = '', palettes = {} } = req.body || {}
+            const { background = '' } = req.files || {};
             if (id) {
                 const query = { '_id': id };
                 await GarmentModel.findOneAndUpdate(query, {
                     name,
                     mannequin_id
                 }, { upsert: true });
-
-                await updateGarmentsQuery(id, tops, 'tops', mannequin_id)
-                await updateGarmentsQuery(id, bottoms, 'bottoms', mannequin_id)
-                await updateGarmentsQuery(id, sleeves, 'sleeves', mannequin_id)
-                if (Object.keys(palettes)?.length) {
-                    await updateGarmentPalettesQuery(id, palettes?.colors, 'colors')
-                    await updateGarmentPalettesQuery(id, palettes?.prints, 'prints')
+                if (background) {
+                    if (typeof background === 'string') {
+                        await GarmentModel.findOneAndUpdate(query, {
+                            background: background,
+                        }, { upsert: true })
+                    } else {
+                        await createGarmentsDirsIfNotExists()
+                        const newName = uuidv4()
+                        const fileType = getFileOriginalMimeType(background.data)
+                        const garmentImage = newName + fileType
+                        const filePath = path.join(__dirname, `../../uploads/garments`, garmentImage);
+                        fs.writeFileSync(filePath, background.data);
+                        await GarmentModel.findOneAndUpdate(query, {
+                            background: garmentImage,
+                        }, { upsert: true })
+                    }
+                }
+                await updateGarmentsQuery(id, JSON.parse(tops), 'tops', mannequin_id)
+                await updateGarmentsQuery(id, JSON.parse(bottoms), 'bottoms', mannequin_id)
+                await updateGarmentsQuery(id, JSON.parse(sleeves), 'sleeves', mannequin_id)
+                const parsedPalettes = JSON.parse(palettes)
+                if (Object.keys(parsedPalettes)?.length) {
+                    await updateGarmentPalettesQuery(id, parsedPalettes?.colors, 'colors')
+                    await updateGarmentPalettesQuery(id, parsedPalettes?.prints, 'prints')
                 }
                 const garments = await GarmentModel.find({})
                 return garments
